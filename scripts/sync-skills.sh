@@ -56,7 +56,7 @@ sync_skills() {
     fi
 
     skill_name=$(basename "$skill_dir")
-    echo "処理中: $skill_name"
+    skill_logged=0
 
     # 各ターゲットディレクトリにシンボリックリンクを作成
     for target_dir in "${TARGET_DIRS[@]}"; do
@@ -69,22 +69,37 @@ sync_skills() {
           # 既存のシンボリックリンクを確認
           current_target=$(readlink "$link_path")
           if [ "$current_target" = "$relative_path" ]; then
-            echo "  ✓ $(basename "$target_dir"): 正しくリンク済み"
+            # 正しいリンクは表示しない
+            :
           else
+            if [ "$skill_logged" -eq 0 ]; then
+              echo "処理中: $skill_name"
+              skill_logged=1
+            fi
             log_warn "  $(basename "$target_dir"): 異なるリンク先 ($current_target)"
             ln -sf "$relative_path" "$link_path"
             log_info "  $(basename "$target_dir"): リンクを修正"
           fi
         else
+          if [ "$skill_logged" -eq 0 ]; then
+            echo "処理中: $skill_name"
+            skill_logged=1
+          fi
           log_warn "  $(basename "$target_dir"): ディレクトリ/ファイルが存在します（スキップ）"
         fi
       else
         # 新規リンク作成
         ln -s "$relative_path" "$link_path"
+        if [ "$skill_logged" -eq 0 ]; then
+          echo "処理中: $skill_name"
+          skill_logged=1
+        fi
         log_info "  $(basename "$target_dir"): リンク作成"
       fi
     done
-    echo
+    if [ "$skill_logged" -eq 1 ]; then
+      echo
+    fi
   done
 
   echo "=== 同期完了 ==="
