@@ -33,11 +33,14 @@ Collect inputs (as available):
 
 3. Create a worktree.
    - Prefer `git wt` if it exists; otherwise use `git worktree`.
-     - Check alias with `git config --get alias.wt` or `git wt --help`.
+     - Check availability with `command -v git-wt` or `git wt --help`.
+     - If `git wt` is not found, fall back to `git worktree`.
+     - If using `git wt`, see `references/git-wt.md` for quick commands and copy flags.
    - Choose a branch name (e.g., `request/<short-slug>`).
    - Create the worktree:
      - `git worktree add -b <branch> <path> <base>`
    - `cd` into the worktree and verify `git status`.
+   - If `DOTENV_PRIVATE_KEY` is required and `.env.keys` exists in the parent repo, copy it into the worktree root (do not commit secrets).
 
 4. Implement the fix.
    - Follow any `AGENTS.md` or project rules in scope.

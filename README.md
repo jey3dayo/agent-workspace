@@ -1,0 +1,58 @@
+# Codex Skills Collection
+
+このリポジトリは、Codex エージェント向けのスキル（SKILL.md）を集約・運用するための場所です。
+README では「入口としての概要」と「スキル一覧」をまとめ、詳細は各スキル配下の `SKILL.md` を参照します。
+
+## 目的
+
+- スキルの発見性を高め、用途に合ったスキルを素早く見つける
+- スキルの作成・運用ルールを簡潔に共有する
+- 変更点の入口を README に集約する
+
+## ディレクトリ構成
+
+- `skills-internal/` : 自作スキル（`skills-internal/<skill-name>/SKILL.md`）
+- `skills/` : 外部由来スキル（チェックアウト/インストール済み）
+- `scripts/` : スキル運用や補助スクリプト（必要に応じて）
+- `mise.toml` : 開発・実行環境の設定
+
+## 使い方（概要）
+
+- スキルは **名前で指定** するか、**依頼内容がスキル説明に一致**したときに利用します。
+- 具体的な手順・コマンド・制約は **各 `SKILL.md` が正** です。
+- README は **一覧性** と **入口** を重視し、詳細は最小限に留めます。
+
+## スキル一覧（自作 / 外部）
+
+### 自作スキル（skills-internal）
+
+| カテゴリ | スキル | 概要 |
+| --- | --- | --- |
+| 自動化 / 生成 | [`generate-svg`](skills-internal/generate-svg/SKILL.md) | SVG 図解生成（透過背景、ダークモード対応、Material Icons 統合など） |
+| GitHub / CI | [`request-to-pr`](skills-internal/request-to-pr/SKILL.md) | 依頼→実装→チェック→PR作成まで一気通貫で実施 |
+| アーキテクチャ / 運用 | [`integration-framework`](skills-internal/integration-framework/SKILL.md) | Claude Code 統合アーキテクチャのガイド（TaskContext/Bus など） |
+
+### 外部スキル（skills/）
+
+| カテゴリ | スキル | 概要 |
+| --- | --- | --- |
+| 自動化 / 生成 | [`agent-browser`](skills/agent-browser/SKILL.md) | Web 操作の自動化（ナビゲーション、フォーム入力、スクリーンショット、データ抽出など） |
+| GitHub / CI | [`gh-address-comments`](skills/gh-address-comments/SKILL.md) | GitHub PR のレビューコメント対応を支援（gh CLI） |
+| GitHub / CI | [`gh-fix-ci`](skills/gh-fix-ci/SKILL.md) | GitHub Actions の失敗ログを調査し、修正計画から実装まで支援 |
+| 設計 / 品質 | [`ui-ux-pro-max`](skills/ui-ux-pro-max/SKILL.md) | UI/UX 設計の包括的ガイド（スタイル、配色、フォント等） |
+| 設計 / 品質 | [`web-design-guidelines`](skills/web-design-guidelines/SKILL.md) | Web インターフェース設計のガイドライン準拠チェック |
+| 設計 / 品質 | [`vercel-react-best-practices`](skills/vercel-react-best-practices/SKILL.md) | React/Next.js のパフォーマンス最適化ガイド（Vercel） |
+| アーキテクチャ / 運用 | [`skill-creator`](skills/skill-creator/SKILL.md) | 新規スキル作成・既存スキル更新のガイド |
+
+## スキル追加・更新の流れ（一般）
+
+1. 自作スキルは `skills-internal/<skill-name>/SKILL.md` を作成または更新する
+2. 外部スキルは `skills/` 配下に追加する（インストール/チェックアウトなど）
+3. README のスキル一覧に追加/更新する
+4. 依存するツール・前提条件があれば `SKILL.md` に明記する
+
+## 運用方針
+
+- **README は入口**、**SKILL.md が詳細**の原則を守る
+- 追加・更新時は README と SKILL.md の記載を同期する
+- 既存のスキルの挙動を変える場合は、影響範囲と使い方の更新を明記する
