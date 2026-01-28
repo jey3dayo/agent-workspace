@@ -51,3 +51,16 @@ depends = ["docs:lint", "docs:format:check", "docs:links"]
 [tasks."update"]
 description = "npx skills update を実行"
 run = "skills update"
+
+[tasks."skills:sync"]
+description = "スキルを3箇所に同期"
+run = "./scripts/sync-skills.sh"
+
+[tasks."skills:status"]
+description = "スキルリンク状態を表示"
+run = "./scripts/sync-skills.sh status"
+
+[tasks."skills:refresh"]
+alias = "ci"
+description = "スキル更新 → 同期"
+run = "mise run update && mise run skills:sync"
