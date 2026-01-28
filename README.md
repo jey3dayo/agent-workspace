@@ -22,6 +22,12 @@ README では「入口としての概要」と「スキル一覧」をまとめ�
 - 具体的な手順・コマンド・制約は **各 `SKILL.md` が正** です。
 - README は **一覧性** と **入口** を重視し、詳細は最小限に留めます。
 
+## 同期（即時反映）
+
+- `./scripts/sync-skills.sh` で `skills/` と `skills-internal/` を各エージェント（`.claude` / `.codex` / `.opencode`）に同期します
+- 同名スキルがある場合は **`skills-internal` を優先** します（重複は原則置かない）
+- 状態確認は `./scripts/sync-skills.sh status`
+
 ## スキル一覧（自作 / 外部）
 
 ### 自作スキル（skills-internal）

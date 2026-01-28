@@ -1,11 +1,15 @@
 #!/bin/bash
 
 # スキル同期スクリプト
-# ~/.agents/skills/ の全スキルを3箇所に同期する
+# ~/.agents/skills/ と ~/.agents/skills-internal/ の全スキルを3箇所に同期する
 
 set -euo pipefail
 
-AGENTS_SKILLS="$HOME/.agents/skills"
+# ソーススキルディレクトリ（外部 → 内部の順で処理。後勝ちになる）
+SOURCE_DIRS=(
+  "$HOME/.agents/skills"
+  "$HOME/.agents/skills-internal"
+)
 TARGET_DIRS=(
   "$HOME/.claude/skills"
   "$HOME/.codex/skills"
@@ -36,8 +40,16 @@ sync_skills() {
   echo
 
   # ソースディレクトリの存在確認
-  if [ ! -d "$AGENTS_SKILLS" ]; then
-    log_error "ソースディレクトリが存在しません: $AGENTS_SKILLS"
+  local has_source=0
+  for source_dir in "${SOURCE_DIRS[@]}"; do
+    if [ -d "$source_dir" ]; then
+      has_source=1
+    else
+      log_warn "ソースディレクトリが存在しません: $source_dir"
+    fi
+  done
+  if [ "$has_source" -eq 0 ]; then
+    log_error "有効なソースディレクトリがありません"
     exit 1
   fi
 
@@ -49,24 +61,36 @@ sync_skills() {
     fi
   done
 
+  # 重複チェック（同名スキルが複数ソースに存在）
+  declare -A seen_sources
+
   # 各スキルを処理
-  for skill_dir in "$AGENTS_SKILLS"/*; do
-    if [ ! -d "$skill_dir" ]; then
+  for source_dir in "${SOURCE_DIRS[@]}"; do
+    if [ ! -d "$source_dir" ]; then
       continue
     fi
 
-    skill_name=$(basename "$skill_dir")
-    skill_logged=0
+    for skill_dir in "$source_dir"/*; do
+      if [ ! -d "$skill_dir" ]; then
+        continue
+      fi
 
-    # 各ターゲットディレクトリにシンボリックリンクを作成
-    for target_dir in "${TARGET_DIRS[@]}"; do
-      link_path="$target_dir/$skill_name"
-      relative_path="../../.agents/skills/$skill_name"
+      skill_name=$(basename "$skill_dir")
+      skill_logged=0
 
-      # 既存のリンクまたはディレクトリを確認
-      if [ -e "$link_path" ]; then
+      if [ -n "${seen_sources[$skill_name]:-}" ]; then
+        log_warn "重複スキル名: $skill_name (${seen_sources[$skill_name]} と $(basename "$source_dir"))"
+      fi
+      seen_sources["$skill_name"]="$(basename "$source_dir")"
+
+      # 各ターゲットディレクトリにシンボリックリンクを作成
+      for target_dir in "${TARGET_DIRS[@]}"; do
+        link_path="$target_dir/$skill_name"
+        relative_path="../../.agents/$(basename "$source_dir")/$skill_name"
+
+        # 既存のリンクまたはディレクトリを確認
         if [ -L "$link_path" ]; then
-          # 既存のシンボリックリンクを確認
+          # 既存のシンボリックリンクを確認（リンク切れでも readlink は有効）
           current_target=$(readlink "$link_path")
           if [ "$current_target" = "$relative_path" ]; then
             # 正しいリンクは表示しない
@@ -80,26 +104,26 @@ sync_skills() {
             ln -sf "$relative_path" "$link_path"
             log_info "  $(basename "$target_dir"): リンクを修正"
           fi
-        else
+        elif [ -e "$link_path" ]; then
           if [ "$skill_logged" -eq 0 ]; then
             echo "処理中: $skill_name"
             skill_logged=1
           fi
           log_warn "  $(basename "$target_dir"): ディレクトリ/ファイルが存在します（スキップ）"
+        else
+          # 新規リンク作成
+          ln -s "$relative_path" "$link_path"
+          if [ "$skill_logged" -eq 0 ]; then
+            echo "処理中: $skill_name"
+            skill_logged=1
+          fi
+          log_info "  $(basename "$target_dir"): リンク作成"
         fi
-      else
-        # 新規リンク作成
-        ln -s "$relative_path" "$link_path"
-        if [ "$skill_logged" -eq 0 ]; then
-          echo "処理中: $skill_name"
-          skill_logged=1
-        fi
-        log_info "  $(basename "$target_dir"): リンク作成"
+      done
+      if [ "$skill_logged" -eq 1 ]; then
+        echo
       fi
     done
-    if [ "$skill_logged" -eq 1 ]; then
-      echo
-    fi
   done
 
   echo "=== 同期完了 ==="
