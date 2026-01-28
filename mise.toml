@@ -11,6 +11,7 @@ fd = 'latest'                        # ファイル検索用
 prettier = 'latest'                  # コードフォーマッター
 "npm:markdownlint-cli2" = "latest"
 "npm:markdown-link-check" = "latest"
+"npm:skills" = "latest"
 
 # === ドキュメント管理 ===
 [tasks."docs:lint"]
@@ -45,3 +46,8 @@ depends = ["docs:fix", "docs:format"]
 [tasks.lint]
 description = "全体検証（修正はしない）"
 depends = ["docs:lint", "docs:format:check", "docs:links"]
+
+# === スキル管理 ===
+[tasks."update"]
+description = "npx skills update を実行"
+run = "skills update"
