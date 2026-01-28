@@ -1,8 +1,6 @@
 ---
 name: request-to-pr
 description: Verify a user request (or a GitHub issue), create a git worktree, implement the fix, run checks, and open a PR using the repository's PR template. Use when asked to validate a request/issue and carry it through to a PR.
-metadata:
-  short-description: Verify request, fix, and open PR
 ---
 
 # Request to PR
@@ -12,6 +10,8 @@ metadata:
 Turn a user request (or issue) into a validated fix with a PR, end-to-end.
 
 ## Inputs
+
+Collect inputs (as available):
 
 - `request`: user request text or an issue URL
 - `repo`: path to the repo (default `.`)
@@ -23,7 +23,7 @@ Turn a user request (or issue) into a validated fix with a PR, end-to-end.
 ## Workflow
 
 1. Gather context and verify the request.
-   - If the request is an issue URL and you need remote data, **ask permission** before using `gh`, `curl`, or any network access.
+   - If the request is an issue URL and remote data is needed, follow the environment policy for network actions; if permission is required, ask for it before using `gh`, `curl`, or any network access.
    - If permission is not granted, ask the user to paste the issue body/comments.
    - Restate the requirement and define acceptance criteria.
    - Decide if the claim/request is correct. If incorrect or ambiguous, explain why and stop to ask how to proceed.
@@ -33,7 +33,7 @@ Turn a user request (or issue) into a validated fix with a PR, end-to-end.
 
 3. Create a worktree.
    - Prefer `git wt` if it exists; otherwise use `git worktree`.
-     - Check alias: `git config --get alias.wt` or `git wt --help`.
+     - Check alias with `git config --get alias.wt` or `git wt --help`.
    - Choose a branch name (e.g., `request/<short-slug>`).
    - Create the worktree:
      - `git worktree add -b <branch> <path> <base>`
@@ -60,7 +60,7 @@ Turn a user request (or issue) into a validated fix with a PR, end-to-end.
 
 7. Create the PR.
    - Ensure `gh` is authenticated; if not, ask the user to log in.
-   - **Ask permission** before any network actions.
+   - Follow the environment policy for network actions; ask permission only if required.
    - Use `gh pr create` with the template-filled body.
    - Share the PR URL.
 
