@@ -63,6 +63,33 @@
       "skillFolderHash": "3116f3e62dbd02b44a598b1aa690d2a8938e8f89",
       "installedAt": "2026-01-28T18:32:10.141Z",
       "updatedAt": "2026-01-28T18:32:10.141Z"
+    },
+    "generate-svg": {
+      "source": "jey3dayo/agent-workspace",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/jey3dayo/agent-workspace.git",
+      "skillPath": "skills-internal/generate-svg/SKILL.md",
+      "skillFolderHash": "0ae70826ecd33723b58910373d19d44f2cdb9d90",
+      "installedAt": "2026-01-28T18:54:21.217Z",
+      "updatedAt": "2026-01-28T18:54:21.217Z"
+    },
+    "integration-framework": {
+      "source": "jey3dayo/agent-workspace",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/jey3dayo/agent-workspace.git",
+      "skillPath": "skills-internal/integration-framework/SKILL.md",
+      "skillFolderHash": "995e9614ded6f78d64d46132727a70067a5aea74",
+      "installedAt": "2026-01-28T18:54:21.261Z",
+      "updatedAt": "2026-01-28T18:54:21.261Z"
+    },
+    "request-to-pr": {
+      "source": "jey3dayo/agent-workspace",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/jey3dayo/agent-workspace.git",
+      "skillPath": "skills-internal/request-to-pr/SKILL.md",
+      "skillFolderHash": "6dda7e965e80c7fb18a8e256b78516a5f4e0ccd2",
+      "installedAt": "2026-01-28T18:54:21.304Z",
+      "updatedAt": "2026-01-28T18:54:21.304Z"
     }
   }
 }
