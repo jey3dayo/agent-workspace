@@ -1,0 +1,47 @@
+# ~/.agents エージェント・スキル管理用 mise 設定
+
+[env]
+_.path = ['./node_modules/.bin']
+MD_EXCLUDES = "--exclude node_modules --exclude tmux/plugins --exclude fisher --exclude 'zsh/.zinit' --exclude plans --exclude 'plugins/cache' --exclude 'plugins/marketplaces' --exclude projects"
+MARKDOWN_LINK_CONFIG = ".markdown-link-check.json"
+
+[tools]
+node = '24'                          # Node 24 系に固定
+fd = 'latest'                        # ファイル検索用
+prettier = 'latest'                  # コードフォーマッター
+"npm:markdownlint-cli2" = "latest"
+"npm:markdown-link-check" = "latest"
+
+# === ドキュメント管理 ===
+[tasks."docs:lint"]
+description = "Markdownファイルのlintチェック"
+run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X markdownlint-cli2"
+
+[tasks."docs:fix"]
+description = "Markdownファイルの自動修正"
+run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X markdownlint-cli2 --fix"
+
+[tasks."docs:links"]
+description = "Markdownリンクチェック"
+run = "fd -e md -X markdown-link-check --quiet --config ${MARKDOWN_LINK_CONFIG}"
+
+[tasks."docs:links:verbose"]
+description = "Markdownリンクチェック（詳細モード）"
+run = "fd -e md -X markdown-link-check --verbose --config ${MARKDOWN_LINK_CONFIG}"
+
+[tasks."docs:format"]
+description = "Prettierでフォーマット"
+run = "prettier --write --cache --log-level warn \"${MD_GLOB}\""
+
+[tasks."docs:format:check"]
+description = "Prettierフォーマットチェック"
+run = "prettier --check --cache \"${MD_GLOB}\""
+
+# === エイリアス ===
+[tasks.format]
+description = "全ての自動修正を実行"
+depends = ["docs:fix", "docs:format"]
+
+[tasks.lint]
+description = "全体検証（修正はしない）"
+depends = ["docs:lint", "docs:format:check", "docs:links"]
