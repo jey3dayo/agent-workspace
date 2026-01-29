@@ -82,14 +82,23 @@
       "installedAt": "2026-01-28T18:54:21.261Z",
       "updatedAt": "2026-01-28T18:54:21.261Z"
     },
+    "task-to-pr": {
+      "source": "jey3dayo/agent-workspace",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/jey3dayo/agent-workspace.git",
+      "skillPath": "skills-internal/task-to-pr/SKILL.md",
+      "skillFolderHash": "8a31ea56c95af6ad5dff2019b3c3d379c471c091",
+      "installedAt": "2026-01-29T12:20:45Z",
+      "updatedAt": "2026-01-29T12:20:45Z"
+    },
     "request-to-pr": {
       "source": "jey3dayo/agent-workspace",
       "sourceType": "github",
       "sourceUrl": "https://github.com/jey3dayo/agent-workspace.git",
       "skillPath": "skills-internal/request-to-pr/SKILL.md",
-      "skillFolderHash": "6dda7e965e80c7fb18a8e256b78516a5f4e0ccd2",
-      "installedAt": "2026-01-28T18:54:21.304Z",
-      "updatedAt": "2026-01-28T18:54:21.304Z"
+      "skillFolderHash": "ca424ae518c61e477da122ee30a023900d946214",
+      "installedAt": "2026-01-29T12:20:45Z",
+      "updatedAt": "2026-01-29T12:20:45Z"
     }
   }
 }
