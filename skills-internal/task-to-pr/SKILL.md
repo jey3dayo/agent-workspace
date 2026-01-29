@@ -40,17 +40,30 @@ Collect inputs (as available):
    - Create the worktree:
      - `git worktree add -b <branch> <path> <base>`
    - `cd` into the worktree and verify `git status`.
-   - If `DOTENV_PRIVATE_KEY` is required and `.env.keys` exists in the parent repo, copy it into the worktree root (do not commit secrets).
 
-4. Implement the fix.
+4. Initialize the worktree (when applicable).
+   - **Dependency install (Node projects):**
+     - If `package.json` exists, detect the package manager and install deps.
+     - Prefer the `packageManager` field in `package.json` when present.
+     - Otherwise infer by lockfile in repo root (prefer one that exists):
+       - `pnpm-lock.yaml` → `pnpm install`
+       - `yarn.lock` → `yarn install`
+       - `package-lock.json` or `npm-shrinkwrap.json` → `npm install`
+     - If no lockfile but `package.json` exists, use `ni` (if available) or ask the user.
+   - **Env files (.env / .env.keys):**
+     - If the parent repo has `.env` and the worktree does not, copy `.env` into the worktree root.
+     - If the parent repo has `.env.keys`, copy it into the worktree root (even when `.env` is committed).
+     - Do not commit secrets.
+
+5. Implement the fix.
    - Follow any `AGENTS.md` or project rules in scope.
    - Keep changes minimal and scoped to the request.
 
-5. Run checks.
+6. Run checks.
    - Run the repo’s standard `lint`, `type-check`, `test`, and `build` (or the closest equivalents).
    - Report results and failures clearly.
 
-6. Prepare PR content using the template.
+7. Prepare PR content using the template.
    - Locate a PR template in this order:
      - `.github/PULL_REQUEST_TEMPLATE.md`
      - `.github/PULL_REQUEST_TEMPLATE/*.md` (if multiple, ask which to use)
@@ -61,7 +74,7 @@ Collect inputs (as available):
      - Tests run and results
      - Any risks or follow-ups
 
-7. Create the PR.
+8. Create the PR.
    - Ensure `gh` is authenticated; if not, ask the user to log in.
    - Follow the environment policy for network actions; ask permission only if required.
    - Use `gh pr create` with the template-filled body.

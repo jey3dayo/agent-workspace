@@ -35,7 +35,7 @@ README では「入口としての概要」と「スキル一覧」をまとめ�
 | カテゴリ | スキル | 概要 |
 | --- | --- | --- |
 | 自動化 / 生成 | [`generate-svg`](skills-internal/generate-svg/SKILL.md) | SVG 図解生成（透過背景、ダークモード対応、Material Icons 統合など） |
-| GitHub / CI | [`task-to-pr`](skills-internal/task-to-pr/SKILL.md) | 依頼→実装→チェック→PR作成まで一気通貫で実施（alias: request-to-pr） |
+| GitHub / CI | [`task-to-pr`](skills-internal/task-to-pr/SKILL.md) | 依頼→実装→チェック→PR作成まで一気通貫で実施 |
 | アーキテクチャ / 運用 | [`integration-framework`](skills-internal/integration-framework/SKILL.md) | Claude Code 統合アーキテクチャのガイド（TaskContext/Bus など） |
 
 ### 外部スキル（skills/）
