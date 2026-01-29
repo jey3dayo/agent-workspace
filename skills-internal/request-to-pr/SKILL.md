@@ -36,7 +36,7 @@ Collect inputs (as available):
      - Check availability with `command -v git-wt` or `git wt --help`.
      - If `git wt` is not found, fall back to `git worktree`.
      - If using `git wt`, see `references/git-wt.md` for quick commands and copy flags.
-   - Choose a branch name (e.g., `request/<short-slug>`).
+   - Choose a branch name (prefer `feat/<short-slug>` in kebab-case; e.g., `feat/<short-slug>`).
    - Create the worktree:
      - `git worktree add -b <branch> <path> <base>`
    - `cd` into the worktree and verify `git status`.
