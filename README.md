@@ -57,6 +57,19 @@ README では「入口としての概要」と「スキル一覧」をまとめ�
 3. README のスキル一覧に追加/更新する
 4. 依存するツール・前提条件があれば `SKILL.md` に明記する
 
+## 例外: ui-ux-pro-max の手動構成パターン
+
+`ui-ux-pro-max` は `.claude/skills` 側が `src/` へのシンボリックリンク構成のため、
+`skills add` 等で `.claude/skills` だけを取得するとリンク切れになりやすい。
+
+対策:
+- `skills/` 配下は **実体ディレクトリ（scripts/data/templates）** で保持する
+- 実体は **git で管理しない**（容量肥大化を避けるため `.gitignore` 済み）
+- 破損チェック: `mise run skills:check-links`（警告のみ）
+- 修復/取得: `mise run skills:fix:ui-ux-pro-max`
+
+`mise ci` は `skills:check-links` と `skills:fix:ui-ux-pro-max` を先頭で実行する。
+
 ## 運用方針
 
 - **README は入口**、**SKILL.md が詳細**の原則を守る

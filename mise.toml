@@ -56,6 +56,14 @@ run = "skills update"
 description = "スキルを3箇所に同期"
 run = "./scripts/sync-skills.sh"
 
+[tasks."skills:check-links"]
+description = "skills/ と skills-internal/ の壊れたリンク検査（警告のみ）"
+run = "./scripts/check-skill-links.sh"
+
+[tasks."skills:fix:ui-ux-pro-max"]
+description = "ui-ux-pro-max の /tmp リンクを実体化"
+run = "./scripts/fix-ui-ux-pro-max.sh"
+
 [tasks."skills:status"]
 description = "スキルリンク状態を表示"
 run = "./scripts/sync-skills.sh status"
@@ -63,4 +71,4 @@ run = "./scripts/sync-skills.sh status"
 [tasks."skills:refresh"]
 alias = "ci"
 description = "スキル更新 → 同期"
-run = "mise run update && mise run skills:sync"
+run = "mise run skills:check-links && mise run update && mise run skills:fix:ui-ux-pro-max && mise run skills:sync"

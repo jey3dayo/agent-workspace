@@ -34,6 +34,60 @@ log_error() {
   echo -e "${RED}✗${NC} $1"
 }
 
+# /tmp 参照やリンク切れを検出して同期事故を防ぐ
+resolve_path() {
+  local path="$1"
+  if readlink -f / >/dev/null 2>&1; then
+    readlink -f "$path" 2>/dev/null || true
+  elif command -v python3 >/dev/null 2>&1; then
+    python3 - "$path" <<'PY'
+import os, sys
+print(os.path.realpath(sys.argv[1]))
+PY
+  elif command -v python >/dev/null 2>&1; then
+    python - "$path" <<'PY'
+import os, sys
+print(os.path.realpath(sys.argv[1]))
+PY
+  else
+    echo ""
+  fi
+}
+
+validate_skill_dir() {
+  local skill_dir="$1"
+  local bad=0
+
+  while IFS= read -r link; do
+    local target resolved
+    target=$(readlink "$link" 2>/dev/null || true)
+
+    if [ ! -e "$link" ]; then
+      # 自己参照系のリンクは許容（readlink -f がループで失敗するため）
+      if [[ "$target" == *"/.agents/skills/"* ]]; then
+        continue
+      fi
+      log_error "  内部リンク切れ: $link -> ${target:-?}"
+      bad=1
+      continue
+    fi
+
+    if [[ "$target" == /tmp/* || "$target" == /private/tmp/* ]]; then
+      log_error "  /tmp リンク検出: $link -> $target"
+      bad=1
+      continue
+    fi
+
+    resolved=$(resolve_path "$link")
+    if [[ "$resolved" == /tmp/* || "$resolved" == /private/tmp/* ]]; then
+      log_error "  /tmp リンク検出: $link -> $resolved"
+      bad=1
+    fi
+  done < <(find "$skill_dir" -type l 2>/dev/null)
+
+  return $bad
+}
+
 # スキルの同期
 sync_skills() {
   echo "=== スキル同期開始 ==="
@@ -77,6 +131,13 @@ sync_skills() {
 
       skill_name=$(basename "$skill_dir")
       skill_logged=0
+
+      if ! validate_skill_dir "$skill_dir"; then
+        echo "処理中: $skill_name"
+        log_error "  内部リンク異常のため同期をスキップ"
+        echo
+        continue
+      fi
 
       if [ -n "${seen_sources[$skill_name]:-}" ]; then
         log_warn "重複スキル名: $skill_name (${seen_sources[$skill_name]} と $(basename "$source_dir"))"

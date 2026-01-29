@@ -12,3 +12,8 @@ Thumbs.db
 # 一時ファイル
 *.tmp
 *.log
+
+# ui-ux-pro-max (keep repo slim; populate via mise task)
+skills/ui-ux-pro-max/data/
+skills/ui-ux-pro-max/scripts/
+skills/ui-ux-pro-max/templates/
