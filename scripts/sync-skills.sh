@@ -62,6 +62,15 @@ validate_skill_dir() {
     local target resolved
     target=$(readlink "$link" 2>/dev/null || true)
 
+    # 循環リンクを検出して削除（スキル名と同じ名前のリンクがスキル内にある場合）
+    local link_name=$(basename "$link")
+    local skill_name=$(basename "$skill_dir")
+    if [ "$link_name" = "$skill_name" ] && [[ "$target" == *"/.agents/skills-internal/$skill_name" ]]; then
+      log_warn "  循環リンク検出・削除: $link -> $target"
+      rm "$link"
+      continue
+    fi
+
     if [ ! -e "$link" ]; then
       # 自己参照系のリンクは許容（readlink -f がループで失敗するため）
       if [[ "$target" == *"/.agents/skills/"* ]]; then
