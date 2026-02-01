@@ -132,34 +132,38 @@ similarity-ts --print src/
 // Before: 重複コード（類似度98%）
 // File: src/services/user-service.ts
 export async function getUserById(id: string) {
-  const user = await prisma.user.findUnique({ where: { id } })
-  if (!user) throw new Error('User not found')
-  return user
+  const user = await prisma.user.findUnique({ where: { id } });
+  if (!user) throw new Error("User not found");
+  return user;
 }
 
 // File: src/services/admin-service.ts
 export async function getAdminById(id: string) {
-  const admin = await prisma.admin.findUnique({ where: { id } })
-  if (!admin) throw new Error('Admin not found')
-  return admin
+  const admin = await prisma.admin.findUnique({ where: { id } });
+  if (!admin) throw new Error("Admin not found");
+  return admin;
 }
 
 // After: 共通化
 // File: src/lib/repository-utils.ts
-export async function findByIdOrThrow<T>(model: any, id: string, resourceName: string): Promise<T> {
-  const record = await model.findUnique({ where: { id } })
-  if (!record) throw new Error(`${resourceName} not found`)
-  return record
+export async function findByIdOrThrow<T>(
+  model: any,
+  id: string,
+  resourceName: string,
+): Promise<T> {
+  const record = await model.findUnique({ where: { id } });
+  if (!record) throw new Error(`${resourceName} not found`);
+  return record;
 }
 
 // File: src/services/user-service.ts
 export async function getUserById(id: string) {
-  return findByIdOrThrow(prisma.user, id, 'User')
+  return findByIdOrThrow(prisma.user, id, "User");
 }
 
 // File: src/services/admin-service.ts
 export async function getAdminById(id: string) {
-  return findByIdOrThrow(prisma.admin, id, 'Admin')
+  return findByIdOrThrow(prisma.admin, id, "Admin");
 }
 ```
 
@@ -376,14 +380,14 @@ pnpm report:similarity  # reports/similarity-report.md に出力
 
 // ユーザー作成
 async function createUser(data: UserInput) {
-  const validated = validateUserInput(data)
-  return await prisma.user.create({ data: validated })
+  const validated = validateUserInput(data);
+  return await prisma.user.create({ data: validated });
 }
 
 // 管理者作成（追加の権限チェックが必要）
 async function createAdmin(data: AdminInput) {
-  const validated = validateAdminInput(data)
-  return await prisma.admin.create({ data: validated })
+  const validated = validateAdminInput(data);
+  return await prisma.admin.create({ data: validated });
 }
 ```
 

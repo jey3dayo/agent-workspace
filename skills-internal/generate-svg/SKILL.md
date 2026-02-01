@@ -112,7 +112,7 @@ allowed-tools: Read, Write, Bash
 
 ### Material Icons 使用
 
-- **アイコンソース**: https://fonts.google.com/icons
+- **アイコンソース**: <https://fonts.google.com/icons>
 - **形式**: SVG埋め込み
 - **サイズ**: 24px, 32px, 48px (用途に応じて)
 - **スタイル**: Outlined, Filled, Rounded から選択
@@ -368,7 +368,7 @@ Material Iconsを使用する場合は、SVGパスとして埋め込んでくだ
 
 ### アイコン取得方法
 
-1. https://fonts.google.com/icons にアクセス
+1. <https://fonts.google.com/icons> にアクセス
 2. 使用したいアイコンを選択
 3. "SVG" タブから `<path>` 要素をコピー
 4. 図解のSVG内に埋め込む
@@ -394,5 +394,5 @@ Material Iconsを使用する場合は、SVGパスとして埋め込んでくだ
 詳細な設計情報は以下を参照：
 
 - `docs/research/blog-diagram-design-patterns.md`: デザインパターン研究
-- Material Icons: https://fonts.google.com/icons
-- WCAG Guidelines: https://www.w3.org/WAI/WCAG21/quickref/
+- Material Icons: <https://fonts.google.com/icons>
+- WCAG Guidelines: <https://www.w3.org/WAI/WCAG21/quickref/>

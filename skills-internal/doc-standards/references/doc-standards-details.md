@@ -8,8 +8,8 @@ Projects should create `.claude/doc-standards/config.yaml` with at minimum:
 
 ```yaml
 project:
-  name: 'my-project'
-  language: 'en' # or "ja", "es", etc.
+  name: "my-project"
+  language: "en" # or "ja", "es", etc.
 
 metadata:
   required_fields:
@@ -24,7 +24,7 @@ tags:
   min_required:
     - category/
     - audience/
-  reference_file: 'references/tag-taxonomy.md' # or "../skills/doc-standards/references/tag-taxonomy.md"
+  reference_file: "references/tag-taxonomy.md" # or "../skills/doc-standards/references/tag-taxonomy.md"
 
 size:
   recommended: 500
@@ -344,7 +344,7 @@ Response language is determined by project configuration:
 
    ```yaml
    response:
-     language: 'ja' # or "en", "es", etc.
+     language: "ja" # or "en", "es", etc.
    ```
 
 2. **Use configured language**:

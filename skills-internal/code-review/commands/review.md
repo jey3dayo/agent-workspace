@@ -1,6 +1,6 @@
 ---
 description: Comprehensive code review with project-specific optimization
-argument-hint: '[--simple] [--staged|--recent|--branch <name>] [--with-impact] [--fix] [--fix-pr [pr-number]]'
+argument-hint: "[--simple] [--staged|--recent|--branch <name>] [--with-impact] [--fix] [--fix-pr [pr-number]]"
 ---
 
 # Review - 統合コードレビューコマンド
@@ -355,7 +355,7 @@ git commit -m "Pre-review checkpoint" || echo "No changes to commit"
 **推奨パターン**:
 
 ```typescript
-type Result<T, E> = { success: true; data: T } | { success: false; error: E }
+type Result<T, E> = { success: true; data: T } | { success: false; error: E };
 ```
 
 #### 6. アーキテクチャ (Architecture)
@@ -404,7 +404,7 @@ TypeScript固有の詳細な観点については、以下を参照してくだ�
 
 ```typescript
 // 推奨: Result<T, E>パターン
-type Result<T, E> = { success: true; data: T } | { success: false; error: E }
+type Result<T, E> = { success: true; data: T } | { success: false; error: E };
 
 function fetchUser(id: string): Result<User, FetchError> {
   // 実装...

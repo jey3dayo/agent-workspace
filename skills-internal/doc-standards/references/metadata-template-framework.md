@@ -84,7 +84,7 @@ All documentation should include metadata in this format (field labels configura
 ```yaml
 metadata:
   formats:
-    date: 'YYYY-MM-DD' # or "MM/DD/YYYY", "DD.MM.YYYY", etc.
+    date: "YYYY-MM-DD" # or "MM/DD/YYYY", "DD.MM.YYYY", etc.
   freshness:
     warning_days: 180 # Flag docs older than N days
 ```
@@ -315,8 +315,8 @@ metadata:
     - tags # Or project-specific label
 
   formats:
-    date: 'YYYY-MM-DD'
-    tags: 'backtick-wrapped, comma-separated'
+    date: "YYYY-MM-DD"
+    tags: "backtick-wrapped, comma-separated"
 
   freshness:
     warning_days: 180 # Days before stale warning

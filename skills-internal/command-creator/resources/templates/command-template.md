@@ -1,6 +1,6 @@
 ---
 description: [コマンドの明確で簡潔な説明（20-100文字）]
-argument-hint: '[required-arg] [--optional-flag]'
+argument-hint: "[required-arg] [--optional-flag]"
 ---
 
 # コマンド名

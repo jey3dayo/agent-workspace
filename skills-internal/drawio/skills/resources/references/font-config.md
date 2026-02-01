@@ -475,7 +475,7 @@ style="fontFamily=Helvetica;"
 #### 5. Calculate Correct Width for Japanese Text
 
 ```javascript
-width = charCount * 35 + 10 // 30-40px per char + margin
+width = charCount * 35 + 10; // 30-40px per char + margin
 ```
 
 #### 6. Verify fontFamily in All Text Elements

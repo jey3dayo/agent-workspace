@@ -28,8 +28,8 @@
 
 ```typescript
 // Example import patterns
-import { Something } from '@/path' // Absolute
-import { Local } from './local' // Relative
+import { Something } from "@/path"; // Absolute
+import { Local } from "./local"; // Relative
 ```
 
 **Path Aliases**:

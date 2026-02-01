@@ -43,14 +43,14 @@ TypeScriptコードで **`any` 型の使用を禁止** します。
 ```typescript
 // 明示的な型定義
 interface User {
-  id: string
-  name: string
-  email: string
+  id: string;
+  name: string;
+  email: string;
 }
 
 function processUser(user: User): Result<ProcessedUser, Error> {
   // 型安全な処理
-  return ok(transformUser(user))
+  return ok(transformUser(user));
 }
 
 // ジェネリクスで型安全性を保持
@@ -66,7 +66,7 @@ any 型の使用：
 ```typescript
 // any型の使用（禁止）
 function processData(data: any): any {
-  return data.something // 型チェックなし
+  return data.something; // 型チェックなし
 }
 
 // 暗黙的なany（禁止）
@@ -75,7 +75,7 @@ function handleEvent(event) {
 }
 
 // 型アサーションの乱用（禁止）
-const data = response as any
+const data = response as any;
 ```
 
 ## 例外
@@ -86,20 +86,22 @@ const data = response as any
 // unknown型を使用し、型ガードで安全化
 function parseJSON(json: string): Result<unknown, Error> {
   try {
-    const data: unknown = JSON.parse(json)
+    const data: unknown = JSON.parse(json);
     // 型ガードで検証
     if (isValidData(data)) {
-      return ok(data)
+      return ok(data);
     }
-    return err(new Error('Invalid data'))
+    return err(new Error("Invalid data"));
   } catch (e) {
-    return err(e as Error)
+    return err(e as Error);
   }
 }
 
 function isValidData(data: unknown): data is DataType {
   // 型ガードで検証
-  return typeof data === 'object' && data !== null && 'id' in data && 'name' in data
+  return (
+    typeof data === "object" && data !== null && "id" in data && "name" in data
+  );
 }
 ```
 

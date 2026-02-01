@@ -1,7 +1,7 @@
 ---
 name: agent-name
 description: エージェントの専門領域と使用タイミングの明確な説明
-tools: ['*'] # または ["Read", "Grep", "Bash"]
+tools: ["*"] # または ["Read", "Grep", "Bash"]
 color: blue
 model: claude-sonnet-4-5
 ---

@@ -26,7 +26,11 @@
   "mcpServers": {
     "filesystem": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/allowed/directory"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/path/to/allowed/directory"
+      ]
     }
   }
 }
@@ -166,11 +170,17 @@ export OPENAI_API_KEY="sk-xxxxxxxxxxxx"
   "mcpServers": {
     "mysql": {
       "command": "sh",
-      "args": ["-c", "MYSQL_PASSWORD=$MYSQL_ROOT_PASSWORD node /path/to/mysql-server.js"]
+      "args": [
+        "-c",
+        "MYSQL_PASSWORD=$MYSQL_ROOT_PASSWORD node /path/to/mysql-server.js"
+      ]
     },
     "github": {
       "command": "sh",
-      "args": ["-c", "GITHUB_PERSONAL_ACCESS_TOKEN=$GITHUB_TOKEN npx -y @github/github-mcp-server"]
+      "args": [
+        "-c",
+        "GITHUB_PERSONAL_ACCESS_TOKEN=$GITHUB_TOKEN npx -y @github/github-mcp-server"
+      ]
     }
   }
 }
@@ -225,11 +235,18 @@ security add-generic-password -a $USER -s mysql_password -w "melody"
     },
     "filesystem": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/username/projects"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/username/projects"
+      ]
     },
     "github": {
       "command": "sh",
-      "args": ["-c", "GITHUB_PERSONAL_ACCESS_TOKEN=$GITHUB_TOKEN npx -y @github/github-mcp-server"]
+      "args": [
+        "-c",
+        "GITHUB_PERSONAL_ACCESS_TOKEN=$GITHUB_TOKEN npx -y @github/github-mcp-server"
+      ]
     },
     "postgres": {
       "command": "sh",

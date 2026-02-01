@@ -139,7 +139,7 @@ Tags MUST be formatted per project config (default: comma-separated, backtick-wr
 ```yaml
 metadata:
   formats:
-    tags: 'backtick-wrapped, comma-separated' # Default
+    tags: "backtick-wrapped, comma-separated" # Default
     # Or: "square-bracket-wrapped, space-separated"
 ```
 
@@ -328,7 +328,7 @@ tags:
 
   max_recommended: 5 # Warn if exceeding this count
 
-  reference_file: 'references/tag-taxonomy.md' # Path to project taxonomy
+  reference_file: "references/tag-taxonomy.md" # Path to project taxonomy
 ```
 
 ---

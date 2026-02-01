@@ -19,21 +19,27 @@ Fetch latest react-grid-layout documentation:
 ```typescript
 // Basic API and configuration
 context7.query(
-  '/react-grid-layout/react-grid-layout',
-  'basic usage layout structure cols width rowHeight'
-)
+  "/react-grid-layout/react-grid-layout",
+  "basic usage layout structure cols width rowHeight",
+);
 
 // TypeScript integration
-context7.query('/react-grid-layout/react-grid-layout', 'TypeScript types GridConfig Layout')
+context7.query(
+  "/react-grid-layout/react-grid-layout",
+  "TypeScript types GridConfig Layout",
+);
 
 // Next.js SSR handling
 context7.query(
-  '/react-grid-layout/react-grid-layout',
-  'Next.js SSR dynamic import useContainerWidth'
-)
+  "/react-grid-layout/react-grid-layout",
+  "Next.js SSR dynamic import useContainerWidth",
+);
 
 // Responsive and hooks
-context7.query('/react-grid-layout/react-grid-layout', 'useContainerWidth responsive grid hooks')
+context7.query(
+  "/react-grid-layout/react-grid-layout",
+  "useContainerWidth responsive grid hooks",
+);
 ```
 
 ## ASTA-Specific Patterns
@@ -58,11 +64,11 @@ ASTA-specific dynamic calculation pattern:
 
 ```typescript
 // Calculate required columns from layout
-const pointsX = layout.map(({ x, w }) => x + w)
-const cols = Math.max(...pointsX) || 150
+const pointsX = layout.map(({ x, w }) => x + w);
+const cols = Math.max(...pointsX) || 150;
 
 // Calculate grid width
-const gridWidth = cols * rowHeight
+const gridWidth = cols * rowHeight;
 ```
 
 **Details**: See `references/02-cols-width-calculation.md` for:

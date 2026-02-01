@@ -286,10 +286,10 @@ endFill=0                   /* Open arrow */
 
 ```javascript
 // All values should be multiples of 10
-x = Math.round(x / 10) * 10
-y = Math.round(y / 10) * 10
-width = Math.round(width / 10) * 10
-height = Math.round(height / 10) * 10
+x = Math.round(x / 10) * 10;
+y = Math.round(y / 10) * 10;
+width = Math.round(width / 10) * 10;
+height = Math.round(height / 10) * 10;
 ```
 
 ### Width Calculation for Text
@@ -298,16 +298,16 @@ height = Math.round(height / 10) * 10
 
 ```javascript
 // 1文字あたり 30-40px
-const chars = text.length
-const width = chars * 35 + 10 // +10px margin
+const chars = text.length;
+const width = chars * 35 + 10; // +10px margin
 ```
 
 #### 英語テキスト
 
 ```javascript
 // 1文字あたり 8-10px
-const chars = text.length
-const width = chars * 9 + 10 // +10px margin
+const chars = text.length;
+const width = chars * 9 + 10; // +10px margin
 ```
 
 #### Example

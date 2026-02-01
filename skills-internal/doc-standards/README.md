@@ -141,8 +141,8 @@ Minimum required to get started:
 
 ```yaml
 project:
-  name: 'my-project'
-  language: 'en'
+  name: "my-project"
+  language: "en"
 
 metadata:
   required_fields:
@@ -157,7 +157,7 @@ tags:
   min_required:
     - category/
     - audience/
-  reference_file: 'references/tag-taxonomy.md'
+  reference_file: "references/tag-taxonomy.md"
 
 size:
   recommended: 500
@@ -258,9 +258,9 @@ Use your project's language:
 ```yaml
 metadata:
   required_fields:
-    - '最終更新' # Last Updated (Japanese)
-    - '対象' # Audience (Japanese)
-    - 'タグ' # Tags (Japanese)
+    - "最終更新" # Last Updated (Japanese)
+    - "対象" # Audience (Japanese)
+    - "タグ" # Tags (Japanese)
 ```
 
 ### Response Language
@@ -269,8 +269,8 @@ Set project response language:
 
 ```yaml
 response:
-  language: 'ja' # Japanese
-  format: 'conversational'
+  language: "ja" # Japanese
+  format: "conversational"
 ```
 
 ---
@@ -283,8 +283,8 @@ Link to high-level project rules:
 
 ```yaml
 integration:
-  rules_file: '.claude/rules/documentation-rules.md'
-  docs_hub: 'docs/README.md'
+  rules_file: ".claude/rules/documentation-rules.md"
+  docs_hub: "docs/README.md"
 ```
 
 ### With Document Mapping
@@ -295,7 +295,7 @@ Enable document registry:
 quality:
   mapping:
     enabled: true
-    file: 'references/document-mapping.md'
+    file: "references/document-mapping.md"
 ```
 
 ### With CI/CD
@@ -323,12 +323,12 @@ Automate quality checks:
 
 ```yaml
 project:
-  name: 'MyApp'
-  language: 'en'
+  name: "MyApp"
+  language: "en"
 
 tags:
   tier_system: [category/, audience/, environment/]
-  reference_file: 'references/tag-taxonomy.md'
+  reference_file: "references/tag-taxonomy.md"
 
 size:
   recommended: 500
@@ -340,12 +340,12 @@ size:
 
 ```yaml
 project:
-  name: 'ASTA'
-  language: 'ja'
+  name: "ASTA"
+  language: "ja"
 
 metadata:
   formats:
-    date: 'YYYY-MM-DD'
+    date: "YYYY-MM-DD"
   freshness:
     warning_days: 180
 
@@ -356,16 +356,16 @@ quality:
     validate: true
 
 response:
-  language: 'ja'
-  format: 'conversational'
+  language: "ja"
+  format: "conversational"
 ```
 
 ### Example 3: Open Source Project
 
 ```yaml
 project:
-  name: 'OpenProject'
-  language: 'en'
+  name: "OpenProject"
+  language: "en"
 
 tags:
   max_recommended: 3 # Simpler tagging
@@ -379,7 +379,7 @@ quality:
   links:
     validate: true
     update_readme: true
-    readme_path: 'README.md'
+    readme_path: "README.md"
 ```
 
 ---
@@ -429,7 +429,7 @@ cat .claude/doc-standards/references/tag-taxonomy.md
 ```yaml
 # Add to config.yaml
 response:
-  language: 'ja'
+  language: "ja"
 ```
 
 ---
