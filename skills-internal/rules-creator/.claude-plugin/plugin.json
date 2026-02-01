@@ -1,0 +1,9 @@
+{
+  "name": "rules-creator",
+  "version": "1.0.0",
+  "description": "ルール・steering・hookifyの作成ガイド。4種類のルールタイプの使い分け",
+  "author": {
+    "name": "jey3dayo"
+  },
+  "skills": ["./SKILL.md"]
+}
