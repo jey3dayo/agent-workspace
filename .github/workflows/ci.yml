@@ -6,17 +6,17 @@ on:
       - "**/*.md"
       - "**/*.sh"
       - "**/*.json"
-      - "mise.toml"
-      - ".markdown-link-check.json"
-      - ".github/workflows/ci.yml"
+      - "**/*.yml"
+      - "**/*.yaml"
+      - "**/*.toml"
   pull_request:
     paths:
       - "**/*.md"
       - "**/*.sh"
       - "**/*.json"
-      - "mise.toml"
-      - ".markdown-link-check.json"
-      - ".github/workflows/ci.yml"
+      - "**/*.yml"
+      - "**/*.yaml"
+      - "**/*.toml"
   workflow_dispatch:
 
 jobs:
