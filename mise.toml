@@ -32,11 +32,14 @@ run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X markdown-link-check --ver
 
 [tasks."docs:format"]
 description = "Prettierでフォーマット"
-run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X prettier --write --cache --log-level warn"
+run = "fd -e md --type f --no-follow ${MD_EXCLUDES} | xargs prettier --write --log-level warn"
 
 [tasks."docs:format:check"]
 description = "Prettierフォーマットチェック"
-run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X prettier --check --cache"
+run = '''
+files=$(fd -e md --type f --no-follow ${MD_EXCLUDES})
+echo "$files" | xargs prettier --check
+'''
 
 # === エイリアス ===
 [tasks.format]
