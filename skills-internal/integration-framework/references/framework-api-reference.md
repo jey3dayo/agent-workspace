@@ -50,7 +50,9 @@ interface TaskRequest {
 
 **説明**: 新しいTaskContextを作成します。
 
-**戻り値**: 生成されたTaskContext
+#### 戻り値
+
+生成されたTaskContext
 
 **例**:
 
@@ -82,7 +84,9 @@ interface ProjectContext {
 
 - `root`: プロジェクトルートディレクトリ
 
-**戻り値**: ProjectContext
+#### 戻り値
+
+ProjectContext
 
 **例**:
 
@@ -110,7 +114,9 @@ type EnhancedTaskContext = TaskContext & {
 - `context`: ベースとなるTaskContext
 - `agentType`: エージェント名
 
-**戻り値**: 強化されたTaskContext
+#### 戻り値
+
+強化されたTaskContext
 
 **例**:
 
@@ -134,7 +140,9 @@ createChildContext(
 - `parent`: 親TaskContext
 - `request`: 子タスクのリクエスト
 
-**戻り値**: 子TaskContext
+#### 戻り値
+
+子TaskContext
 
 **例**:
 
@@ -188,7 +196,9 @@ getSharedData(
 - `fromId`: 送信元タスクID
 - `toId`: 受信側タスクID
 
-**戻り値**: 共有データ（存在しない場合はnull）
+#### 戻り値
+
+共有データ（存在しない場合はnull）
 
 **例**:
 
@@ -217,7 +227,9 @@ enum ProjectType {
 
 **説明**: プロジェクトタイプを自動検出します。
 
-**戻り値**: ProjectType
+#### 戻り値
+
+ProjectType
 
 #### detectTechStack
 
@@ -233,7 +245,9 @@ interface TechStack {
 
 **説明**: 使用されている技術スタックを検出します。
 
-**戻り値**: TechStack配列
+#### 戻り値
+
+TechStack配列
 
 #### getGitStatus
 
@@ -254,7 +268,9 @@ interface GitStatus {
 
 **説明**: Git状態を取得します。
 
-**戻り値**: GitStatus
+#### 戻り値
+
+GitStatus
 
 #### getEnvironmentInfo
 
@@ -274,7 +290,9 @@ interface EnvironmentInfo {
 
 **説明**: 環境情報を取得します。
 
-**戻り値**: EnvironmentInfo
+#### 戻り値
+
+EnvironmentInfo
 
 #### analyzeIntent
 
@@ -291,7 +309,9 @@ interface Intent {
 
 **説明**: 自然言語リクエストから意図を分析します。
 
-**戻り値**: Intent
+#### 戻り値
+
+Intent
 
 ---
 
@@ -361,7 +381,9 @@ type Unsubscribe = () => void;
 - `eventType`: イベントタイプ（ワイルドカード対応: "task.\*"）
 - `handler`: イベントハンドラー関数
 
-**戻り値**: 購読解除関数
+#### 戻り値
+
+購読解除関数
 
 **例**:
 
@@ -408,7 +430,9 @@ interface Response {
 - `message`: メッセージ
 - `timeout`: タイムアウト（ミリ秒、デフォルト: 30000）
 
-**戻り値**: Promise<Response>
+#### 戻り値
+
+`Promise<Response>`
 
 **例**:
 
@@ -488,7 +512,9 @@ interface WorkflowResult {
 - `workflow`: ワークフロー定義
 - `context`: TaskContext
 
-**戻り値**: Promise<WorkflowResult>
+#### 戻り値
+
+`Promise<WorkflowResult>`
 
 **例**:
 
@@ -538,7 +564,9 @@ interface BusMetrics {
 
 **説明**: Communication Busのメトリクスを取得します。
 
-**戻り値**: BusMetrics
+#### 戻り値
+
+BusMetrics
 
 **例**:
 
@@ -611,7 +639,9 @@ class FrameworkError extends Error {
 
 **説明**: 標準化されたエラーを作成します。
 
-**戻り値**: FrameworkError
+#### 戻り値
+
+FrameworkError
 
 **例**:
 
@@ -650,7 +680,9 @@ interface ErrorHandlingResult {
 - `error`: エラーオブジェクト
 - `context`: TaskContext
 
-**戻り値**: Promise<ErrorHandlingResult>
+#### 戻り値
+
+`Promise<ErrorHandlingResult>`
 
 **例**:
 
@@ -690,7 +722,9 @@ interface RecoveryResult {
 - `context`: TaskContext
 - `maxAttempts`: 最大試行回数（デフォルト: 3）
 
-**戻り値**: Promise<RecoveryResult>
+#### 戻り値
+
+`Promise<RecoveryResult>`
 
 **例**:
 
@@ -716,7 +750,9 @@ interface ErrorStatistics {
 
 **説明**: エラー統計を取得します。
 
-**戻り値**: ErrorStatistics
+#### 戻り値
+
+ErrorStatistics
 
 **例**:
 
@@ -747,7 +783,9 @@ interface ErrorReport {
 
 **説明**: 詳細なエラーレポートを作成します。
 
-**戻り値**: ErrorReport
+#### 戻り値
+
+ErrorReport
 
 **例**:
 
@@ -807,7 +845,9 @@ interface QualityMetrics {
 
 - `request`: TaskRequest
 
-**戻り値**: Promise<TaskResult>
+#### 戻り値
+
+`Promise<TaskResult>`
 
 **例**:
 
@@ -835,7 +875,9 @@ executeWorkflow(
 - `workflow`: ワークフロー定義
 - `context`: TaskContext
 
-**戻り値**: Promise<WorkflowResult>
+#### 戻り値
+
+`Promise<WorkflowResult>`
 
 **例**:
 
@@ -863,7 +905,9 @@ interface SystemStatus {
 
 **説明**: システムステータスを取得します。
 
-**戻り値**: SystemStatus
+#### 戻り値
+
+SystemStatus
 
 **例**:
 
@@ -886,7 +930,9 @@ interface PerformanceAnalytics {
 
 **説明**: パフォーマンス分析を取得します。
 
-**戻り値**: PerformanceAnalytics
+#### 戻り値
+
+PerformanceAnalytics
 
 **例**:
 
@@ -980,7 +1026,9 @@ selectAgent(
 
 **説明**: TaskContextに基づいて最適なエージェントを選択します。
 
-**戻り値**: エージェント名
+#### 戻り値
+
+エージェント名
 
 **例**:
 
@@ -998,7 +1046,9 @@ getCapabilities(
 
 **説明**: エージェントの能力を取得します。
 
-**戻り値**: 能力の配列
+#### 戻り値
+
+能力の配列
 
 **例**:
 
@@ -1081,7 +1131,9 @@ getCommands(): string[]
 
 **説明**: 登録されているすべてのコマンド名を取得します。
 
-**戻り値**: コマンド名の配列
+#### 戻り値
+
+コマンド名の配列
 
 **例**:
 
@@ -1114,7 +1166,9 @@ interface RoutingDecision {
 
 **説明**: タスクのルーティングを決定します。
 
-**戻り値**: Promise<RoutingDecision>
+#### 戻り値
+
+`Promise<RoutingDecision>`
 
 **例**:
 
@@ -1132,7 +1186,9 @@ analyzeIntent(
 
 **説明**: 自然言語リクエストから意図を分析します。
 
-**戻り値**: Intent
+#### 戻り値
+
+Intent
 
 **例**:
 
@@ -1157,7 +1213,9 @@ interface AgentMatch {
 
 **説明**: 意図とエージェント能力をマッチングします。
 
-**戻り値**: AgentMatch配列
+#### 戻り値
+
+AgentMatch配列
 
 **例**:
 
@@ -1177,7 +1235,9 @@ getOrchestrator(): IntegrationOrchestrator
 
 **説明**: グローバルOrchestratorインスタンスを取得します。
 
-**戻り値**: IntegrationOrchestrator
+#### 戻り値
+
+IntegrationOrchestrator
 
 **例**:
 
