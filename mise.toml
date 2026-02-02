@@ -2,7 +2,6 @@
 
 [env]
 _.path = ['./node_modules/.bin']
-MD_EXCLUDES = "--exclude node_modules --exclude tmux/plugins --exclude fisher --exclude 'zsh/.zinit' --exclude plans --exclude 'plugins/cache' --exclude 'plugins/marketplaces' --exclude projects --exclude skills"
 MARKDOWN_LINK_CONFIG = ".markdown-link-check.json"
 
 [tools]
@@ -16,27 +15,27 @@ fd = 'latest'                        # ファイル検索用
 # === ドキュメント管理 ===
 [tasks."docs:lint"]
 description = "Markdownファイルのlintチェック"
-run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X markdownlint-cli2"
+run = "fd -e md --type f --no-follow -X markdownlint-cli2"
 
 [tasks."docs:fix"]
 description = "Markdownファイルの自動修正"
-run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X markdownlint-cli2 --fix"
+run = "fd -e md --type f --no-follow -X markdownlint-cli2 --fix"
 
 [tasks."docs:links"]
 description = "Markdownリンクチェック"
-run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X markdown-link-check --quiet --config ${MARKDOWN_LINK_CONFIG}"
+run = "fd -e md --type f --no-follow -X markdown-link-check --quiet --config ${MARKDOWN_LINK_CONFIG}"
 
 [tasks."docs:links:verbose"]
 description = "Markdownリンクチェック（詳細モード）"
-run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X markdown-link-check --verbose --config ${MARKDOWN_LINK_CONFIG}"
+run = "fd -e md --type f --no-follow -X markdown-link-check --verbose --config ${MARKDOWN_LINK_CONFIG}"
 
 [tasks."docs:format"]
 description = "Prettierでフォーマット"
-run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X prettier --write --log-level warn"
+run = "fd -e md --type f --no-follow -X prettier --write --log-level warn"
 
 [tasks."docs:format:check"]
 description = "Prettierフォーマットチェック"
-run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X prettier --check"
+run = "fd -e md --type f --no-follow -X prettier --check"
 
 # === エイリアス ===
 [tasks.format]

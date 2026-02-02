@@ -1,0 +1,10 @@
+# fd exclude patterns (replaces MD_EXCLUDES in mise.toml)
+node_modules
+tmux/plugins
+fisher
+zsh/.zinit
+plans
+plugins/cache
+plugins/marketplaces
+projects
+skills
