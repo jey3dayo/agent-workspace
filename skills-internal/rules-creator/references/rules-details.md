@@ -37,11 +37,11 @@
 - AIが理解し従う
 - システムレベルの強制なし
 
-### 2. Settings Rules (.kiro/settings/rules/)
+### 2. Rules (.claude/rules/)
 
-**YAML フロントマター（推奨）:**
+**YAML フロントマター形式:**
 
-Settings Rules では、ルールを特定のファイルパターンに限定するために YAML frontmatter を使用できます。
+Rulesファイルでは、ルールを特定のファイルパターンに限定するためにYAMLフロントマターを使用します。
 
 ```yaml
 ---
@@ -59,26 +59,22 @@ paths: src/**/*.ts, tests/**/*.test.ts
   - `{a,b}` - ブレース展開で複数パターン（例：`{src,lib}/**/*.ts`）
   - カンマ区切り - 複数パターンの組み合わせ（例：`src/**/*.ts, tests/**/*.test.ts`）
 
-**使用例:**
+**基本構造:**
 
-```yaml
-# TypeScript 型安全性ルール
+```markdown
 ---
-paths: {src,lib}/**/*.ts, {src,lib}/**/*.tsx
----
-
-# テストルール
----
-paths: tests/**/*.test.ts, **/__tests__/**/*.ts
+paths: src/api/**/*.ts
 ---
 
-# アーキテクチャルール（ドメイン層のみ）
----
-paths: src/domain/**/*.ts
----
+# API開発ルール
+
+このルールには以下のような内容を書きます。
+
+- 全APIエンドポイントは入力検証必須
+- 標準エラーレスポンス形式を使用
 ```
 
-**構造:**
+**詳細構造（オプション）:**
 
 ```markdown
 ---
@@ -86,10 +82,6 @@ paths: src/**/*.ts, tests/**/*.test.ts
 ---
 
 # ルール名
-
-## 適用範囲（Paths）
-
-このルールは以下のファイルパターンに適用されます：...
 
 ## 制約
 
