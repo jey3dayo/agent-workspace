@@ -13,6 +13,12 @@
     "MD040": false,
     // First line as header - allow for more flexible document structure
     "MD041": false,
+    // Emphasis used instead of a heading - disallow punctuation exceptions
+    "MD036": {
+      "punctuation": ""
+    },
+    // Trailing punctuation in headings - allow (many headings include ':' or '?')
+    "MD026": false,
     // Table column style - allow any style (aligned, compact, padded)
     "MD060": false,
   },

@@ -4,7 +4,7 @@
 
 ### 1. Guidelines (CLAUDE.md)
 
-**構造:**
+### 構造:
 
 ```markdown
 # 開発協働ガイド
@@ -31,7 +31,7 @@
 4. 品質保証
 ```
 
-**特徴:**
+### 特徴:
 
 - 暗黙的な強制
 - AIが理解し従う
@@ -39,7 +39,7 @@
 
 ### 2. Rules (.claude/rules/)
 
-**YAML フロントマター形式:**
+### YAML フロントマター形式:
 
 Rulesファイルでは、ルールを特定のファイルパターンに限定するためにYAMLフロントマターを使用します。
 
@@ -49,7 +49,7 @@ paths: src/**/*.ts, tests/**/*.test.ts
 ---
 ```
 
-**paths フィールド:**
+### paths フィールド:
 
 - **目的**: ルールが適用されるファイルパターンを指定
 - **省略時**: ルールは全ファイルに無条件適用
@@ -59,7 +59,7 @@ paths: src/**/*.ts, tests/**/*.test.ts
   - `{a,b}` - ブレース展開で複数パターン（例：`{src,lib}/**/*.ts`）
   - カンマ区切り - 複数パターンの組み合わせ（例：`src/**/*.ts, tests/**/*.test.ts`）
 
-**基本構造:**
+### 基本構造:
 
 ```markdown
 ---
@@ -74,7 +74,7 @@ paths: src/api/**/*.ts
 - 標準エラーレスポンス形式を使用
 ```
 
-**詳細構造（オプション）:**
+### 詳細構造（オプション）:
 
 ```markdown
 ---
@@ -114,7 +114,7 @@ paths: src/**/*.ts, tests/**/*.test.ts
 - [ ] CI/CDチェック
 ```
 
-**例（型安全性ルール）:**
+### 例（型安全性ルール）:
 
 ```markdown
 # 型安全性: any型禁止
@@ -153,13 +153,13 @@ function process(data: any): any {
 
 ### 3. Steering Documents (.kiro/steering/)
 
-**標準ファイル:**
+### 標準ファイル:
 
 - `product.md` - プロダクトビジョン、機能、ビジネスコンテキスト
 - `tech.md` - 技術スタック、アーキテクチャ決定、パターン
 - `structure.md` - プロジェクトレイアウト、モジュール構成、命名規則
 
-**構造:**
+### 構造:
 
 ```markdown
 # [コンテキスト領域] Steering
@@ -197,7 +197,7 @@ function process(data: any): any {
 - 例: [ファイルパス]
 ```
 
-**例（技術Steering）:**
+### 例（技術Steering）:
 
 ```markdown
 # 技術Steering
@@ -228,7 +228,7 @@ Next.js 15アプリケーション、レイヤードアーキテクチャ、Resu
 
 ### 4. Hookify Rules (.claude/hookify.\*.local.md)
 
-**構造:**
+### 構造:
 
 ```yaml
 ---
@@ -253,7 +253,7 @@ message: ユーザーへのメッセージ
 [アクションが失敗したら何が起こるか]
 ```
 
-**例（Pre-Commit品質ゲート）:**
+### 例（Pre-Commit品質ゲート）:
 
 ```yaml
 ---
@@ -282,7 +282,7 @@ git commitコマンド実行前
 - 修正を提案
 ```
 
-**例（危険なコマンドの警告）:**
+### 例（危険なコマンドの警告）:
 
 ```yaml
 ---
@@ -308,11 +308,11 @@ message: "⚠️  Warning: Destructive command detected. Are you sure?"
 
 ### 1. 明確さと具体性
 
-**良い例:**
+### 良い例:
 
 > "すべての公開APIエンドポイントはZodスキーマを使用して入力を検証しなければならない"
 
-**悪い例:**
+### 悪い例:
 
 > "入力を適切に検証する"
 
@@ -373,19 +373,19 @@ message: "⚠️  Warning: Destructive command detected. Are you sure?"
 
 ### AIがルールをどう使用するか
 
-**Settings Rules:**
+### Settings Rules:
 
 1. 分析と実装中に読み込まれる
 2. 違反は警告またはアクションをブロック
 3. コードレビューフィードバックで参照される
 
-**Steering:**
+### Steering:
 
 1. セッション開始時に永続的メモリとして読み込まれる
 2. 明示的な言及なしに意思決定を伝える
 3. コンテキストを提供
 
-**Hookify:**
+### Hookify:
 
 1. イベントによって自動的にトリガー
 2. AIの関与なしに実行
