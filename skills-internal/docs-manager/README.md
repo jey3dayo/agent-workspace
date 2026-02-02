@@ -415,19 +415,24 @@ jobs:
 
 ## FAQ
 
-**Q: Do I need a configuration file?**
+### Q: Do I need a configuration file?
+
 A: No, docs-manager works without configuration using generic defaults. Configuration is optional but recommended for customization.
 
-**Q: Can I use multiple project types?**
+### Q: Can I use multiple project types?
+
 A: No, one project type per configuration. Use `custom` type for mixed requirements.
 
-**Q: How do I migrate existing documentation?**
+### Q: How do I migrate existing documentation?
+
 A: Start with configuration matching current structure, then gradually enhance. See [Metadata Standards](references/metadata-standards.md#migration-guide).
 
-**Q: What if my project doesn't fit any built-in type?**
+### Q: What if my project doesn't fit any built-in type?
+
 A: Use `custom` project type and define your own rules.
 
-**Q: Can I override specific rules?**
+### Q: Can I override specific rules?
+
 A: Yes, all rules are configurable. See template for complete options.
 
 ## Contributing

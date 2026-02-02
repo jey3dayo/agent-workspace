@@ -14,7 +14,7 @@ paths: {src,lib}/**/*.ts, {src,lib}/**/*.tsx
 
 TypeScriptソースコードとReactコンポーネントファイルが対象です。
 
-**Pathsパターン構文：**
+### Pathsパターン構文：
 
 - `{src,lib}/**/*.ts` - src と lib ディレクトリ配下の全 TypeScript ファイル
 - `{src,lib}/**/*.tsx` - src と lib ディレクトリ配下の全 React TypeScript ファイル
@@ -27,7 +27,7 @@ TypeScriptコードで **`any` 型の使用を禁止** します。
 
 ## 根拠
 
-**技術的正当性:**
+### 技術的正当性:
 
 - 型安全性を維持し、コンパイル時に型エラーを検出
 - 実行時エラーを防ぎ、コードの信頼性を向上
@@ -114,7 +114,7 @@ function isValidData(data: unknown): data is DataType {
 - [x] CI/CDチェック: 型チェックが失敗すればビルドブロック
 - [x] Pre-commitフック: コミット前に型チェック実行
 
-**ESLint設定例:**
+### ESLint設定例:
 
 ```json
 {
@@ -127,7 +127,7 @@ function isValidData(data: unknown): data is DataType {
 }
 ```
 
-**tsconfig.json設定例:**
+### tsconfig.json設定例:
 
 ```json
 {
@@ -152,7 +152,7 @@ function isValidData(data: unknown): data is DataType {
 
 ---
 
-**この例について:**
+### この例について:
 
 このファイルは、Settings Rules における paths フィールドの実用例です：
 

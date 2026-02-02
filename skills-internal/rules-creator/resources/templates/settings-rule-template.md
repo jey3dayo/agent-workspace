@@ -12,7 +12,7 @@ paths: src/**/*.ts, tests/**/*.test.ts
 paths: src/**/*.ts, tests/**/*.test.ts
 ```
 
-**Pathsパターン構文：**
+### Pathsパターン構文：
 
 - `**` - 任意の深さのディレクトリ（例：`src/**/*.ts` は src 配下の全 TypeScript ファイル）
 - `*` - 任意のファイル名（例：`*.md` はプロジェクトルートの全マークダウンファイル）
