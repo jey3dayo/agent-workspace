@@ -8,10 +8,10 @@ MARKDOWN_LINK_CONFIG = ".markdown-link-check.json"
 [tools]
 node = '24'                          # Node 24 系に固定
 fd = 'latest'                        # ファイル検索用
-prettier = 'latest'                  # コードフォーマッター
-"npm:markdownlint-cli2" = "latest"
-"npm:markdown-link-check" = "latest"
-"npm:skills" = "latest"
+"npm:prettier" = 'latest'            # コードフォーマッター
+"npm:markdownlint-cli2" = "latest"   # Markdown lint
+"npm:markdown-link-check" = "latest" # Markdown リンクチェック
+"npm:skills" = "latest"              # スキル管理
 
 # === ドキュメント管理 ===
 [tasks."docs:lint"]
