@@ -343,16 +343,16 @@ Projects can configure quality standards in `.claude/doc-standards/config.yaml`:
 
 ```yaml
 quality:
-  checklist_file: 'references/quality-checklist-examples.md' # Project examples (optional)
+  checklist_file: "references/quality-checklist-examples.md" # Project examples (optional)
 
   mapping:
     enabled: true # Use document mapping
-    file: 'references/document-mapping.md' # Path to mapping file
+    file: "references/document-mapping.md" # Path to mapping file
 
   links:
     validate: true # Validate links
     update_readme: true # Auto-update README
-    readme_path: 'docs/README.md' # Path to navigation hub
+    readme_path: "docs/README.md" # Path to navigation hub
 
   freshness:
     operations_docs: 90 # Review operations docs every 90 days

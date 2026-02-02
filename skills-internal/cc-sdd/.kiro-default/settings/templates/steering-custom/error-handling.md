@@ -41,11 +41,11 @@ Example pattern:
 
 ```typescript
 try {
-  return await useCase()
+  return await useCase();
 } catch (e) {
-  if (e instanceof BusinessError) return respondMapped(e)
-  logError(e)
-  return respondInternal()
+  if (e instanceof BusinessError) return respondMapped(e);
+  logError(e);
+  return respondInternal();
 }
 ```
 

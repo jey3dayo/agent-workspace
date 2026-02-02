@@ -47,7 +47,7 @@ Pixel Width = (Grid Units × Row Height) + (Margins × (Grid Units - 1))
 ### 1. cols (Number of Columns)
 
 ```typescript
-cols: number // default: 12
+cols: number; // default: 12
 ```
 
 **Purpose:**
@@ -64,7 +64,7 @@ cols: number // default: 12
 ### 2. width (Container Width in Pixels)
 
 ```typescript
-width: number // Required for drag calculations
+width: number; // Required for drag calculations
 ```
 
 **Purpose:**
@@ -260,7 +260,7 @@ function DynamicGridLayout({ layout: inputLayout }: { layout: Layout[] }) {
 #### Step 1: Calculate Required Columns
 
 ```typescript
-const pointsX = layout.map(({ x, w }) => x + w)
+const pointsX = layout.map(({ x, w }) => x + w);
 ```
 
 **What this does:**
@@ -272,18 +272,18 @@ const pointsX = layout.map(({ x, w }) => x + w)
 
 ```typescript
 const layout = [
-  { i: 'a', x: 0, w: 4 }, // right edge: 0 + 4 = 4
-  { i: 'b', x: 4, w: 6 }, // right edge: 4 + 6 = 10
-  { i: 'c', x: 10, w: 2 }, // right edge: 10 + 2 = 12
-]
+  { i: "a", x: 0, w: 4 }, // right edge: 0 + 4 = 4
+  { i: "b", x: 4, w: 6 }, // right edge: 4 + 6 = 10
+  { i: "c", x: 10, w: 2 }, // right edge: 10 + 2 = 12
+];
 
-const pointsX = [4, 10, 12]
+const pointsX = [4, 10, 12];
 ```
 
 #### Step 2: Find Maximum Columns
 
 ```typescript
-const cols = pointsX.length > 0 ? Math.max(...pointsX) : 150
+const cols = pointsX.length > 0 ? Math.max(...pointsX) : 150;
 ```
 
 **What this does:**
@@ -295,23 +295,23 @@ const cols = pointsX.length > 0 ? Math.max(...pointsX) : 150
 **Example:**
 
 ```typescript
-const pointsX = [4, 10, 12]
-const cols = Math.max(...pointsX) // 12
+const pointsX = [4, 10, 12];
+const cols = Math.max(...pointsX); // 12
 ```
 
 **Why the fallback?**
 
 ```typescript
 // Prevents issues with empty grids
-const emptyLayout = []
-const pointsX = [] // No items
-const cols = 150 // Fallback ensures grid has width
+const emptyLayout = [];
+const pointsX = []; // No items
+const cols = 150; // Fallback ensures grid has width
 ```
 
 #### Step 3: Calculate Pixel Width
 
 ```typescript
-const gridWidth = cols * CALENDAR_ROW_HEIGHT
+const gridWidth = cols * CALENDAR_ROW_HEIGHT;
 ```
 
 **Simple proportional calculation:**
@@ -322,9 +322,9 @@ const gridWidth = cols * CALENDAR_ROW_HEIGHT
 **Example:**
 
 ```typescript
-const cols = 12
-const CALENDAR_ROW_HEIGHT = 24
-const gridWidth = 12 * 24 // 288 pixels
+const cols = 12;
+const CALENDAR_ROW_HEIGHT = 24;
+const gridWidth = 12 * 24; // 288 pixels
 ```
 
 ### Why This Pattern Works
@@ -355,10 +355,10 @@ const gridWidth = 12 * 24 // 288 pixels
 
 ```typescript
 // ❌ Bad: Cols doesn't match actual content
-const cols = 12
+const cols = 12;
 const layout = [
-  { i: 'item', x: 0, y: 0, w: 20, h: 2 }, // w exceeds cols!
-]
+  { i: "item", x: 0, y: 0, w: 20, h: 2 }, // w exceeds cols!
+];
 ```
 
 **Problem:** Item width (20) exceeds cols (12) → rendering issues
@@ -367,16 +367,16 @@ const layout = [
 
 ```typescript
 // ✅ Good: Calculate cols from layout
-const maxX = Math.max(...layout.map(({ x, w }) => x + w))
-const cols = Math.max(maxX, 12) // at least 12, more if needed
+const maxX = Math.max(...layout.map(({ x, w }) => x + w));
+const cols = Math.max(maxX, 12); // at least 12, more if needed
 ```
 
 ### Mistake 2: Zero or Negative cols
 
 ```typescript
 // ❌ Bad: Empty layout with no fallback
-const layout = []
-const cols = Math.max(...layout.map(({ x, w }) => x + w)) // -Infinity!
+const layout = [];
+const cols = Math.max(...layout.map(({ x, w }) => x + w)); // -Infinity!
 ```
 
 **Problem:** `Math.max()` on empty array returns `-Infinity`
@@ -385,7 +385,8 @@ const cols = Math.max(...layout.map(({ x, w }) => x + w)) // -Infinity!
 
 ```typescript
 // ✅ Good: Provide fallback
-const cols = layout.length > 0 ? Math.max(...layout.map(({ x, w }) => x + w)) : 12 // sensible default
+const cols =
+  layout.length > 0 ? Math.max(...layout.map(({ x, w }) => x + w)) : 12; // sensible default
 ```
 
 ### Mistake 3: Forgetting to Filter Invalid Layout Items
@@ -393,42 +394,44 @@ const cols = layout.length > 0 ? Math.max(...layout.map(({ x, w }) => x + w)) : 
 ```typescript
 // ❌ Bad: Null/undefined items cause errors
 const layout = [
-  { i: 'a', x: 0, y: 0, w: 4, h: 2 },
+  { i: "a", x: 0, y: 0, w: 4, h: 2 },
   null, // ← Problem!
-  { i: 'b', x: 4, y: 0, w: 4, h: 2 },
-]
+  { i: "b", x: 4, y: 0, w: 4, h: 2 },
+];
 
-const cols = Math.max(...layout.map(({ x, w }) => x + w)) // TypeError!
+const cols = Math.max(...layout.map(({ x, w }) => x + w)); // TypeError!
 ```
 
 **Solution:**
 
 ```typescript
 // ✅ Good: Filter out invalid items
-const validLayout = layout.filter(item => item !== null && item !== undefined)
-const cols = Math.max(...validLayout.map(({ x, w }) => x + w))
+const validLayout = layout.filter(
+  (item) => item !== null && item !== undefined,
+);
+const cols = Math.max(...validLayout.map(({ x, w }) => x + w));
 ```
 
 ### Mistake 4: Miscalculating Width with Margins
 
 ```typescript
 // ❌ Bad: Forgetting margins affect actual width
-const gridWidth = cols * rowHeight // Doesn't account for margins!
+const gridWidth = cols * rowHeight; // Doesn't account for margins!
 ```
 
 **For exact calculations including margins:**
 
 ```typescript
 // ✅ Better: Account for margins
-const [marginX, marginY] = margin
-const gridWidth = cols * rowHeight + (cols - 1) * marginX
+const [marginX, marginY] = margin;
+const gridWidth = cols * rowHeight + (cols - 1) * marginX;
 ```
 
 **However, ASTA pattern uses simplified calculation:**
 
 ```typescript
 // ✅ ASTA: Simplified (margins are small, negligible impact)
-const gridWidth = cols * CALENDAR_ROW_HEIGHT
+const gridWidth = cols * CALENDAR_ROW_HEIGHT;
 ```
 
 ### Mistake 5: Not Using React.useMemo for Expensive Calculations
@@ -436,8 +439,8 @@ const gridWidth = cols * CALENDAR_ROW_HEIGHT
 ```typescript
 // ❌ Bad: Recalculates on every render
 function GridLayout({ data }) {
-  const layout = generateLayoutFromData(data) // Expensive!
-  const cols = Math.max(...layout.map(({ x, w }) => x + w))
+  const layout = generateLayoutFromData(data); // Expensive!
+  const cols = Math.max(...layout.map(({ x, w }) => x + w));
   // ...
 }
 ```
@@ -447,9 +450,12 @@ function GridLayout({ data }) {
 ```typescript
 // ✅ Good: Memoize expensive calculations
 function GridLayout({ data }) {
-  const layout = React.useMemo(() => generateLayoutFromData(data), [data])
+  const layout = React.useMemo(() => generateLayoutFromData(data), [data]);
 
-  const cols = React.useMemo(() => Math.max(...layout.map(({ x, w }) => x + w), 12), [layout])
+  const cols = React.useMemo(
+    () => Math.max(...layout.map(({ x, w }) => x + w), 12),
+    [layout],
+  );
   // ...
 }
 ```
@@ -459,18 +465,18 @@ function GridLayout({ data }) {
 ### Technique 1: Add Console Logs
 
 ```typescript
-const pointsX = layout.map(({ x, w }) => x + w)
-const cols = Math.max(...pointsX, 12)
-const gridWidth = cols * rowHeight
+const pointsX = layout.map(({ x, w }) => x + w);
+const cols = Math.max(...pointsX, 12);
+const gridWidth = cols * rowHeight;
 
-console.log('[Grid Debug]', {
+console.log("[Grid Debug]", {
   itemCount: layout.length,
   layoutItems: layout.map(({ i, x, w }) => ({ i, x, w, rightEdge: x + w })),
   pointsX,
   calculatedCols: cols,
   gridWidth,
   rowHeight,
-})
+});
 ```
 
 **Example Output:**
@@ -507,35 +513,41 @@ console.log('[Grid Debug]', {
 
 ```typescript
 function validateLayout(layout: Layout[], cols: number): boolean {
-  const errors: string[] = []
+  const errors: string[] = [];
 
-  layout.forEach(item => {
+  layout.forEach((item) => {
     // Check if item exceeds grid
     if (item.x + item.w > cols) {
-      errors.push(`Item "${item.i}" exceeds grid: x=${item.x} + w=${item.w} > cols=${cols}`)
+      errors.push(
+        `Item "${item.i}" exceeds grid: x=${item.x} + w=${item.w} > cols=${cols}`,
+      );
     }
 
     // Check for negative positions
     if (item.x < 0 || item.y < 0) {
-      errors.push(`Item "${item.i}" has negative position: x=${item.x}, y=${item.y}`)
+      errors.push(
+        `Item "${item.i}" has negative position: x=${item.x}, y=${item.y}`,
+      );
     }
 
     // Check for zero dimensions
     if (item.w <= 0 || item.h <= 0) {
-      errors.push(`Item "${item.i}" has invalid dimensions: w=${item.w}, h=${item.h}`)
+      errors.push(
+        `Item "${item.i}" has invalid dimensions: w=${item.w}, h=${item.h}`,
+      );
     }
-  })
+  });
 
   if (errors.length > 0) {
-    console.error('[Layout Validation Failed]', errors)
-    return false
+    console.error("[Layout Validation Failed]", errors);
+    return false;
   }
 
-  return true
+  return true;
 }
 
 // Usage
-const isValid = validateLayout(layout, cols)
+const isValid = validateLayout(layout, cols);
 if (!isValid) {
   // Handle invalid layout
 }
@@ -545,16 +557,19 @@ if (!isValid) {
 
 ```typescript
 // Method 1: ASTA pattern
-const colsAsta = Math.max(...layout.map(({ x, w }) => x + w), 12)
+const colsAsta = Math.max(...layout.map(({ x, w }) => x + w), 12);
 
 // Method 2: Alternative
-const colsAlt = layout.reduce((max, item) => Math.max(max, item.x + item.w), 12)
+const colsAlt = layout.reduce(
+  (max, item) => Math.max(max, item.x + item.w),
+  12,
+);
 
-console.log('[Comparison]', {
+console.log("[Comparison]", {
   astaCols: colsAsta,
   alternativeCols: colsAlt,
   match: colsAsta === colsAlt,
-})
+});
 ```
 
 ## Performance Considerations
@@ -604,8 +619,8 @@ function OptimizedGridLayout({ events, rooms, times }) {
 ```typescript
 function GridLayout({ data }) {
   // Recalculated on every render!
-  const layout = data.map(createLayoutItem)
-  const cols = Math.max(...layout.map(({ x, w }) => x + w))
+  const layout = data.map(createLayoutItem);
+  const cols = Math.max(...layout.map(({ x, w }) => x + w));
   // ...
 }
 ```
@@ -614,9 +629,12 @@ function GridLayout({ data }) {
 
 ```typescript
 function GridLayout({ data }) {
-  const layout = React.useMemo(() => data.map(createLayoutItem), [data])
+  const layout = React.useMemo(() => data.map(createLayoutItem), [data]);
 
-  const cols = React.useMemo(() => Math.max(...layout.map(({ x, w }) => x + w), 12), [layout])
+  const cols = React.useMemo(
+    () => Math.max(...layout.map(({ x, w }) => x + w), 12),
+    [layout],
+  );
   // ...
 }
 ```

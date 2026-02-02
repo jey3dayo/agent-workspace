@@ -23,7 +23,7 @@
 Pattern:
 
 ```typescript
-if (!user.hasPermission('resource:action')) throw ForbiddenError()
+if (!user.hasPermission("resource:action")) throw ForbiddenError();
 ```
 
 ## Secrets & Configuration

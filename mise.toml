@@ -2,7 +2,7 @@
 
 [env]
 _.path = ['./node_modules/.bin']
-MD_EXCLUDES = "--exclude node_modules --exclude tmux/plugins --exclude fisher --exclude 'zsh/.zinit' --exclude plans --exclude 'plugins/cache' --exclude 'plugins/marketplaces' --exclude projects"
+MD_EXCLUDES = "--exclude node_modules --exclude tmux/plugins --exclude fisher --exclude 'zsh/.zinit' --exclude plans --exclude 'plugins/cache' --exclude 'plugins/marketplaces' --exclude projects --exclude skills"
 MARKDOWN_LINK_CONFIG = ".markdown-link-check.json"
 
 [tools]
@@ -24,19 +24,19 @@ run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X markdownlint-cli2 --fix"
 
 [tasks."docs:links"]
 description = "Markdownリンクチェック"
-run = "fd -e md -X markdown-link-check --quiet --config ${MARKDOWN_LINK_CONFIG}"
+run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X markdown-link-check --quiet --config ${MARKDOWN_LINK_CONFIG}"
 
 [tasks."docs:links:verbose"]
 description = "Markdownリンクチェック（詳細モード）"
-run = "fd -e md -X markdown-link-check --verbose --config ${MARKDOWN_LINK_CONFIG}"
+run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X markdown-link-check --verbose --config ${MARKDOWN_LINK_CONFIG}"
 
 [tasks."docs:format"]
 description = "Prettierでフォーマット"
-run = "prettier --write --cache --log-level warn \"${MD_GLOB}\""
+run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X prettier --write --cache --log-level warn"
 
 [tasks."docs:format:check"]
 description = "Prettierフォーマットチェック"
-run = "prettier --check --cache \"${MD_GLOB}\""
+run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X prettier --check --cache"
 
 # === エイリアス ===
 [tasks.format]
@@ -64,6 +64,10 @@ run = "./scripts/check-skill-links.sh"
 description = "ui-ux-pro-max の /tmp リンクを実体化"
 run = "./scripts/fix-ui-ux-pro-max.sh"
 
+[tasks."skills:fix:self-links"]
+description = "スキル内の循環自己リンクを削除"
+run = "./scripts/fix-skill-self-links.sh"
+
 [tasks."skills:status"]
 description = "スキルリンク状態を表示"
 run = "./scripts/sync-skills.sh status"
@@ -71,4 +75,4 @@ run = "./scripts/sync-skills.sh status"
 [tasks."skills:refresh"]
 alias = "ci"
 description = "スキル更新 → 同期"
-run = "mise run skills:check-links && mise run update && mise run skills:fix:ui-ux-pro-max && mise run skills:sync"
+run = "mise run skills:check-links && mise run update && mise run skills:fix:ui-ux-pro-max && mise run skills:fix:self-links && mise run skills:sync"

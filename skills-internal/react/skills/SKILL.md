@@ -20,25 +20,46 @@ Use Context7 MCP for generic React documentation instead of maintaining static d
 
 ```typescript
 // Component design patterns
-context7.query('/websites/18_react_dev', 'component composition patterns single responsibility')
+context7.query(
+  "/websites/18_react_dev",
+  "component composition patterns single responsibility",
+);
 
 // Hooks usage and patterns
-context7.query('/websites/18_react_dev', 'useState useEffect dependency arrays cleanup functions')
+context7.query(
+  "/websites/18_react_dev",
+  "useState useEffect dependency arrays cleanup functions",
+);
 
 // Custom Hooks
-context7.query('/websites/18_react_dev', 'custom hooks best practices reusable logic')
+context7.query(
+  "/websites/18_react_dev",
+  "custom hooks best practices reusable logic",
+);
 
 // Performance optimization
-context7.query('/websites/18_react_dev', 'React.memo useMemo useCallback optimization')
+context7.query(
+  "/websites/18_react_dev",
+  "React.memo useMemo useCallback optimization",
+);
 
 // Accessibility
-context7.query('/websites/18_react_dev', 'semantic HTML ARIA keyboard navigation a11y')
+context7.query(
+  "/websites/18_react_dev",
+  "semantic HTML ARIA keyboard navigation a11y",
+);
 
 // Form handling
-context7.query('/websites/18_react_dev', 'controlled uncontrolled forms validation')
+context7.query(
+  "/websites/18_react_dev",
+  "controlled uncontrolled forms validation",
+);
 
 // Error handling
-context7.query('/websites/18_react_dev', 'Error Boundary error handling async operations')
+context7.query(
+  "/websites/18_react_dev",
+  "Error Boundary error handling async operations",
+);
 ```
 
 **Available Context7 React Libraries**:

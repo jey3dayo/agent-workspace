@@ -237,8 +237,8 @@ on:
   pull_request:
     branches: [main, develop]
     paths:
-      - 'src/**/*.ts'
-      - 'src/**/*.tsx'
+      - "src/**/*.ts"
+      - "src/**/*.tsx"
 
 jobs:
   tsr-check:
@@ -252,8 +252,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: "20"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

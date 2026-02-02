@@ -23,28 +23,28 @@
 
 ```typescript
 // ❌ 即時修正必須
-const data: any = response.data
-const value = formData.get('field') as string
-const result = JSON.parse(json) as UserData
+const data: any = response.data;
+const value = formData.get("field") as string;
+const result = JSON.parse(json) as UserData;
 
 // ✅ 修正後
-const data: unknown = response.data
-const value = validateFormData(formData, UserSchema)
-const result = UserSchema.safeParse(JSON.parse(json))
+const data: unknown = response.data;
+const value = validateFormData(formData, UserSchema);
+const result = UserSchema.safeParse(JSON.parse(json));
 ```
 
 #### パターン2: 適切な型推論の活用
 
 ```typescript
 // ❌ 型を放棄
-const items: any[] = response.items
+const items: any[] = response.items;
 
 // ✅ ジェネリクスで型安全性確保
-const items = response.items as Array<Item>
+const items = response.items as Array<Item>;
 // さらに良い: Zodスキーマでバリデーション
-const validated = z.array(ItemSchema).safeParse(response.items)
+const validated = z.array(ItemSchema).safeParse(response.items);
 if (validated.success) {
-  const items = validated.data // Item[]型
+  const items = validated.data; // Item[]型
 }
 ```
 
@@ -64,25 +64,25 @@ if (validated.success) {
 
 ```typescript
 // ❌ 型アサーション
-const unit = data.unit as 'FEET' | 'METERS'
+const unit = data.unit as "FEET" | "METERS";
 
 // ✅ 型ガード関数
-function isDimensionUnit(value: unknown): value is 'FEET' | 'METERS' {
-  return value === 'FEET' || value === 'METERS'
+function isDimensionUnit(value: unknown): value is "FEET" | "METERS" {
+  return value === "FEET" || value === "METERS";
 }
 
-function getDimensionUnit(unit: string | undefined): 'FEET' | 'METERS' {
-  return isDimensionUnit(unit) ? unit : 'FEET' // デフォルト値
+function getDimensionUnit(unit: string | undefined): "FEET" | "METERS" {
+  return isDimensionUnit(unit) ? unit : "FEET"; // デフォルト値
 }
 
-const unit = getDimensionUnit(data.unit)
+const unit = getDimensionUnit(data.unit);
 ```
 
 #### パターン2: Zodスキーマでの検証
 
 ```typescript
 // ❌ 型アサーション
-const mapInfo = cmxMapInfo as CMXMapInfo
+const mapInfo = cmxMapInfo as CMXMapInfo;
 
 // ✅ Zodスキーマ
 const CMXMapInfoSchema = z.object({
@@ -90,13 +90,13 @@ const CMXMapInfoSchema = z.object({
   dimension: z.object({
     width: z.number(),
     height: z.number(),
-    unit: z.enum(['FEET', 'METERS']),
+    unit: z.enum(["FEET", "METERS"]),
   }),
-})
+});
 
-const validated = CMXMapInfoSchema.safeParse(cmxMapInfo)
+const validated = CMXMapInfoSchema.safeParse(cmxMapInfo);
 if (validated.success) {
-  const mapInfo = validated.data // 型安全
+  const mapInfo = validated.data; // 型安全
 }
 ```
 
@@ -104,14 +104,14 @@ if (validated.success) {
 
 ```typescript
 // ❌ 読み取り専用配列への型アサーション
-;(permissionIds as readonly string[]).includes(id)
+(permissionIds as readonly string[]).includes(id);
 
 // ✅ const assertion
-const PERMISSION_IDS = ['read', 'write', 'delete'] as const
-PERMISSION_IDS.includes(id) // 型安全
+const PERMISSION_IDS = ["read", "write", "delete"] as const;
+PERMISSION_IDS.includes(id); // 型安全
 
 // さらに良い: 型定義を明示
-const PERMISSION_IDS: readonly string[] = ['read', 'write', 'delete']
+const PERMISSION_IDS: readonly string[] = ["read", "write", "delete"];
 ```
 
 ---
@@ -190,19 +190,19 @@ const PERMISSION_IDS: readonly string[] = ['read', 'write', 'delete']
 ```typescript
 // ❌ Claude Code誤修正例（実際に発見したバグ）
 export function verifyFormDataSupport(): void {
-  const _formData = new FormData() // _プレフィックス追加
+  const _formData = new FormData(); // _プレフィックス追加
 
   // 使用箇所では_なし → ReferenceError!
-  formData.append('test', 'value') // 未定義変数参照
-  expect(formData.get('test')).toBe('value')
+  formData.append("test", "value"); // 未定義変数参照
+  expect(formData.get("test")).toBe("value");
 }
 
 // ✅ 修正版
 export function verifyFormDataSupport(): void {
-  const formData = new FormData() // 一貫した命名
+  const formData = new FormData(); // 一貫した命名
 
-  formData.append('test', 'value') // 正しい参照
-  expect(formData.get('test')).toBe('value')
+  formData.append("test", "value"); // 正しい参照
+  expect(formData.get("test")).toBe("value");
 }
 ```
 
@@ -214,11 +214,11 @@ export function verifyFormDataSupport(): void {
 
 ```typescript
 // 削除可能
-import { type UnusedType } from './types' // 型定義のみで未使用
-import { unusedHelper } from './helpers' // 使用されていないヘルパー
+import { type UnusedType } from "./types"; // 型定義のみで未使用
+import { unusedHelper } from "./helpers"; // 使用されていないヘルパー
 
 // 注意が必要
-import { usedFunction, unusedFunction } from './utils'
+import { usedFunction, unusedFunction } from "./utils";
 // → unusedFunctionのみ削除
 ```
 
@@ -226,11 +226,11 @@ import { usedFunction, unusedFunction } from './utils'
 
 ```typescript
 // オブジェクト分割代入の不要プロパティ
-const { used, unused } = data
+const { used, unused } = data;
 // → unused削除可能
 
 // 配列分割代入の中間要素（慎重に）
-const [first, _middle, last] = array
+const [first, _middle, last] = array;
 // → _middleは位置が重要なので削除不可（_プレフィックスで明示）
 ```
 
@@ -269,26 +269,29 @@ pnpm lint 2>&1 | grep "no-unused-vars" | awk -F: '{print $1}' | sort | uniq -c |
 
 ```typescript
 // ❌ Service Layer logger依存
-import { transformLogger } from '@/lib/services/logging/layer-loggers'
+import { transformLogger } from "@/lib/services/logging/layer-loggers";
 
 // ✅ console直接使用に変更
 const transformLogger = {
-  info: (msg: string, data?: unknown) => console.info(`[Transform] ${msg}`, data),
-  error: (msg: string, error?: unknown) => console.error(`[Transform] ${msg}`, error),
-  warn: (msg: string, data?: unknown) => console.warn(`[Transform] ${msg}`, data),
-}
+  info: (msg: string, data?: unknown) =>
+    console.info(`[Transform] ${msg}`, data),
+  error: (msg: string, error?: unknown) =>
+    console.error(`[Transform] ${msg}`, error),
+  warn: (msg: string, data?: unknown) =>
+    console.warn(`[Transform] ${msg}`, data),
+};
 ```
 
 ### 2. 型依存の修正
 
 ```typescript
 // ❌ Service Layer型依存
-import { type CMXLocationResponseService } from '@/lib/services/cmx-service/types'
+import { type CMXLocationResponseService } from "@/lib/services/cmx-service/types";
 
 // ✅ インライン型定義に変更
 interface CMXLocationResponseService {
-  macAddress: string
-  location?: { x: number; y: number; unit: string } | null
+  macAddress: string;
+  location?: { x: number; y: number; unit: string } | null;
   // 必要な型のみ定義
 }
 ```
@@ -297,10 +300,10 @@ interface CMXLocationResponseService {
 
 ```typescript
 // ❌ Config Layer関数依存
-import { isDevelopment } from '@/lib/config/server-env'
+import { isDevelopment } from "@/lib/config/server-env";
 
 // ✅ 直接環境変数チェック
-const isDev = process.env.NODE_ENV === 'development'
+const isDev = process.env.NODE_ENV === "development";
 ```
 
 ### 4. 依存種類別の修正戦略
@@ -320,29 +323,29 @@ const isDev = process.env.NODE_ENV === 'development'
 
 ```typescript
 function createUser(data: unknown): Result<User, Error> {
-  const validated = UserSchema.safeParse(data)
+  const validated = UserSchema.safeParse(data);
   if (!validated.success) {
-    return err(new Error(validated.error.message))
+    return err(new Error(validated.error.message));
   }
-  return ok(validated.data)
+  return ok(validated.data);
 }
 ```
 
 ### Stage 2: サービス統合
 
 ```typescript
-const result = await createUser(formData)
+const result = await createUser(formData);
 return result.match(
-  user => ({ success: true, data: user }),
-  error => ({ success: false, error: error.message })
-)
+  (user) => ({ success: true, data: user }),
+  (error) => ({ success: false, error: error.message }),
+);
 ```
 
 ### Stage 3: Action層統合
 
 ```typescript
 export async function createUserAction(formData: FormData) {
-  return toServerActionResult(await createUser(formData))
+  return toServerActionResult(await createUser(formData));
 }
 ```
 
@@ -460,15 +463,15 @@ echo "Layer boundaries: $(pnpm lint 2>&1 | grep -c 'enforce-layer-boundaries')"
 // 原因: 配列で定義した定数をオブジェクトとしてアクセス
 
 // ❌ eslint-rules/rule-constants.js
-export const RESULT_TYPE_NAMES = ['Result', 'ResultAsync']
+export const RESULT_TYPE_NAMES = ["Result", "ResultAsync"];
 // ルール内で RESULT_TYPE_NAMES.Result でアクセス → undefined
 
 // ✅ 正しい実装
 export const RESULT_TYPE_NAMES = {
-  Result: 'Result',
-  ResultAsync: 'ResultAsync',
-  TransformResult: 'TransformResult',
-}
+  Result: "Result",
+  ResultAsync: "ResultAsync",
+  TransformResult: "TransformResult",
+};
 ```
 
 **教訓**: ESLintルール内での定数アクセス方法と定義の一貫性確認が重要
@@ -477,16 +480,18 @@ export const RESULT_TYPE_NAMES = {
 
 ```typescript
 // ❌ 型アサーションの散在（31件）
-const unit = data.unit as 'FEET' | 'METERS'
-const mapInfo = cmxMapInfo as any
+const unit = data.unit as "FEET" | "METERS";
+const mapInfo = cmxMapInfo as any;
 
 // ✅ 型ガードユーティリティ作成 (src/lib/utils/type-guards.ts)
-export function getDimensionUnit(unit: string | undefined): 'FEET' | 'METERS' {
-  return isDimensionUnit(unit) ? unit : 'FEET'
+export function getDimensionUnit(unit: string | undefined): "FEET" | "METERS" {
+  return isDimensionUnit(unit) ? unit : "FEET";
 }
 
-export function isCMXMapInfoLike(data: unknown): data is { imageName?: string } {
-  return typeof data === 'object' && data !== null && 'imageName' in data
+export function isCMXMapInfoLike(
+  data: unknown,
+): data is { imageName?: string } {
+  return typeof data === "object" && data !== null && "imageName" in data;
 }
 ```
 
@@ -503,7 +508,7 @@ export function isCMXMapInfoLike(data: unknown): data is { imageName?: string } 
 const macAddressData = {
   name: formData.name,
   macaddress: formData.macAddress, // フォーム→サービス変換
-}
+};
 ```
 
 **教訓**: 層間での命名規約違いは明示的なマッピングで解決
@@ -512,16 +517,18 @@ const macAddressData = {
 
 ```typescript
 // ❌ 型アサーション
-const entries = Object.entries(fieldExtractors) as Array<[string, (formData: FormData) => unknown]>
+const entries = Object.entries(fieldExtractors) as Array<
+  [string, (formData: FormData) => unknown]
+>;
 
 // ✅ ジェネリクス型定義
-type FieldExtractor = (formData: FormData) => unknown
-type FieldExtractors = Record<string, FieldExtractor>
+type FieldExtractor = (formData: FormData) => unknown;
+type FieldExtractors = Record<string, FieldExtractor>;
 
 const fieldExtractors: FieldExtractors = {
   /* ... */
-}
-const entries = Object.entries(fieldExtractors) // 型推論が働く
+};
+const entries = Object.entries(fieldExtractors); // 型推論が働く
 ```
 
 ---
@@ -612,8 +619,8 @@ const entries = Object.entries(fieldExtractors) // 型推論が働く
 
 ### リファクタリング成果サマリー
 
-| 改善項目         | Before | After   | 改善率  |
-| ---------------- | ------ | ------- | ------- |
+| 改善項目         | Before | After   | 改善率 |
+| ---------------- | ------ | ------- | ------ |
 | コード重複       | 高い   | 80%削減 | ⬇ 80%  |
 | マジックナンバー | 15+    | 0個     | ⬇ 100% |
 | サイレント失敗   | 多数   | 90%削減 | ⬇ 90%  |
@@ -626,12 +633,14 @@ const entries = Object.entries(fieldExtractors) // 型推論が働く
 ```javascript
 // ✅ Before: 各ルールで重複実装（30行×23ファイル = 690行）
 function getLayerInfo(filePath) {
-  let normalizedPath = filePath.startsWith('@/') ? filePath.replace('@/', '') : filePath
+  let normalizedPath = filePath.startsWith("@/")
+    ? filePath.replace("@/", "")
+    : filePath;
   // 複雑な層検出ロジック...
 }
 
 // ✅ After: 共通ユーティリティで一元管理（rule-utils.js）
-import { getLayerInfo, normalizeFilePath, safeExecute } from './rule-utils.js'
+import { getLayerInfo, normalizeFilePath, safeExecute } from "./rule-utils.js";
 // 23ファイル → 1ファイルに集約、690行 → 138行（80%削減）
 ```
 
@@ -639,14 +648,14 @@ import { getLayerInfo, normalizeFilePath, safeExecute } from './rule-utils.js'
 
 ```javascript
 // ❌ Before: ハードコードされたマジックナンバー
-const lines = text.split('\n').slice(0, 10) // Magic number 10
-const contextWindow = text.slice(nodeStart - 100, nodeStart + 100) // Magic 100
+const lines = text.split("\n").slice(0, 10); // Magic number 10
+const contextWindow = text.slice(nodeStart - 100, nodeStart + 100); // Magic 100
 
 // ✅ After: 意味のある定数で管理（rule-constants.js）
 export const ANALYSIS_CONSTANTS = {
   USE_CLIENT_SEARCH_LINES: 10,
   CONTEXT_WINDOW_SIZE: 100,
-}
+};
 ```
 
 #### 3. エラーハンドリング統一

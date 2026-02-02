@@ -23,13 +23,13 @@ Parse natural language tasks, understand project context, and select the optimal
 
 Analyze tasks from multiple perspectives:
 
-**Intent Analysis**
+#### Intent Analysis
 
 - Primary intent detection (implementation, debugging, review, etc.)
 - Task category classification
 - Complexity assessment
 
-**Structural Decomposition**
+#### Structural Decomposition
 
 - Identify targets, constraints, scope
 - Analyze dependencies

@@ -11,7 +11,13 @@ Project-specific documentation configuration file placed in project root.
 ```json
 {
   "project_type": "dotfiles",
-  "required_tags": ["category/", "tool/", "layer/", "environment/", "audience/"],
+  "required_tags": [
+    "category/",
+    "tool/",
+    "layer/",
+    "environment/",
+    "audience/"
+  ],
   "size_limits": {
     "ideal": 300,
     "acceptable": 500,
@@ -72,7 +78,13 @@ Project-specific documentation configuration file placed in project root.
     "multi_account": true,
     "environments": ["caad-aws-ndev", "caad-aws", "shared"],
     "mise_integration": true,
-    "directory_structure": ["features/", "security/", "infrastructure/", "cicd/", "operations/"]
+    "directory_structure": [
+      "features/",
+      "security/",
+      "infrastructure/",
+      "cicd/",
+      "operations/"
+    ]
   },
   "tag_separator": " ",
   "tools": {

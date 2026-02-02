@@ -162,8 +162,10 @@ sync_skills() {
         if [ -L "$link_path" ]; then
           # 既存のシンボリックリンクを確認（リンク切れでも readlink は有効）
           current_target=$(readlink "$link_path")
-          if [ "$current_target" = "$relative_path" ]; then
-            # 正しいリンクは表示しない
+          current_resolved=$(resolve_path "$link_path")
+          expected_resolved=$(resolve_path "$source_dir/$skill_name")
+          if [ "$current_target" = "$relative_path" ] || { [ -n "$current_resolved" ] && [ "$current_resolved" = "$expected_resolved" ]; }; then
+            # 正しいリンクは表示しない（相対/絶対どちらも許容）
             :
           else
             if [ "$skill_logged" -eq 0 ]; then

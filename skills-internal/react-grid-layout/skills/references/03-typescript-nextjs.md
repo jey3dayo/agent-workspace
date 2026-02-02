@@ -29,7 +29,7 @@ import ReactGridLayout, {
   ReactGridLayoutProps,
   ItemCallback,
   WidthProvider,
-} from 'react-grid-layout'
+} from "react-grid-layout";
 ```
 
 ### Core Type Definitions
@@ -37,24 +37,24 @@ import ReactGridLayout, {
 ```typescript
 // Layout item
 interface Layout {
-  i: string
-  x: number
-  y: number
-  w: number
-  h: number
-  minW?: number
-  maxW?: number
-  minH?: number
-  maxH?: number
-  static?: boolean
-  isDraggable?: boolean
-  isResizable?: boolean
-  resizeHandles?: ResizeHandle[]
-  isBounded?: boolean
+  i: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  minW?: number;
+  maxW?: number;
+  minH?: number;
+  maxH?: number;
+  static?: boolean;
+  isDraggable?: boolean;
+  isResizable?: boolean;
+  resizeHandles?: ResizeHandle[];
+  isBounded?: boolean;
 }
 
 // Resize handle types
-type ResizeHandle = 's' | 'w' | 'e' | 'n' | 'sw' | 'nw' | 'se' | 'ne'
+type ResizeHandle = "s" | "w" | "e" | "n" | "sw" | "nw" | "se" | "ne";
 
 // Item callback type
 type ItemCallback = (
@@ -63,43 +63,45 @@ type ItemCallback = (
   newItem: Layout,
   placeholder: Layout,
   event: MouseEvent,
-  element: HTMLElement
-) => void
+  element: HTMLElement,
+) => void;
 
 // Main props interface
 interface ReactGridLayoutProps {
-  className?: string
-  style?: React.CSSProperties
-  width: number
-  autoSize?: boolean
-  cols?: number
-  draggableCancel?: string
-  draggableHandle?: string
-  compactType?: 'vertical' | 'horizontal' | null
-  layout?: Layout[]
-  margin?: [number, number]
-  containerPadding?: [number, number] | null
-  rowHeight?: number
-  maxRows?: number
-  isDraggable?: boolean
-  isResizable?: boolean
-  isDroppable?: boolean
-  preventCollision?: boolean
-  useCSSTransforms?: boolean
-  transformScale?: number
-  allowOverlap?: boolean
-  resizeHandles?: ResizeHandle[]
-  resizeHandle?: ReactElement | ((resizeHandle: string, ref: React.Ref) => ReactElement)
-  onLayoutChange?: (layout: Layout[]) => void
-  onDragStart?: ItemCallback
-  onDrag?: ItemCallback
-  onDragStop?: ItemCallback
-  onResizeStart?: ItemCallback
-  onResize?: ItemCallback
-  onResizeStop?: ItemCallback
-  onDrop?: (layout: Layout[], layoutItem: Layout, event: Event) => void
-  onDropDragOver?: (e: DragOverEvent) => { w?: number; h?: number } | false
-  children: React.ReactNode
+  className?: string;
+  style?: React.CSSProperties;
+  width: number;
+  autoSize?: boolean;
+  cols?: number;
+  draggableCancel?: string;
+  draggableHandle?: string;
+  compactType?: "vertical" | "horizontal" | null;
+  layout?: Layout[];
+  margin?: [number, number];
+  containerPadding?: [number, number] | null;
+  rowHeight?: number;
+  maxRows?: number;
+  isDraggable?: boolean;
+  isResizable?: boolean;
+  isDroppable?: boolean;
+  preventCollision?: boolean;
+  useCSSTransforms?: boolean;
+  transformScale?: number;
+  allowOverlap?: boolean;
+  resizeHandles?: ResizeHandle[];
+  resizeHandle?:
+    | ReactElement
+    | ((resizeHandle: string, ref: React.Ref) => ReactElement);
+  onLayoutChange?: (layout: Layout[]) => void;
+  onDragStart?: ItemCallback;
+  onDrag?: ItemCallback;
+  onDragStop?: ItemCallback;
+  onResizeStart?: ItemCallback;
+  onResize?: ItemCallback;
+  onResizeStop?: ItemCallback;
+  onDrop?: (layout: Layout[], layoutItem: Layout, event: Event) => void;
+  onDropDragOver?: (e: DragOverEvent) => { w?: number; h?: number } | false;
+  children: React.ReactNode;
 }
 ```
 
@@ -274,13 +276,13 @@ const gridWidth = cols * 24;  // Fixed calculation
 ### Solution 3: WidthProvider (Client-Only)
 
 ```typescript
-import { WidthProvider } from 'react-grid-layout'
-import { SafeGridLayout } from './SafeGridLayout'
+import { WidthProvider } from "react-grid-layout";
+import { SafeGridLayout } from "./SafeGridLayout";
 
-const ResponsiveGridLayout = WidthProvider(SafeGridLayout)
+const ResponsiveGridLayout = WidthProvider(SafeGridLayout);
 
 // Must use dynamic import
-const GridLayout = dynamic(() => import('./GridLayout'), { ssr: false })
+const GridLayout = dynamic(() => import("./GridLayout"), { ssr: false });
 ```
 
 **Recommendation for ASTA:** Use Solution 2 (explicit width) for SSR compatibility and predictable rendering.
@@ -341,12 +343,12 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
 
 ```typescript
 interface LayoutInput {
-  id: string
-  x: number
-  y: number
-  width: number
-  height: number
-  isStatic?: boolean
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  isStatic?: boolean;
 }
 
 function createLayout(input: LayoutInput): Layout {
@@ -357,21 +359,21 @@ function createLayout(input: LayoutInput): Layout {
     w: input.width,
     h: input.height,
     static: input.isStatic ?? false,
-  }
+  };
 }
 
 // Type-safe usage
 const layouts: Layout[] = [
   createLayout({
-    id: 'header',
+    id: "header",
     x: 0,
     y: 0,
     width: 12,
     height: 2,
     isStatic: true,
   }),
-  createLayout({ id: 'content', x: 0, y: 2, width: 12, height: 4 }),
-]
+  createLayout({ id: "content", x: 0, y: 2, width: 12, height: 4 }),
+];
 ```
 
 ### Generic Layout Builder
@@ -437,15 +439,15 @@ const layout = buildLayout({
 ```typescript
 // ❌ Error
 const layout = [
-  { id: 'a', x: 0, y: 0, w: 1, h: 2 }, // 'id' should be 'i'
-]
+  { id: "a", x: 0, y: 0, w: 1, h: 2 }, // 'id' should be 'i'
+];
 ```
 
 **Solution:** Use correct property names
 
 ```typescript
 // ✅ Fixed
-const layout: Layout[] = [{ i: 'a', x: 0, y: 0, w: 1, h: 2 }]
+const layout: Layout[] = [{ i: "a", x: 0, y: 0, w: 1, h: 2 }];
 ```
 
 ### Error 3: Width Type Error
@@ -491,20 +493,20 @@ const handleDragStop: ItemCallback = (layout, oldItem, newItem, placeholder, eve
 ```typescript
 // ❌ Error
 const layout: Layout[] = [
-  { i: 'a', x: 0, y: 0, w: 1, h: 2 },
+  { i: "a", x: 0, y: 0, w: 1, h: 2 },
   null, // Type error!
-]
+];
 ```
 
 **Solution:** Filter out null/undefined
 
 ```typescript
 // ✅ Fixed
-const rawLayout = [{ i: 'a', x: 0, y: 0, w: 1, h: 2 }, null]
+const rawLayout = [{ i: "a", x: 0, y: 0, w: 1, h: 2 }, null];
 
 const layout: Layout[] = rawLayout.filter(
-  (item): item is Layout => item !== null && item !== undefined
-)
+  (item): item is Layout => item !== null && item !== undefined,
+);
 ```
 
 ## CSS Import in TypeScript
@@ -513,8 +515,8 @@ Always import the required CSS files:
 
 ```typescript
 // In _app.tsx or layout component
-import 'react-grid-layout/css/styles.css'
-import 'react-resizable/css/styles.css'
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
 ```
 
 If using CSS modules:
@@ -535,23 +537,26 @@ Always use the SafeGridLayout wrapper for React 18 compatibility:
 
 ```typescript
 // ✅ Recommended
-import { SafeGridLayout } from '@/components/Calendar/SafeGridLayout'
+import { SafeGridLayout } from "@/components/Calendar/SafeGridLayout";
 ```
 
 ### 2. Type Layout Arrays Explicitly
 
 ```typescript
 // ✅ Explicit typing
-const layout: Layout[] = [{ i: 'a', x: 0, y: 0, w: 1, h: 2 }]
+const layout: Layout[] = [{ i: "a", x: 0, y: 0, w: 1, h: 2 }];
 
 // ❌ Implicit typing (may cause issues)
-const layout = [{ i: 'a', x: 0, y: 0, w: 1, h: 2 }]
+const layout = [{ i: "a", x: 0, y: 0, w: 1, h: 2 }];
 ```
 
 ### 3. Use React.useMemo for Expensive Calculations
 
 ```typescript
-const cols = React.useMemo(() => Math.max(...layout.map(({ x, w }) => x + w), 12), [layout])
+const cols = React.useMemo(
+  () => Math.max(...layout.map(({ x, w }) => x + w), 12),
+  [layout],
+);
 ```
 
 ### 4. Handle SSR Appropriately
@@ -564,8 +569,8 @@ const cols = React.useMemo(() => Math.max(...layout.map(({ x, w }) => x + w), 12
 ```typescript
 const validLayout = React.useMemo(
   () => rawLayout.filter((item): item is Layout => item !== null),
-  [rawLayout]
-)
+  [rawLayout],
+);
 ```
 
 ## Complete ASTA Example

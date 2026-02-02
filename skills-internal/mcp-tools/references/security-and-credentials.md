@@ -115,7 +115,10 @@ source ~/.zshrc
   "mcpServers": {
     "github": {
       "command": "sh",
-      "args": ["-c", "GITHUB_PERSONAL_ACCESS_TOKEN=$GITHUB_TOKEN npx -y @github/github-mcp-server"]
+      "args": [
+        "-c",
+        "GITHUB_PERSONAL_ACCESS_TOKEN=$GITHUB_TOKEN npx -y @github/github-mcp-server"
+      ]
     },
     "mysql": {
       "command": "sh",

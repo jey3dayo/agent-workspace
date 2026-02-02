@@ -62,7 +62,11 @@ Move patterns to the configuration file:
 
 ```json
 {
-  "ignorePatterns": ["src/app/debug/**", "src/lib/test-utils/**", "src/experimental/**"]
+  "ignorePatterns": [
+    "src/app/debug/**",
+    "src/lib/test-utils/**",
+    "src/experimental/**"
+  ]
 }
 ```
 

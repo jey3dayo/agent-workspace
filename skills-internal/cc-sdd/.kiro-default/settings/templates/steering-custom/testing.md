@@ -30,14 +30,14 @@ Naming:
 ## Structure (AAA)
 
 ```typescript
-it('does X when Y', () => {
+it("does X when Y", () => {
   // Arrange
-  const input = setup()
+  const input = setup();
   // Act
-  const result = act(input)
+  const result = act(input);
   // Assert
-  expect(result).toEqual(expected)
-})
+  expect(result).toEqual(expected);
+});
 ```
 
 ## Mocking & Data

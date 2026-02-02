@@ -320,8 +320,8 @@ Absolute minimum configuration for getting started:
 
 ```yaml
 project:
-  name: 'my-project'
-  language: 'en'
+  name: "my-project"
+  language: "en"
 
 metadata:
   required_fields:
@@ -336,7 +336,7 @@ tags:
   min_required:
     - category/
     - audience/
-  reference_file: 'references/tag-taxonomy.md'
+  reference_file: "references/tag-taxonomy.md"
 
 size:
   recommended: 500
@@ -354,8 +354,8 @@ Complete example from ASTA project:
 
 ```yaml
 project:
-  name: 'ASTA'
-  language: 'ja'
+  name: "ASTA"
+  language: "ja"
 
 metadata:
   required_fields:
@@ -365,8 +365,8 @@ metadata:
     - tags
 
   formats:
-    date: 'YYYY-MM-DD'
-    tags: 'backtick-wrapped, comma-separated'
+    date: "YYYY-MM-DD"
+    tags: "backtick-wrapped, comma-separated"
 
   freshness:
     warning_days: 180
@@ -383,26 +383,26 @@ tags:
 
   max_recommended: 5
 
-  reference_file: '../skills/doc-standards/references/tag-taxonomy.md'
+  reference_file: "../skills/doc-standards/references/tag-taxonomy.md"
 
 size:
   recommended: 500
   warning: 1000
   hard_limit: 2000
 
-  examples_file: '../skills/doc-standards/references/size-guidelines-examples.md'
+  examples_file: "../skills/doc-standards/references/size-guidelines-examples.md"
 
 quality:
-  checklist_file: '../skills/doc-standards/references/quality-checklist-examples.md'
+  checklist_file: "../skills/doc-standards/references/quality-checklist-examples.md"
 
   mapping:
     enabled: true
-    file: '../skills/doc-standards/references/document-mapping.md'
+    file: "../skills/doc-standards/references/document-mapping.md"
 
   links:
     validate: true
     update_readme: true
-    readme_path: 'docs/README.md'
+    readme_path: "docs/README.md"
 
   freshness:
     operations_docs: 90
@@ -410,12 +410,12 @@ quality:
     architecture_docs: 365
 
 integration:
-  rules_file: '.claude/rules/documentation-rules.md'
-  docs_hub: 'docs/README.md'
+  rules_file: ".claude/rules/documentation-rules.md"
+  docs_hub: "docs/README.md"
 
 response:
-  language: 'ja'
-  format: 'conversational'
+  language: "ja"
+  format: "conversational"
 ```
 
 ---
@@ -426,8 +426,8 @@ Typical configuration for most projects:
 
 ```yaml
 project:
-  name: 'MyProject'
-  language: 'en'
+  name: "MyProject"
+  language: "en"
 
 metadata:
   required_fields:
@@ -436,7 +436,7 @@ metadata:
     - tags
 
   formats:
-    date: 'YYYY-MM-DD'
+    date: "YYYY-MM-DD"
 
 tags:
   tier_system:
@@ -450,7 +450,7 @@ tags:
 
   max_recommended: 5
 
-  reference_file: 'references/tag-taxonomy.md'
+  reference_file: "references/tag-taxonomy.md"
 
 size:
   recommended: 500
@@ -461,11 +461,11 @@ quality:
   links:
     validate: true
     update_readme: true
-    readme_path: 'docs/README.md'
+    readme_path: "docs/README.md"
 
 response:
-  language: 'en'
-  format: 'conversational'
+  language: "en"
+  format: "conversational"
 ```
 
 ---

@@ -307,8 +307,8 @@ width = charCount × 35 + 10
 #### Solution
 
 ```javascript
-x = Math.round(x / 10) * 10
-y = Math.round(y / 10) * 10
+x = Math.round(x / 10) * 10;
+y = Math.round(y / 10) * 10;
 ```
 
 ## Integration with ASTA Project

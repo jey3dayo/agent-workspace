@@ -25,7 +25,7 @@
 ---
 name: security
 description: セキュリティ分析と脆弱性検出の専門家
-tools: ['*']
+tools: ["*"]
 color: red
 model: claude-sonnet-4-5
 ---
@@ -60,7 +60,7 @@ model: claude-sonnet-4-5
 ---
 name: cygate-api
 description: CyGate API専門エージェント（Clean Architecture準拠）
-tools: ['*']
+tools: ["*"]
 color: blue
 ---
 ## プロジェクトコンテキスト
@@ -94,7 +94,7 @@ color: blue
 ---
 name: format-validator
 description: コードフォーマット検証専門
-tools: ['Read', 'Bash', 'Glob']
+tools: ["Read", "Bash", "Glob"]
 color: magenta
 model: claude-sonnet-4-5
 ---
@@ -167,7 +167,7 @@ color: green
 ---
 name: architecture-discoverer
 description: コードベースアーキテクチャの自律探索
-tools: ['*']
+tools: ["*"]
 color: cyan
 ---
 ## 探索戦略
@@ -199,7 +199,7 @@ color: cyan
 **例:**
 
 ```yaml
-tools: ['*']
+tools: ["*"]
 ```
 
 ### Mode 2: Explicit List (`tools: ["Tool1", "Tool2"]`)
@@ -219,7 +219,7 @@ tools: ['*']
 **例:**
 
 ```yaml
-tools: ['Read', 'Grep', 'Bash', 'Glob']
+tools: ["Read", "Grep", "Bash", "Glob"]
 ```
 
 ### Mode 3: Inherited (`tools: "inherit"`)

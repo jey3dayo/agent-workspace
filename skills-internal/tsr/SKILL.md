@@ -305,11 +305,11 @@ next-env.d.ts
 設定ファイルに基づいて`.tsrignore`を自動生成できます:
 
 ```typescript
-import { loadTsrConfig, generateTsrIgnore } from './config-loader'
+import { loadTsrConfig, generateTsrIgnore } from "./config-loader";
 
-const config = await loadTsrConfig('/path/to/project')
-const ignoreContent = await generateTsrIgnore(config)
-console.log(ignoreContent)
+const config = await loadTsrConfig("/path/to/project");
+const ignoreContent = await generateTsrIgnore(config);
+console.log(ignoreContent);
 ```
 
 詳細は `references/tsrignore.md` を参照。

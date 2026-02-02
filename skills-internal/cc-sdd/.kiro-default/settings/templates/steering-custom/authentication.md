@@ -53,8 +53,8 @@
 Example pattern:
 
 ```typescript
-requirePermission('resource:action') // route
-if (!user.can('resource:action')) throw ForbiddenError() // domain
+requirePermission("resource:action"); // route
+if (!user.can("resource:action")) throw ForbiddenError(); // domain
 ```
 
 ### Ownership

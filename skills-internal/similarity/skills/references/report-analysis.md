@@ -62,16 +62,16 @@ Similarity: 0.94 (94%)
 // 影響範囲評価の観点
 interface ImpactAnalysis {
   // 該当ファイルの層（Service, Action, Component等）
-  layer: string
+  layer: string;
 
   // 参照される回数
-  referenceCount: number
+  referenceCount: number;
 
   // 依存するモジュール数
-  dependencyCount: number
+  dependencyCount: number;
 
   // テストカバレッジ
-  testCoverage: number
+  testCoverage: number;
 }
 ```
 
@@ -85,24 +85,28 @@ interface ImpactAnalysis {
 // Before: 重複コード
 // File: src/services/user-service.ts
 export async function getUserById(id: string) {
-  const user = await prisma.user.findUnique({ where: { id } })
-  if (!user) throw new Error('User not found')
-  return user
+  const user = await prisma.user.findUnique({ where: { id } });
+  if (!user) throw new Error("User not found");
+  return user;
 }
 
 // File: src/services/admin-service.ts
 export async function getAdminById(id: string) {
-  const admin = await prisma.admin.findUnique({ where: { id } })
-  if (!admin) throw new Error('Admin not found')
-  return admin
+  const admin = await prisma.admin.findUnique({ where: { id } });
+  if (!admin) throw new Error("Admin not found");
+  return admin;
 }
 
 // After: 共通関数抽出
 // File: src/lib/repository-utils.ts
-export async function findByIdOrThrow<T>(model: any, id: string, resourceName: string): Promise<T> {
-  const record = await model.findUnique({ where: { id } })
-  if (!record) throw new Error(`${resourceName} not found`)
-  return record
+export async function findByIdOrThrow<T>(
+  model: any,
+  id: string,
+  resourceName: string,
+): Promise<T> {
+  const record = await model.findUnique({ where: { id } });
+  if (!record) throw new Error(`${resourceName} not found`);
+  return record;
 }
 ```
 
@@ -111,17 +115,17 @@ export async function findByIdOrThrow<T>(model: any, id: string, resourceName: s
 ```typescript
 // Before: 類似した処理パターン
 async function processUserData(data: UserData) {
-  const validated = validateUserData(data)
-  const result = await saveUser(validated)
-  await auditLog('USER_CREATED', result)
-  return result
+  const validated = validateUserData(data);
+  const result = await saveUser(validated);
+  await auditLog("USER_CREATED", result);
+  return result;
 }
 
 async function processOrderData(data: OrderData) {
-  const validated = validateOrderData(data)
-  const result = await saveOrder(validated)
-  await auditLog('ORDER_CREATED', result)
-  return result
+  const validated = validateOrderData(data);
+  const result = await saveOrder(validated);
+  await auditLog("ORDER_CREATED", result);
+  return result;
 }
 
 // After: 高階関数で抽象化
@@ -129,12 +133,12 @@ async function processWithAudit<T, V>(
   data: T,
   validator: (data: T) => V,
   saver: (validated: V) => Promise<any>,
-  auditAction: string
+  auditAction: string,
 ) {
-  const validated = validator(data)
-  const result = await saver(validated)
-  await auditLog(auditAction, result)
-  return result
+  const validated = validator(data);
+  const result = await saver(validated);
+  await auditLog(auditAction, result);
+  return result;
 }
 ```
 
@@ -143,29 +147,29 @@ async function processWithAudit<T, V>(
 ```typescript
 // Before: 類似した型定義
 interface UserCreateInput {
-  name: string
-  email: string
-  role: string
+  name: string;
+  email: string;
+  role: string;
 }
 
 interface AdminCreateInput {
-  name: string
-  email: string
-  permissions: string[]
+  name: string;
+  email: string;
+  permissions: string[];
 }
 
 // After: 共通基底型 + 拡張
 interface BaseCreateInput {
-  name: string
-  email: string
+  name: string;
+  email: string;
 }
 
 interface UserCreateInput extends BaseCreateInput {
-  role: string
+  role: string;
 }
 
 interface AdminCreateInput extends BaseCreateInput {
-  permissions: string[]
+  permissions: string[];
 }
 ```
 
@@ -280,19 +284,19 @@ Pattern: FormData → Validation → Service Call
 export async function processFormDataAction<T, E>(
   formData: FormData,
   schema: ZodSchema<T>,
-  serviceCall: (data: T) => Promise<Result<E, Error>>
+  serviceCall: (data: T) => Promise<Result<E, Error>>,
 ): Promise<ServerActionResult<E>> {
   // FormData → Object
-  const rawData = Object.fromEntries(formData)
+  const rawData = Object.fromEntries(formData);
 
   // Validation
-  const validated = schema.safeParse(rawData)
+  const validated = schema.safeParse(rawData);
   if (!validated.success) {
-    return err(new ValidationError(validated.error))
+    return err(new ValidationError(validated.error));
   }
 
   // Service Call
-  return convertFormDataToAction(() => serviceCall(validated.data))
+  return convertFormDataToAction(() => serviceCall(validated.data));
 }
 ```
 ````
@@ -302,17 +306,17 @@ export async function processFormDataAction<T, E>(
 ```typescript
 // Before
 export async function createUserAction(formData: FormData) {
-  const rawData = Object.fromEntries(formData)
-  const validated = CreateUserSchema.safeParse(rawData)
+  const rawData = Object.fromEntries(formData);
+  const validated = CreateUserSchema.safeParse(rawData);
   if (!validated.success) {
-    return err(new ValidationError(validated.error))
+    return err(new ValidationError(validated.error));
   }
-  return convertFormDataToAction(() => createUserService(validated.data))
+  return convertFormDataToAction(() => createUserService(validated.data));
 }
 
 // After
 export async function createUserAction(formData: FormData) {
-  return processFormDataAction(formData, CreateUserSchema, createUserService)
+  return processFormDataAction(formData, CreateUserSchema, createUserService);
 }
 ```
 

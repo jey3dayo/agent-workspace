@@ -261,10 +261,10 @@ on:
   pull_request:
     branches: [main, develop]
     paths:
-      - 'src/**/*.ts'
-      - 'src/**/*.tsx'
-      - '.tsr-config.json'
-      - '.tsrignore'
+      - "src/**/*.ts"
+      - "src/**/*.tsx"
+      - ".tsr-config.json"
+      - ".tsrignore"
 
 jobs:
   tsr-check:
@@ -276,8 +276,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: "20"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

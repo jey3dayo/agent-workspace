@@ -340,7 +340,7 @@ size:
   warning: 1000 # Start considering split
   hard_limit: 2000 # Must split immediately
 
-  examples_file: 'references/size-guidelines-examples.md' # Project examples (optional)
+  examples_file: "references/size-guidelines-examples.md" # Project examples (optional)
 ```
 
 **Customization**:

@@ -14,52 +14,52 @@ Utility to load and merge Kiro configuration from multiple sources with fallback
 
 ```typescript
 interface KiroConfig {
-  version: string
+  version: string;
   paths: {
-    root: string
-    steering: string
-    specs: string
-    settings: string
-    templates: string
-    rules: string
-  }
+    root: string;
+    steering: string;
+    specs: string;
+    settings: string;
+    templates: string;
+    rules: string;
+  };
   workflow: {
-    defaultLanguage: 'ja' | 'en'
-    autoApproval: boolean
+    defaultLanguage: "ja" | "en";
+    autoApproval: boolean;
     phases: {
-      requirements: { enabled: boolean; template?: string }
-      design: { enabled: boolean; template?: string }
-      tasks: { enabled: boolean; template?: string }
-    }
-  }
+      requirements: { enabled: boolean; template?: string };
+      design: { enabled: boolean; template?: string };
+      tasks: { enabled: boolean; template?: string };
+    };
+  };
   templates: {
     specs: {
-      init: string
-      requirementsInit: string
-      requirements: string
-      design: string
-      tasks: string
-    }
+      init: string;
+      requirementsInit: string;
+      requirements: string;
+      design: string;
+      tasks: string;
+    };
     steering: {
-      custom: string
-    }
-  }
+      custom: string;
+    };
+  };
   rules: {
-    earsFormat: string
-    designPrinciples: string
-    designDiscoveryLight: string
-    designDiscoveryFull: string
-    designReview: string
-    gapAnalysis: string
-    steeringPrinciples: string
-    tasksGeneration: string
-    [key: string]: string
-  }
+    earsFormat: string;
+    designPrinciples: string;
+    designDiscoveryLight: string;
+    designDiscoveryFull: string;
+    designReview: string;
+    gapAnalysis: string;
+    steeringPrinciples: string;
+    tasksGeneration: string;
+    [key: string]: string;
+  };
   validation: {
-    requireApproval: boolean
-    checkTaskCoverage: boolean
-    enforcePhaseOrder: boolean
-  }
+    requireApproval: boolean;
+    checkTaskCoverage: boolean;
+    enforcePhaseOrder: boolean;
+  };
 }
 ```
 

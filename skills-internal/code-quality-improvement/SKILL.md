@@ -175,19 +175,19 @@ pnpm build         # ビルド成功（該当する場合）
 ```typescript
 // ❌ 危険: アンダースコアだけ追加して使用箇所は未修正
 export function verifyFormDataSupport(): void {
-  const _formData = new FormData() // ← _追加
+  const _formData = new FormData(); // ← _追加
 
   // 使用箇所は_なし → ReferenceError!
-  formData.append('test', 'value') // ← 未定義変数参照
-  expect(formData.get('test')).toBe('value')
+  formData.append("test", "value"); // ← 未定義変数参照
+  expect(formData.get("test")).toBe("value");
 }
 
 // ✅ 正しい: 一貫した命名
 export function verifyFormDataSupport(): void {
-  const formData = new FormData()
+  const formData = new FormData();
 
-  formData.append('test', 'value')
-  expect(formData.get('test')).toBe('value')
+  formData.append("test", "value");
+  expect(formData.get("test")).toBe("value");
 }
 ```
 
@@ -214,13 +214,13 @@ export function verifyFormDataSupport(): void {
 ```typescript
 // 🔴 修正前: any型 + 型アサーション
 async function getUser(id: string): Promise<any> {
-  const response = await fetch(`/api/users/${id}`)
-  return response.json() as User
+  const response = await fetch(`/api/users/${id}`);
+  return response.json() as User;
 }
 
 // ✅ 修正後: Zodスキーマ + Result<T,E>
 async function getUser(id: string): ResultAsync<User, Error> {
-  return handleApiResponse(fetch(`/api/users/${id}`), UserSchema)
+  return handleApiResponse(fetch(`/api/users/${id}`), UserSchema);
 }
 ```
 
@@ -229,20 +229,20 @@ async function getUser(id: string): ResultAsync<User, Error> {
 ```typescript
 // 🔴 修正前: FormData型安全性なし
 export async function createUser(formData: FormData) {
-  const name = formData.get('name') as string
-  const email = formData.get('email') as string
-  return await userService.create({ name, email })
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  return await userService.create({ name, email });
 }
 
 // ✅ 修正後: Zodスキーマ検証 + Result<T,E>
 export async function createUser(formData: FormData) {
-  const validated = validateFormData(formData, CreateUserSchema)
+  const validated = validateFormData(formData, CreateUserSchema);
   if (!validated.success) {
-    return { success: false, error: validated.error }
+    return { success: false, error: validated.error };
   }
 
-  const result = await userService.create(validated.data)
-  return toServerActionResult(result)
+  const result = await userService.create(validated.data);
+  return toServerActionResult(result);
 }
 ```
 
@@ -251,16 +251,16 @@ export async function createUser(formData: FormData) {
 ```typescript
 // 🔴 修正前: 型アサーション
 function transformData(raw: unknown): User {
-  return raw as User
+  return raw as User;
 }
 
 // ✅ 修正後: 型ガード + バリデーション
 function transformData(raw: unknown): Result<User, Error> {
-  const validated = UserSchema.safeParse(raw)
+  const validated = UserSchema.safeParse(raw);
   if (!validated.success) {
-    return err(new Error(validated.error.message))
+    return err(new Error(validated.error.message));
   }
-  return ok(validated.data)
+  return ok(validated.data);
 }
 ```
 
