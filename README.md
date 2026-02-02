@@ -40,22 +40,26 @@ README では「入口としての概要」と「スキル一覧」をまとめ�
 
 ### 外部スキル（skills/）
 
-| カテゴリ              | スキル                                                                       | 概要                                                                                 |
-| --------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| 自動化 / 生成         | [`agent-browser`](skills/agent-browser/SKILL.md)                             | Web 操作の自動化（ナビゲーション、フォーム入力、スクリーンショット、データ抽出など） |
-| GitHub / CI           | [`gh-address-comments`](skills/gh-address-comments/SKILL.md)                 | GitHub PR のレビューコメント対応を支援（gh CLI）                                     |
-| GitHub / CI           | [`gh-fix-ci`](skills/gh-fix-ci/SKILL.md)                                     | GitHub Actions の失敗ログを調査し、修正計画から実装まで支援                          |
-| 設計 / 品質           | [`ui-ux-pro-max`](skills/ui-ux-pro-max/SKILL.md)                             | UI/UX 設計の包括的ガイド（スタイル、配色、フォント等）                               |
-| 設計 / 品質           | [`web-design-guidelines`](skills/web-design-guidelines/SKILL.md)             | Web インターフェース設計のガイドライン準拠チェック                                   |
-| 設計 / 品質           | [`vercel-react-best-practices`](skills/vercel-react-best-practices/SKILL.md) | React/Next.js のパフォーマンス最適化ガイド（Vercel）                                 |
-| アーキテクチャ / 運用 | [`skill-creator`](skills/skill-creator/SKILL.md)                             | 新規スキル作成・既存スキル更新のガイド                                               |
+> **Note**: これらのスキルは `npx skills add` でインストールされます。詳細は各リポジトリを参照してください。
+
+| カテゴリ              | スキル                                                                                                                             | 概要                                                                                 |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 自動化 / 生成         | [`agent-browser`](https://github.com/vercel-labs/agent-browser/blob/main/skills/agent-browser/SKILL.md)                            | Web 操作の自動化（ナビゲーション、フォーム入力、スクリーンショット、データ抽出など） |
+| GitHub / CI           | [`gh-address-comments`](https://github.com/openai/skills/blob/main/skills/.curated/gh-address-comments/SKILL.md)                   | GitHub PR のレビューコメント対応を支援（gh CLI）                                     |
+| GitHub / CI           | [`gh-fix-ci`](https://github.com/openai/skills/blob/main/skills/.curated/gh-fix-ci/SKILL.md)                                       | GitHub Actions の失敗ログを調査し、修正計画から実装まで支援                          |
+| 設計 / 品質           | [`ui-ux-pro-max`](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/blob/main/SKILL.md)                                      | UI/UX 設計の包括的ガイド（スタイル、配色、フォント等）                               |
+| 設計 / 品質           | [`web-design-guidelines`](https://github.com/vercel-labs/agent-skills/blob/main/skills/web-design-guidelines/SKILL.md)             | Web インターフェース設計のガイドライン準拠チェック                                   |
+| 設計 / 品質           | [`vercel-react-best-practices`](https://github.com/vercel-labs/agent-skills/blob/main/skills/vercel-react-best-practices/SKILL.md) | React/Next.js のパフォーマンス最適化ガイド（Vercel）                                 |
+| アーキテクチャ / 運用 | [`skill-creator`](https://github.com/openai/skills/blob/main/skills/.system/skill-creator/SKILL.md)                                | 新規スキル作成・既存スキル更新のガイド                                               |
 
 ## スキル追加・更新の流れ（一般）
 
-1. 自作スキルは `skills-internal/<skill-name>/SKILL.md` を作成または更新する
-2. 外部スキルは `skills/` 配下に追加する（インストール/チェックアウトなど）
+1. **自作スキル**: `skills-internal/<skill-name>/SKILL.md` を作成または更新する
+2. **外部スキル**: `npx skills add <repository>` でインストールする
+   - 例: `npx skills add vercel-labs/agent-browser -g -y`
 3. README のスキル一覧に追加/更新する
 4. 依存するツール・前提条件があれば `SKILL.md` に明記する
+5. `mise ci` を実行してスキル同期を確認する
 
 ## 例外: ui-ux-pro-max の手動構成パターン
 
