@@ -8,10 +8,10 @@ MARKDOWN_LINK_CONFIG = ".markdown-link-check.json"
 [tools]
 node = '24'                          # Node 24 系に固定
 fd = 'latest'                        # ファイル検索用
-prettier = 'latest'                  # コードフォーマッター
-"npm:markdownlint-cli2" = "latest"
-"npm:markdown-link-check" = "latest"
-"npm:skills" = "latest"
+"npm:prettier" = 'latest'            # コードフォーマッター
+"npm:markdownlint-cli2" = "latest"   # Markdown lint
+"npm:markdown-link-check" = "latest" # Markdown リンクチェック
+"npm:skills" = "latest"              # スキル管理
 
 # === ドキュメント管理 ===
 [tasks."docs:lint"]
@@ -32,11 +32,11 @@ run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X markdown-link-check --ver
 
 [tasks."docs:format"]
 description = "Prettierでフォーマット"
-run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X prettier --write --cache --log-level warn"
+run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X prettier --write --log-level warn"
 
 [tasks."docs:format:check"]
 description = "Prettierフォーマットチェック"
-run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X prettier --check --cache"
+run = "fd -e md --type f --no-follow ${MD_EXCLUDES} -X prettier --check"
 
 # === エイリアス ===
 [tasks.format]
