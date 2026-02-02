@@ -40,7 +40,7 @@ run = "fd -e md --type f --no-follow -X prettier --check"
 # === エイリアス ===
 [tasks.format]
 description = "全ての自動修正を実行"
-depends = ["docs:fix", "docs:format"]
+depends = ["skills:fix:bold-headings", "docs:fix", "docs:format"]
 
 [tasks.lint]
 description = "全体検証（修正はしない）"
@@ -62,6 +62,10 @@ run = "./scripts/check-skill-links.sh"
 [tasks."skills:fix:ui-ux-pro-max"]
 description = "ui-ux-pro-max の /tmp リンクを実体化"
 run = "./scripts/fix-ui-ux-pro-max.sh"
+
+[tasks."skills:fix:bold-headings"]
+description = "skills-internal の太字見出しを###へ変換"
+run = "node ./scripts/replace-bold-headings.js"
 
 [tasks."skills:fix:self-links"]
 description = "スキル内の循環自己リンクを削除"
