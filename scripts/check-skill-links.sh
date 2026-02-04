@@ -125,9 +125,7 @@ for source_dir in "${SOURCE_DIRS[@]}"; do
     fi
 
     skill_name=$(basename "$skill_dir")
-    if check_skill_dir "$skill_dir" "$skill_name"; then
-      echo "- $skill_name ok"
-    else
+    if ! check_skill_dir "$skill_dir" "$skill_name"; then
       skills_with_issues=$((skills_with_issues + 1))
     fi
   done
@@ -138,9 +136,7 @@ echo "=== target link check ==="
 
 for target_dir in "${TARGET_DIRS[@]}"; do
   label=$(basename "$(dirname "$target_dir")")/$(basename "$target_dir")
-  if check_target_dir "$target_dir" "$label"; then
-    echo "- $label ok"
-  else
+  if ! check_target_dir "$target_dir" "$label"; then
     skills_with_issues=$((skills_with_issues + 1))
   fi
 done
