@@ -8,7 +8,7 @@
 
 ```
 ~/.agents/
-├── skills/           # 外部リポジトリからのスキル（npx add-skill、git submodule等）
+├── skills/           # 外部リポジトリからのスキル（npx skills add、git submodule等）
 ├── skills-internal/  # 自前で作成・管理するスキル（Single Source of Truth）
 └── scripts/
     └── sync-skills.sh  # 自動同期スクリプト
@@ -24,7 +24,7 @@
 
 ### 1. 外部スキル → `~/.agents/skills/`
 
-- `npx add-skill <repo> -a claude-code` で取得
+- `npx skills add <repo> -g -a claude-code` で取得
 - 公開スキル、Vercel公式、コミュニティスキル
 - Git submoduleでの管理も可能
 
@@ -54,9 +54,48 @@
 **原因**: 外部からのrsyncやコピー時に混入する可能性
 **対策**: 同期スクリプトが自動で削除するため、手動対応不要
 
+## スキルCLI使い方
+
+### 基本コマンド
+
+```bash
+npx skills add <source>
+```
+
+### ソース形式
+
+| 形式       | 例                                                                                                  |
+| ---------- | --------------------------------------------------------------------------------------------------- |
+| GitHub短縮 | `npx skills add vercel-labs/agent-skills`                                                           |
+| 特定スキル | `npx skills add https://github.com/vercel-labs/agent-skills/tree/main/skills/web-design-guidelines` |
+| ローカル   | `npx skills add ./my-local-skills`                                                                  |
+
+### 主要オプション
+
+| フラグ                 | 説明                                         |
+| ---------------------- | -------------------------------------------- |
+| `-g, --global`         | ホームディレクトリにインストール（推奨）     |
+| `-a, --agent <agents>` | 対象エージェント指定（claude-code, codex等） |
+| `-s, --skill <skills>` | 特定スキルのみ選択                           |
+| `-y, --yes`            | 確認プロンプトをスキップ                     |
+| `-l, --list`           | スキル一覧表示（インストールなし）           |
+
+### 実用例
+
+```bash
+# 特定リポジトリから全スキルをグローバルインストール
+npx skills add vercel-labs/agent-skills -g -y
+
+# 特定スキルのみをClaude Codeにインストール
+npx skills add vercel-labs/agent-skills -g -a claude-code -s web-design-guidelines -y
+
+# 特定パスのスキルをインストール
+npx skills add https://github.com/DeL-TaiseiOzaki/claude-code-orchestra/tree/main/.claude/skills/gemini-system -g -y
+```
+
 ## 新規スキル作成フロー
 
-1. 公開スキルを探す: `npx add-skill <repo> -a claude-code`
+1. 公開スキルを探す: `npx skills add <repo> -g -a claude-code`
 2. 自作する場合: `~/.agents/skills-internal/{skill-name}/SKILL.md` を作成
 3. 同期を実行: `~/.agents/scripts/sync-skills.sh` または `mise ci`
 
