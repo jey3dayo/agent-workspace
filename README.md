@@ -51,6 +51,7 @@ README では「入口としての概要」と「スキル一覧」をまとめ�
 | 設計 / 品質           | [`web-design-guidelines`](https://github.com/vercel-labs/agent-skills)                     | Web インターフェース設計のガイドライン準拠チェック                                   |
 | 設計 / 品質           | [`vercel-react-best-practices`](https://github.com/vercel-labs/agent-skills)               | React/Next.js のパフォーマンス最適化ガイド（Vercel）                                 |
 | アーキテクチャ / 運用 | [`skill-creator`](https://github.com/openai/skills/tree/main/skills/.system/skill-creator) | 新規スキル作成・既存スキル更新のガイド                                               |
+| アーキテクチャ / 運用 | [`codex-system`](https://github.com/DeL-TaiseiOzaki/claude-code-orchestra)                 | Claude Code ↔ Codex CLI の連携。Codex を深い推論パートナーとして活用                 |
 
 ## スキル追加・更新の流れ（一般）
 
