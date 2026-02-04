@@ -50,6 +50,7 @@ paths: src/**/*.ts, tests/**/*.test.ts
 ```
 
 **重要**: Claude Code の `.claude/rules/*.md` において、公式に説明されている frontmatter は基本的に `paths` です。
+
 - `paths` 以外のキー（例: `source`, `references` など）を追加しても、Claude Code 側で特別扱いされる保証はありません。
 - 参照元や根拠を残したい場合は、frontmatter ではなく本文に `Sources:` のように記載してください。
 
