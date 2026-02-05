@@ -201,7 +201,7 @@ done
 **Notes**:
 
 - Fixes are executed automatically without confirmation
-- Commit message format: `CI修正: {error category} - {short description}`
+- Commit message format: `fix(ci): {error category} - {short description}`
 - Always push after each fix to retrigger CI
 
 ## Quick Reference
@@ -232,7 +232,7 @@ gh pr checks
 python scripts/inspect_pr_checks.py
 
 # Push after auto-fix
-git add . && git commit -m "CI修正: {category}" && git push
+git add . && git commit -m "fix(ci): {category} - {short description}" && git push
 ```
 
 ## Output Expectations
@@ -242,6 +242,15 @@ git add . && git commit -m "CI修正: {category}" && git push
 - If multiple PR templates exist, confirm which to use
 - Do not commit unless explicitly requested
 - CI monitoring and fixes run automatically (no confirmation; report only when attempts are exceeded)
+
+## Terminology and Style Guide
+
+- Tool names must be exact and wrapped in backticks: `TaskCreate`, `TaskList`, `TaskUpdate`.
+- Field names must be exact and wrapped in backticks: `blockedBy`, `activeForm`, `in_progress`, `completed`, `deleted`.
+- Use "subtask" (one word), "worktree" (lowercase), "PR" (uppercase), "CI" (uppercase), and "GitHub" (proper case).
+- Use backticks for commands, file paths, and placeholders like `{category}` or `{short description}`.
+- Use conventional commits for CI fixes: `fix(ci): {error category} - {short description}`.
+- Keep examples and templates in English for consistency.
 
 ## Bundled Resources
 

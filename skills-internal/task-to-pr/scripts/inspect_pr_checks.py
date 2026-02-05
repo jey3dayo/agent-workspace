@@ -97,7 +97,7 @@ def main() -> int:
     args = parse_args()
     repo_root = find_git_root(Path(args.repo))
     if repo_root is None:
-        print("エラー: Gitリポジトリ内にいません。", file=sys.stderr)
+        print("Error: Not inside a Git repository.", file=sys.stderr)
         return 1
 
     if not ensure_gh_available(repo_root):
@@ -113,7 +113,7 @@ def main() -> int:
 
     failing = [c for c in checks if is_failing(c)]
     if not failing:
-        print(f"PR #{pr_value}: 失敗しているチェックは検出されませんでした。")
+        print(f"PR #{pr_value}: No failing checks detected.")
         return 0
 
     results = []
@@ -149,13 +149,13 @@ def find_git_root(start: Path) -> Path | None:
 
 def ensure_gh_available(repo_root: Path) -> bool:
     if which("gh") is None:
-        print("エラー: ghがインストールされていないか、PATHに含まれていません。", file=sys.stderr)
+        print("Error: gh is not installed or not in PATH.", file=sys.stderr)
         return False
     result = run_gh_command(["auth", "status"], cwd=repo_root)
     if result.returncode == 0:
         return True
     message = (result.stderr or result.stdout or "").strip()
-    print(message or "エラー: ghが認証されていません。", file=sys.stderr)
+    print(message or "Error: gh is not authenticated.", file=sys.stderr)
     return False
 
 
@@ -165,16 +165,16 @@ def resolve_pr(pr_value: str | None, repo_root: Path) -> str | None:
     result = run_gh_command(["pr", "view", "--json", "number"], cwd=repo_root)
     if result.returncode != 0:
         message = (result.stderr or result.stdout or "").strip()
-        print(message or "エラー: PRを解決できませんでした。", file=sys.stderr)
+        print(message or "Error: Unable to resolve PR.", file=sys.stderr)
         return None
     try:
         data = json.loads(result.stdout or "{}")
     except json.JSONDecodeError:
-        print("エラー: PR JSONをパースできませんでした。", file=sys.stderr)
+        print("Error: Unable to parse PR JSON.", file=sys.stderr)
         return None
     number = data.get("number")
     if not number:
-        print("エラー: PR番号が見つかりませんでした。", file=sys.stderr)
+        print("Error: PR number not found.", file=sys.stderr)
         return None
     return str(number)
 
@@ -200,7 +200,7 @@ def fetch_checks(pr_value: str, repo_root: Path) -> list[dict[str, Any]] | None:
             ]
             selected_fields = [field for field in fallback_fields if field in available_fields]
             if not selected_fields:
-                print("エラー: gh pr checksで利用可能なフィールドがありません。", file=sys.stderr)
+                print("Error: No available fields for gh pr checks.", file=sys.stderr)
                 return None
             result = run_gh_command(
                 ["pr", "checks", pr_value, "--json", ",".join(selected_fields)],
@@ -208,18 +208,18 @@ def fetch_checks(pr_value: str, repo_root: Path) -> list[dict[str, Any]] | None:
             )
             if result.returncode != 0:
                 message = (result.stderr or result.stdout or "").strip()
-                print(message or "エラー: gh pr checksが失敗しました。", file=sys.stderr)
+                print(message or "Error: gh pr checks failed.", file=sys.stderr)
                 return None
         else:
-            print(message or "エラー: gh pr checksが失敗しました。", file=sys.stderr)
+            print(message or "Error: gh pr checks failed.", file=sys.stderr)
             return None
     try:
         data = json.loads(result.stdout or "[]")
     except json.JSONDecodeError:
-        print("エラー: checks JSONをパースできませんでした。", file=sys.stderr)
+        print("Error: Unable to parse checks JSON.", file=sys.stderr)
         return None
     if not isinstance(data, list):
-        print("エラー: 予期しないchecks JSONの形式です。", file=sys.stderr)
+        print("Error: Unexpected checks JSON format.", file=sys.stderr)
         return None
     return data
 
@@ -253,7 +253,7 @@ def analyze_check(
 
     if run_id is None:
         base["status"] = "external"
-        base["note"] = "detailsUrlにGitHub Actions run idが検出されませんでした。"
+        base["note"] = "No GitHub Actions run id detected in detailsUrl."
         return base
 
     metadata = fetch_run_metadata(run_id, repo_root)
@@ -265,7 +265,7 @@ def analyze_check(
 
     if log_status == "pending":
         base["status"] = "log_pending"
-        base["note"] = log_error or "ログはまだ利用できません。"
+        base["note"] = log_error or "Logs are not available yet."
         if metadata:
             base["run"] = metadata
         return base
@@ -359,21 +359,21 @@ def fetch_run_log(run_id: str, repo_root: Path) -> tuple[str, str]:
     result = run_gh_command(["run", "view", run_id, "--log"], cwd=repo_root)
     if result.returncode != 0:
         error = (result.stderr or result.stdout or "").strip()
-        return "", error or "gh run viewが失敗しました"
+        return "", error or "gh run view failed"
     return result.stdout, ""
 
 
 def fetch_job_log(job_id: str, repo_root: Path) -> tuple[str, str]:
     repo_slug = fetch_repo_slug(repo_root)
     if not repo_slug:
-        return "", "エラー: ジョブログのリポジトリ名を解決できませんでした。"
+        return "", "Error: Unable to resolve repository name for job logs."
     endpoint = f"/repos/{repo_slug}/actions/jobs/{job_id}/logs"
     returncode, stdout_bytes, stderr = run_gh_command_raw(["api", endpoint], cwd=repo_root)
     if returncode != 0:
         message = (stderr or stdout_bytes.decode(errors="replace")).strip()
-        return "", message or "gh api job logsが失敗しました"
+        return "", message or "gh api job logs failed"
     if is_zip_payload(stdout_bytes):
-        return "", "ジョブログがzipアーカイブで返されました。パースできません。"
+        return "", "Job logs were returned as a zip archive and cannot be parsed."
     return stdout_bytes.decode(errors="replace"), ""
 
 
@@ -458,12 +458,12 @@ def tail_lines(text: str, max_lines: int) -> str:
 
 def render_results(pr_number: str, results: Iterable[dict[str, Any]]) -> None:
     results_list = list(results)
-    print(f"PR #{pr_number}: {len(results_list)} 件の失敗したチェックを分析しました。")
+    print(f"PR #{pr_number}: analyzed {len(results_list)} failed checks.")
     for result in results_list:
         print("-" * 60)
-        print(f"チェック名: {result.get('name', '')}")
+        print(f"Check name: {result.get('name', '')}")
         if result.get("detailsUrl"):
-            print(f"詳細: {result['detailsUrl']}")
+            print(f"Details: {result['detailsUrl']}")
         run_id = result.get("runId")
         if run_id:
             print(f"Run ID: {run_id}")
@@ -471,7 +471,7 @@ def render_results(pr_number: str, results: Iterable[dict[str, Any]]) -> None:
         if job_id:
             print(f"Job ID: {job_id}")
         status = result.get("status", "unknown")
-        print(f"ステータス: {status}")
+        print(f"Status: {status}")
 
         run_meta = result.get("run", {})
         if run_meta:
@@ -479,25 +479,25 @@ def render_results(pr_number: str, results: Iterable[dict[str, Any]]) -> None:
             sha = (run_meta.get("headSha") or "")[:12]
             workflow = run_meta.get("workflowName") or run_meta.get("name") or ""
             conclusion = run_meta.get("conclusion") or run_meta.get("status") or ""
-            print(f"ワークフロー: {workflow} ({conclusion})")
+            print(f"Workflow: {workflow} ({conclusion})")
             if branch or sha:
-                print(f"ブランチ/SHA: {branch} {sha}")
+                print(f"Branch/SHA: {branch} {sha}")
             if run_meta.get("url"):
                 print(f"Run URL: {run_meta['url']}")
 
         if result.get("note"):
-            print(f"注意: {result['note']}")
+            print(f"Note: {result['note']}")
 
         if result.get("error"):
-            print(f"ログ取得エラー: {result['error']}")
+            print(f"Log fetch error: {result['error']}")
             continue
 
         snippet = result.get("logSnippet") or ""
         if snippet:
-            print("失敗スニペット:")
+            print("Failure snippet:")
             print(indent_block(snippet, prefix="  "))
         else:
-            print("スニペットはありません。")
+            print("No snippet available.")
     print("-" * 60)
 
 

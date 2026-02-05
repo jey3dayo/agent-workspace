@@ -1,50 +1,50 @@
-# CI修正パターン集
+# CI Fix Patterns
 
-## 目的
+## Purpose
 
-CI失敗を自動修正するための戦略とパターンを提供します。`inspect_pr_checks.py`と組み合わせて使用します。
+Provide strategies and patterns for automatically fixing CI failures. Use with `inspect_pr_checks.py`.
 
-## inspect_pr_checks.py 使用方法
+## inspect_pr_checks.py Usage
 
-### 基本的な使い方
+### Basic Usage
 
 ```bash
-# 現在のブランチのPRチェックを検査
+# Inspect PR checks for the current branch
 python scripts/inspect_pr_checks.py
 
-# 特定のPR番号を指定
+# Specify a PR number
 python scripts/inspect_pr_checks.py --pr 123
 
-# JSON形式で出力
+# Output as JSON
 python scripts/inspect_pr_checks.py --json
 
-# 最大行数とコンテキスト行数を指定
+# Set max lines and context lines
 python scripts/inspect_pr_checks.py --max-lines 200 --context 50
 ```
 
-### 出力形式
+### Output Format
 
-**テキスト出力**:
+**Text output**:
 
 ```
-PR #123: 2 件の失敗したチェックを分析しました。
+PR #123: analyzed 2 failed checks.
 ------------------------------------------------------------
-チェック名: TypeScript Build
-詳細: https://github.com/.../runs/...
+Check name: TypeScript Build
+Details: https://github.com/.../runs/...
 Run ID: 12345
 Job ID: 67890
-ステータス: ok
-ワークフロー: CI (failure)
-ブランチ/SHA: feat/auth 1a2b3c4d5e6f
+Status: ok
+Workflow: CI (failure)
+Branch/SHA: feat/auth 1a2b3c4d5e6f
 Run URL: https://github.com/.../runs/12345
-失敗スニペット:
+Failure snippet:
   src/auth.ts:45:12 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'.
   45   validateToken(token);
                    ~~~~~
 ------------------------------------------------------------
 ```
 
-**JSON出力** (`--json`):
+**JSON output** (`--json`):
 
 ```json
 {
@@ -69,182 +69,182 @@ Run URL: https://github.com/.../runs/12345
 }
 ```
 
-### エラー検出ワークフロー
+### Error Detection Workflow
 
 ```bash
-# Step 1: CI失敗を検出
+# Step 1: Detect CI failures
 gh pr checks
 
-# Step 2: エラー詳細を取得
+# Step 2: Fetch error details
 python scripts/inspect_pr_checks.py --json > /tmp/ci-errors.json
 
-# Step 3: エラーカテゴリを判定（logSnippetを解析）
-# Step 4: 修正戦略を適用（以下のパターン参照）
-# Step 5: 修正 → コミット → プッシュ
+# Step 3: Determine error category (parse logSnippet)
+# Step 4: Apply fix strategy (see patterns below)
+# Step 5: Fix → commit → push
 git add .
-git commit -m "CI修正: {category}"
+git commit -m "fix(ci): {category} - {short description}"
 git push
 ```
 
-## エラーカテゴリと修正戦略
+## Error Categories and Fix Strategies
 
-### 1. 型エラー（TypeScript）
+### 1. Type Errors (TypeScript)
 
-**検出キーワード**:
+**Detection keywords**:
 
 - `TS2345`, `TS2339`, `TS2322`, `TS7006`, `TS2571`
 - `error TS`, `Type 'X' is not assignable`, `Property 'X' does not exist`
 
-**修正戦略**:
+**Fix strategies**:
 
-#### A. 型不一致の修正
+#### A. Fix type mismatches
 
-**パターン**: 引数や戻り値の型が一致しない
+**Pattern**: Argument or return types do not match
 
 ```typescript
-// エラー例
+// Error example
 validateToken(token); // error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'
 
-// 修正1: 型アサーション（正しい型が保証されている場合）
+// Fix 1: Type assertion or conversion (when correct type is guaranteed)
 validateToken(Number(token));
 
-// 修正2: 関数シグネチャ修正（引数の型が間違っている場合）
+// Fix 2: Update function signature (when argument type is wrong)
 function validateToken(token: string) { ... }
 
-// 修正3: オプショナル型（nullableな場合）
+// Fix 3: Optional types (when nullable)
 function validateToken(token: string | null) { ... }
 ```
 
-#### B. プロパティ不存在エラー
+#### B. Property does not exist
 
-**パターン**: オブジェクトに存在しないプロパティにアクセス
+**Pattern**: Accessing a property that does not exist on the type
 
 ```typescript
-// エラー例
+// Error example
 user.email; // error TS2339: Property 'email' does not exist on type 'User'
 
-// 修正1: 型定義を拡張
+// Fix 1: Extend the type definition
 interface User {
   email: string;
 }
 
-// 修正2: オプショナルアクセス
+// Fix 2: Optional access
 user.email ?? "default@example.com";
 
-// 修正3: 型ガード
+// Fix 3: Type guard
 if ("email" in user) {
   user.email;
 }
 ```
 
-#### C. any型エラー
+#### C. Implicit any
 
-**パターン**: 暗黙的any型
+**Pattern**: Parameter has implicit any type
 
 ```typescript
-// エラー例
+// Error example
 function processData(data) { ... } // error TS7006: Parameter 'data' implicitly has an 'any' type
 
-// 修正: 適切な型を指定
+// Fix: Specify a proper type
 function processData(data: string) { ... }
-function processData(data: unknown) { ... } // 型が不明な場合
+function processData(data: unknown) { ... } // when type is unknown
 ```
 
-### 2. Lintエラー（ESLint）
+### 2. Lint Errors (ESLint)
 
-**検出キーワード**:
+**Detection keywords**:
 
 - `error`, `warning`, `eslint`, `Expected`, `Unexpected`
-- ファイルパスとルール名（例: `no-unused-vars`, `@typescript-eslint/no-explicit-any`）
+- File path and rule name (e.g., `no-unused-vars`, `@typescript-eslint/no-explicit-any`)
 
-**修正戦略**:
+**Fix strategies**:
 
-#### A. 未使用変数
+#### A. Unused variables
 
-**ルール**: `no-unused-vars`, `@typescript-eslint/no-unused-vars`
+**Rules**: `no-unused-vars`, `@typescript-eslint/no-unused-vars`
 
 ```typescript
-// エラー例
+// Error example
 const unused = 42; // error: 'unused' is assigned a value but never used
 
-// 修正1: 削除
-// （変数を削除）
+// Fix 1: Remove
+// (delete the variable)
 
-// 修正2: _プレフィックス（避けられない場合のみ）
-const _unused = 42; // エラーハンドリングなど制約がある場合
+// Fix 2: _ prefix (only if unavoidable)
+const _unused = 42; // when constrained (e.g., error handling)
 ```
 
-#### B. any型使用
+#### B. Explicit any
 
-**ルール**: `@typescript-eslint/no-explicit-any`
+**Rule**: `@typescript-eslint/no-explicit-any`
 
 ```typescript
-// エラー例
+// Error example
 function process(data: any) { ... } // error: Unexpected any. Specify a different type
 
-// 修正1: 具体的な型
+// Fix 1: Concrete type
 function process(data: UserData) { ... }
 
-// 修正2: unknown型
+// Fix 2: unknown type
 function process(data: unknown) { ... }
 
-// 修正3: ジェネリック型
+// Fix 3: Generic type
 function process<T>(data: T) { ... }
 ```
 
-#### C. 型アサーション
+#### C. Unnecessary type assertions
 
-**ルール**: `@typescript-eslint/no-unnecessary-type-assertion`
+**Rule**: `@typescript-eslint/no-unnecessary-type-assertion`
 
 ```typescript
-// エラー例
+// Error example
 const value = someValue as string; // error: This assertion is unnecessary
 
-// 修正: 型アサーションを削除
+// Fix: Remove the assertion
 const value = someValue;
 ```
 
-### 3. テスト失敗
+### 3. Test Failures
 
-**検出キーワード**:
+**Detection keywords**:
 
 - `FAIL`, `FAILED`, `expected`, `received`, `AssertionError`
 - `Test Suites:`, `Tests:`, `jest`, `vitest`, `mocha`
 
-**修正戦略**:
+**Fix strategies**:
 
-#### A. アサーション失敗
+#### A. Assertion failures
 
-**パターン**: 期待値と実際の値が一致しない
+**Pattern**: Expected value does not match actual value
 
 ```typescript
-// エラー例
+// Error example
 expect(result).toBe(42);
 // Expected: 42
 // Received: "42"
 
-// 修正1: 型変換
+// Fix 1: Type conversion
 expect(Number(result)).toBe(42);
 
-// 修正2: 期待値を修正（仕様が変わった場合）
+// Fix 2: Update expected value (if spec changed)
 expect(result).toBe("42");
 
-// 修正3: 実装を修正
+// Fix 3: Fix implementation
 function calculate(): number {
-  // 戻り値をnumberに
-  return 42; // 文字列ではなく数値を返す
+  // Return a number
+  return 42;
 }
 ```
 
-#### B. モック不足
+#### B. Missing mocks
 
-**パターン**: 外部依存が適切にモックされていない
+**Pattern**: External dependency is not mocked properly
 
 ```typescript
-// エラー例
+// Error example
 // Error: Cannot read property 'get' of undefined (axios)
 
-// 修正: モック追加
+// Fix: Add mock
 vi.mock("axios", () => ({
   default: {
     get: vi.fn().mockResolvedValue({ data: [] }),
@@ -252,69 +252,69 @@ vi.mock("axios", () => ({
 }));
 ```
 
-#### C. 非同期処理の待機不足
+#### C. Missing await
 
-**パターン**: awaitが不足している
+**Pattern**: Missing `await` for async code
 
 ```typescript
-// エラー例
+// Error example
 test("fetches data", () => {
-  const result = fetchData(); // Promise未解決
-  expect(result).toEqual(expected); // 失敗
+  const result = fetchData(); // Promise unresolved
+  expect(result).toEqual(expected); // fails
 });
 
-// 修正
+// Fix
 test("fetches data", async () => {
   const result = await fetchData();
   expect(result).toEqual(expected);
 });
 ```
 
-### 4. ビルドエラー
+### 4. Build Errors
 
-**検出キーワード**:
+**Detection keywords**:
 
 - `Error: Cannot find module`, `Module not found`, `ENOENT`
 - `Build failed`, `Compilation error`
 
-**修正戦略**:
+**Fix strategies**:
 
-#### A. モジュール不足
+#### A. Missing modules
 
-**パターン**: 依存関係がインストールされていない
+**Pattern**: Dependency not installed
 
 ```bash
-# エラー例
+# Error example
 Error: Cannot find module 'lodash'
 
-# 修正: 依存関係をインストール
+# Fix: Install dependency
 npm install lodash
-# または
+# or
 pnpm add lodash
 ```
 
-#### B. インポートパス間違い
+#### B. Incorrect import paths
 
-**パターン**: ファイルパスが間違っている
+**Pattern**: File path is incorrect
 
 ```typescript
-// エラー例
+// Error example
 import { helper } from "./utils/helper"; // Error: Cannot find module
 
-// 修正: 正しいパスに修正
+// Fix: Correct the path
 import { helper } from "../utils/helper";
-// または
-import { helper } from "@/utils/helper"; // エイリアスを使用
+// or
+import { helper } from "@/utils/helper"; // using alias
 ```
 
-#### C. ビルド設定エラー
+#### C. Build config errors
 
-**パターン**: tsconfig.json や webpack設定の問題
+**Pattern**: Issue in tsconfig.json or webpack config
 
 ```json
-// エラー例: "Cannot find name 'process'"
+// Error example: "Cannot find name 'process'"
 
-// 修正: tsconfig.jsonに型定義を追加
+// Fix: Add type definitions in tsconfig.json
 {
   "compilerOptions": {
     "types": ["node"]
@@ -322,139 +322,139 @@ import { helper } from "@/utils/helper"; // エイリアスを使用
 }
 ```
 
-## 自動修正の優先順位
+## Auto-Fix Priority
 
-### 1. 確実に修正可能（自動実行）
+### 1. Safe to fix automatically
 
-- 未使用変数の削除
-- 不要な型アサーションの削除
-- インポート文のソート
-- フォーマット違反
+- Remove unused variables
+- Remove unnecessary type assertions
+- Sort imports
+- Formatting violations
 
-### 2. 推論が必要（慎重に実行）
+### 2. Requires inference (act carefully)
 
-- 型不一致の修正（型アサーション vs シグネチャ変更）
-- プロパティ不存在（型定義追加 vs オプショナルアクセス）
-- テストの期待値修正
+- Type mismatch fixes (assertion vs signature change)
+- Property missing (extend types vs optional access)
+- Test expectation changes
 
-### 3. 手動介入が必要
+### 3. Requires manual intervention
 
-- ロジックエラー
-- アーキテクチャ変更が必要な問題
-- 外部API変更による破壊的変更
+- Logic errors
+- Issues requiring architectural changes
+- Breaking changes due to external API changes
 
-## 修正実装パターン
+## Fix Implementation Patterns
 
-### パターン1: 単一ファイルの型エラー
+### Pattern 1: Single-file type error
 
 ```bash
-# 1. エラー検出
+# 1. Detect errors
 python scripts/inspect_pr_checks.py --json > /tmp/ci-errors.json
 
-# 2. エラー解析
-# logSnippet から:
-#   - ファイルパス: src/auth.ts
-#   - 行番号: 45
-#   - エラー内容: TS2345
+# 2. Parse error
+# from logSnippet:
+#   - File path: src/auth.ts
+#   - Line number: 45
+#   - Error: TS2345
 
-# 3. ファイル読み込み
+# 3. Read the file
 Read src/auth.ts
 
-# 4. 修正実装
-Edit src/auth.ts (該当箇所を修正)
+# 4. Implement fix
+Edit src/auth.ts (fix the relevant location)
 
-# 5. コミット・プッシュ
+# 5. Commit and push
 git add src/auth.ts
-git commit -m "CI修正: 型エラー - validateToken引数型の修正"
+git commit -m "fix(ci): type error - fix validateToken arg type"
 git push
 ```
 
-### パターン2: 複数ファイルのLintエラー
+### Pattern 2: Multi-file lint errors
 
 ```bash
-# 1. Lint実行（ローカル）
+# 1. Run lint (locally)
 npm run lint
 
-# 2. 自動修正可能なものを修正
+# 2. Fix auto-fixable issues
 npm run lint -- --fix
 
-# 3. 残りの手動修正
-# （no-unused-varsなど）
+# 3. Manual fixes
+# (e.g., no-unused-vars)
 
-# 4. コミット・プッシュ
+# 4. Commit and push
 git add .
-git commit -m "CI修正: Lint - 未使用変数の削除"
+git commit -m "fix(ci): lint - remove unused variables"
 git push
 ```
 
-### パターン3: テスト失敗
+### Pattern 3: Test failures
 
 ```bash
-# 1. テスト実行（ローカル）
+# 1. Run tests (locally)
 npm run test
 
-# 2. 失敗したテストを特定
-# logSnippet から:
-#   - テストファイル: tests/auth.test.ts
-#   - テスト名: "should validate token"
+# 2. Identify failing test
+# from logSnippet:
+#   - Test file: tests/auth.test.ts
+#   - Test name: "should validate token"
 
-# 3. テストコードまたは実装を修正
+# 3. Fix test code or implementation
 Read tests/auth.test.ts
 Read src/auth.ts
 Edit tests/auth.test.ts
 
-# 4. 再実行して確認
+# 4. Re-run to confirm
 npm run test
 
-# 5. コミット・プッシュ
+# 5. Commit and push
 git add tests/auth.test.ts src/auth.ts
-git commit -m "CI修正: テスト - validateTokenのアサーション修正"
+git commit -m "fix(ci): test - fix validateToken assertion"
 git push
 ```
 
-## 修正ループの中断条件
+## Stop Conditions for the Fix Loop
 
-### 自動修正を継続
+### Continue auto-fixing
 
-- 1回目の修正: 無条件で継続
-- 2回目の修正: 前回と異なるエラーカテゴリなら継続
-- 3回目の修正: 前回と異なるエラーカテゴリなら継続
+- 1st attempt: always continue
+- 2nd attempt: continue if the error category differs from the previous attempt
+- 3rd attempt: continue if the error category differs from the previous attempt
 
-### ユーザーに報告（中断）
+### Report to the user (stop)
 
-以下の場合、3回以内でも中断してユーザーに報告:
+Stop and report within 3 attempts if:
 
-- 同じエラーが3回連続で発生
-- エラーカテゴリが判定できない（未知のエラー）
-- ログが取得できない（status: "log_unavailable"）
-- 外部チェック（status: "external"）
+- The same error occurs 3 times in a row
+- Error category is unknown (unclassified error)
+- Logs are unavailable (status: "log_unavailable")
+- External checks (status: "external")
 
-### 試行回数超過時の報告フォーマット
+### Report format when attempts are exceeded
 
 ```
-CI修正を3回試行しましたが、失敗が継続しています。
+Tried CI fixes 3 times, but failures persist.
 
-試行した修正:
-1. CI修正: 型エラー - validateToken引数型の修正
-2. CI修正: Lint - 未使用変数の削除
-3. CI修正: 型エラー - User型定義の拡張
+Fixes attempted:
+1. fix(ci): type error - fix validateToken arg type
+2. fix(ci): lint - remove unused variables
+3. fix(ci): type error - extend User type definition
 
-残存するエラー:
-- チェック名: TypeScript Build
-- エラーカテゴリ: 型エラー
-- ファイル: src/auth.ts:67
-- 内容: error TS2339: Property 'role' does not exist on type 'User'
+Remaining errors:
+- Check name: TypeScript Build
+- Error category: type error
+- File: src/auth.ts:67
+- Details: error TS2339: Property 'role' does not exist on type 'User'
 
-推奨される次のステップ:
-1. User型にroleプロパティを追加
-2. または、roleアクセスをオプショナルチェーンに変更
-3. 手動でコミット・プッシュして再確認
+Recommended next steps:
+1. Add role to the User type
+2. Or change role access to optional chaining
+3. Manually commit and push, then re-check
 ```
 
-## 注意事項
+## Notes
 
-- 修正は確認なしで自動実行されるため、慎重に判断する
-- 各修正後、必ずプッシュしてCIを再トリガーする
-- 同じエラーが繰り返される場合は早期に中断する
-- ログが不完全な場合（status: "log_pending"）は、数秒待ってから再試行
-- 外部チェック（GitHub Apps等）は自動修正できないため、スキップする
+- Fixes run automatically without confirmation, so apply carefully
+- Always push after each fix to retrigger CI
+- If the same error repeats, stop early
+- If logs are incomplete (status: "log_pending"), wait a few seconds and retry
+- External checks (e.g., GitHub Apps) cannot be auto-fixed; skip

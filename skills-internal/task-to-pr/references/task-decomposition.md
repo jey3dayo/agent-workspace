@@ -1,234 +1,234 @@
-# タスク分解ガイド
+# Task Decomposition Guide
 
-## 目的
+## Purpose
 
-複雑なタスクを適切に分解し、`TaskCreate`/`TaskList`/`TaskUpdate`を活用して進捗を可視化します。
+Break complex tasks appropriately and visualize progress using `TaskCreate`/`TaskList`/`TaskUpdate`.
 
-## 複雑度評価
+## Complexity Assessment
 
-### Simple（タスク分解不要）
+### Simple (No Decomposition Needed)
 
-以下のすべてを満たす場合:
+All of the following are true:
 
-- 単一ファイルの変更
-- 変更内容が明確（明確な修正、バグフィックス）
-- 3ステップ以下で完了
+- Single-file change
+- Change is clear (straightforward modification or bug fix)
+- Can be completed in 3 steps or fewer
 
-**例**:
+**Examples**:
 
-- タイポ修正
-- 単一関数の修正
-- 設定ファイルの更新
+- Fixing a typo
+- Updating a single function
+- Updating a config file
 
-**対応**: TaskCreateを使用せず、直接実装
+**Action**: Do not use TaskCreate; implement directly.
 
-### Complex（タスク分解必要）
+### Complex (Decomposition Needed)
 
-以下のいずれかを満たす場合:
+Any of the following are true:
 
-- 複数ファイルの変更
-- アーキテクチャ変更を伴う
-- 3ステップを超える作業
-- 複数のコンポーネント/モジュールに影響
+- Multiple files are changed
+- Includes architectural changes
+- More than 3 steps of work
+- Impacts multiple components/modules
 
-**例**:
+**Examples**:
 
-- 新機能追加
-- リファクタリング
-- 複数箇所のバグ修正
-- API変更
+- Adding a new feature
+- Refactoring
+- Fixing bugs across multiple areas
+- API changes
 
-**対応**: TaskCreateでサブタスクを登録
+**Action**: Register subtasks with TaskCreate.
 
-## TaskCreateパターン
+## TaskCreate Patterns
 
-### 機能追加パターン
+### Feature Addition Pattern
 
-**例**: ユーザー認証機能を追加
+**Example**: Add user authentication
 
 ```markdown
-TaskCreate #1: "データモデル定義"
-description: User, Session モデルを定義し、データベーススキーマを作成
-activeForm: "データモデルを定義中"
+TaskCreate #1: "Define data models"
+description: Define User and Session models and create database schema
+activeForm: "Defining data models"
 
-TaskCreate #2: "認証API実装"
-description: POST /auth/login, POST /auth/logout エンドポイントを実装
-activeForm: "認証APIを実装中"
+TaskCreate #2: "Implement auth APIs"
+description: Implement POST /auth/login, POST /auth/logout endpoints
+activeForm: "Implementing auth APIs"
 blockedBy: [#1]
 
-TaskCreate #3: "ミドルウェア実装"
-description: JWT検証ミドルウェアを実装し、保護ルートに適用
-activeForm: "ミドルウェアを実装中"
+TaskCreate #3: "Implement middleware"
+description: Implement JWT validation middleware and apply to protected routes
+activeForm: "Implementing middleware"
 blockedBy: [#2]
 
-TaskCreate #4: "テスト追加"
-description: 認証フロー全体の統合テストを追加
-activeForm: "テストを追加中"
+TaskCreate #4: "Add tests"
+description: Add integration tests for the authentication flow
+activeForm: "Adding tests"
 blockedBy: [#3]
 ```
 
-**依存関係の推論**:
+**Dependency reasoning**:
 
-- データモデル → API → ミドルウェア → テスト（線形依存）
+- Data model → API → middleware → tests (linear dependency)
 
-### リファクタリングパターン
+### Refactoring Pattern
 
-**例**: コンポーネントのディレクトリ構造を再編成
+**Example**: Reorganize component directory structure
 
 ```markdown
-TaskCreate #1: "新ディレクトリ構造設計"
-description: コンポーネント分類を定義し、移動計画を立案
-activeForm: "ディレクトリ構造を設計中"
+TaskCreate #1: "Design new directory structure"
+description: Define component taxonomy and plan the moves
+activeForm: "Designing directory structure"
 
-TaskCreate #2: "Atomic コンポーネント移動"
-description: Button, Input 等の基本コンポーネントを移動
-activeForm: "Atomicコンポーネントを移動中"
+TaskCreate #2: "Move Atomic components"
+description: Move basic components like Button, Input
+activeForm: "Moving Atomic components"
 blockedBy: [#1]
 
-TaskCreate #3: "Composite コンポーネント移動"
-description: Form, Modal 等の複合コンポーネントを移動
-activeForm: "Compositeコンポーネントを移動中"
+TaskCreate #3: "Move Composite components"
+description: Move composite components like Form, Modal
+activeForm: "Moving Composite components"
 blockedBy: [#2]
 
-TaskCreate #4: "インポートパス修正"
-description: すべてのインポート文を新しいパスに更新
-activeForm: "インポートパスを修正中"
+TaskCreate #4: "Fix import paths"
+description: Update all import paths to the new locations
+activeForm: "Fixing import paths"
 blockedBy: [#3]
 
-TaskCreate #5: "テスト実行と検証"
-description: 全テストを実行し、インポートエラーがないか確認
-activeForm: "テストを実行中"
+TaskCreate #5: "Run tests and verify"
+description: Run all tests and confirm there are no import errors
+activeForm: "Running tests"
 blockedBy: [#4]
 ```
 
-**依存関係の推論**:
+**Dependency reasoning**:
 
-- 設計 → Atomic移動 → Composite移動 → インポート修正 → テスト（線形依存）
+- Design → Atomic move → Composite move → import fixes → tests (linear dependency)
 
-### バグ修正パターン
+### Bug Fix Pattern
 
-**例**: データ競合によるバグを修正
+**Example**: Fix a data race bug
 
 ```markdown
-TaskCreate #1: "原因調査"
-description: データ競合の発生箇所と原因を特定
-activeForm: "原因を調査中"
+TaskCreate #1: "Investigate root cause"
+description: Identify where the data race occurs and why
+activeForm: "Investigating root cause"
 
-TaskCreate #2: "状態管理修正"
-description: 競合を防ぐために状態管理ロジックを修正
-activeForm: "状態管理を修正中"
+TaskCreate #2: "Fix state management"
+description: Adjust state management logic to prevent the race
+activeForm: "Fixing state management"
 blockedBy: [#1]
 
-TaskCreate #3: "エッジケース対応"
-description: 特定されたエッジケースに対する防御コードを追加
-activeForm: "エッジケースに対応中"
+TaskCreate #3: "Handle edge cases"
+description: Add guards for identified edge cases
+activeForm: "Handling edge cases"
 blockedBy: [#2]
 
-TaskCreate #4: "回帰テスト追加"
-description: バグの再発を防ぐテストケースを追加
-activeForm: "回帰テストを追加中"
+TaskCreate #4: "Add regression tests"
+description: Add tests to prevent regressions
+activeForm: "Adding regression tests"
 blockedBy: [#3]
 ```
 
-**依存関係の推論**:
+**Dependency reasoning**:
 
-- 調査 → 修正 → エッジケース対応 → テスト（線形依存）
+- Investigation → fix → edge cases → tests (linear dependency)
 
-## 依存関係の推論ルール
+## Dependency Inference Rules
 
-### 線形依存（blockedBy: [前のタスク]）
+### Linear Dependency (blockedBy: [previous task])
 
-以下の場合、線形依存を設定:
+Use linear dependency when:
 
-- 順序が明確（データモデル → API → UI）
-- 前のタスクの出力が次のタスクの入力
+- Order is clear (data model → API → UI)
+- Output of one task is input to the next
 
-### 並列実行（blockedByなし）
+### Parallel Execution (no blockedBy)
 
-以下の場合、並列実行可能:
+Parallel execution is possible when:
 
-- 独立したモジュール/ファイル
-- 相互依存がない
-- 同時に作業可能
+- Modules/files are independent
+- No mutual dependency
+- Can be worked on at the same time
 
-**例**:
+**Example**:
 
 ```markdown
-TaskCreate #1: "ユーザーAPI実装"
-TaskCreate #2: "商品API実装"
+TaskCreate #1: "Implement user API"
+TaskCreate #2: "Implement product API"
 
-# #1と#2は並列実行可能（独立したリソース）
+# #1 and #2 can run in parallel (independent resources)
 ```
 
-### 複数依存（blockedBy: [#1, #2]）
+### Multiple Dependencies (blockedBy: [#1, #2])
 
-以下の場合、複数依存を設定:
+Use multiple dependencies when:
 
-- 複数のタスクの完了が必要
-- 統合タスク
+- Completion of multiple tasks is required
+- Integration task
 
-**例**:
+**Example**:
 
 ```markdown
-TaskCreate #1: "ユーザーAPI実装"
-TaskCreate #2: "商品API実装"
-TaskCreate #3: "統合テスト"
+TaskCreate #1: "Implement user API"
+TaskCreate #2: "Implement product API"
+TaskCreate #3: "Integration tests"
 blockedBy: [#1, #2]
 ```
 
-## TaskUpdate使用タイミング
+## When to Use TaskUpdate
 
-### 作業開始時
+### At Start
 
 ```
 TaskUpdate taskId: "1" status: "in_progress"
 ```
 
-- `TaskList`で次のタスクを取得後、すぐに実行
-- `blockedBy`が空のタスクのみ選択
+- Run immediately after retrieving the next task with `TaskList`
+- Only choose tasks with empty `blockedBy`
 
-### 作業完了時
+### At Completion
 
 ```
 TaskUpdate taskId: "1" status: "completed"
 ```
 
-- タスクが完全に完了した場合のみ
-- テストが失敗している場合は`completed`にしない
+- Only when the task is fully complete
+- Do not mark `completed` if tests are failing
 
-### タスク削除時
+### When Deleting a Task
 
 ```
 TaskUpdate taskId: "1" status: "deleted"
 ```
 
-- タスクが不要になった場合
-- 要件変更でタスクが無効になった場合
+- When the task is no longer needed
+- When requirements change and the task becomes invalid
 
-## 実装フロー
+## Implementation Flow
 
 ```
-Step 2: タスク分解と計画立案
-  ├─ 複雑度評価（Simple/Complex）
-  ├─ Complexの場合:
-  │   ├─ TaskCreateでサブタスク登録
-  │   ├─ 依存関係推論（blockedBy設定）
-  │   └─ 計画承認（大規模変更の場合）
-  └─ Simpleの場合: 直接Step 3へ
+Step 2: Task decomposition and planning
+  ├─ Complexity assessment (Simple/Complex)
+  ├─ If Complex:
+  │   ├─ Register subtasks with TaskCreate
+  │   ├─ Infer dependencies (set blockedBy)
+  │   └─ Plan approval (for large changes)
+  └─ If Simple: go directly to Step 3
 
-Step 5: サブタスク実装ループ
-  ├─ TaskListで次のタスク取得
-  │   └─ 条件: blockedBy が空、ID順
+Step 5: Subtask implementation loop
+  ├─ Get next task with TaskList
+  │   └─ Condition: blockedBy is empty, by ID order
   ├─ TaskUpdate status: "in_progress"
-  ├─ タスク実装
+  ├─ Implement the task
   ├─ TaskUpdate status: "completed"
-  └─ すべてのタスクが完了するまで繰り返し
+  └─ Repeat until all tasks are complete
 ```
 
-## 注意事項
+## Notes
 
-- タスク分解は過度に細かくしない（5-7タスク程度が目安）
-- 各タスクは独立して理解できる粒度にする
-- `activeForm`は現在進行形で、ユーザーに表示されることを意識
-- 依存関係は明示的に設定（推測に頼らない）
-- TaskUpdateは作業開始時と完了時に必ず実行
+- Do not over-decompose (5-7 tasks is a good target)
+- Each task should be understandable on its own
+- `activeForm` should be present tense and user-facing
+- Set dependencies explicitly (do not rely on guesswork)
+- Always run TaskUpdate at task start and completion
