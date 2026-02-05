@@ -43,12 +43,6 @@
 
 Rulesファイルでは、ルールを特定のファイルパターンに限定するためにYAMLフロントマターを使用します。
 
-```yaml
----
-paths: src/**/*.ts, tests/**/*.test.ts
----
-```
-
 **重要**: Claude Code の `.claude/rules/*.md` において、公式に説明されている frontmatter は基本的に `paths` です。
 
 - `paths` 以外のキー（例: `source`, `references` など）を追加しても、Claude Code 側で特別扱いされる保証はありません。
@@ -58,17 +52,47 @@ paths: src/**/*.ts, tests/**/*.test.ts
 
 - **目的**: ルールが適用されるファイルパターンを指定
 - **省略時**: ルールは全ファイルに無条件適用
-- **サポートされるパターン**:
-  - `**` - 任意の深さのディレクトリ（例：`src/**/*.ts`）
-  - `*` - 任意のファイル名（例：`*.md`）
-  - `{a,b}` - ブレース展開で複数パターン（例：`{src,lib}/**/*.ts`）
-  - カンマ区切り - 複数パターンの組み合わせ（例：`src/**/*.ts, tests/**/*.test.ts`）
+- **形式**: YAML配列（推奨）またはカンマ区切り文字列
+
+#### YAML配列形式（推奨）:
+
+```yaml
+---
+paths:
+  - "src/**/*.ts"
+  - "lib/**/*.ts"
+  - "tests/**/*.test.ts"
+---
+```
+
+#### ブレース展開:
+
+複数の拡張子やディレクトリを同時にマッチング可能:
+
+```yaml
+---
+paths:
+  - "src/**/*.{ts,tsx}"
+  - "{src,lib}/**/*.ts"
+---
+```
+
+- `src/**/*.{ts,tsx}` → `.ts` と `.tsx` の両方にマッチ
+- `{src,lib}/**/*.ts` → `src/` と `lib/` の両方の `.ts` にマッチ
+
+#### サポートされるパターン:
+
+- `**` - 任意の深さのディレクトリ（例：`src/**/*.ts`）
+- `*` - 任意のファイル名（例：`*.md`）
+- `{a,b}` - ブレース展開で複数パターン（例：`{src,lib}/**/*.ts`）
 
 ### 基本構造:
 
 ```markdown
 ---
-paths: src/api/**/*.ts
+paths:
+  - "src/api/**/*.{ts,tsx}"
+  - "{src,lib}/**/*.ts"
 ---
 
 # API開発ルール
@@ -83,7 +107,9 @@ paths: src/api/**/*.ts
 
 ```markdown
 ---
-paths: src/**/*.ts, tests/**/*.test.ts
+paths:
+  - "src/**/*.{ts,tsx}"
+  - "tests/**/*.{test,spec}.ts"
 ---
 
 # ルール名
@@ -351,6 +377,23 @@ message: "⚠️  Warning: Destructive command detected. Are you sure?"
 
 ### ディレクトリ構造
 
+#### .claude/rules/ のサブディレクトリ構成（推奨）
+
+Rulesはサブディレクトリで整理可能です。関連するルールをまとめることで管理性が向上します。
+
+```
+.claude/rules/
+├── frontend/
+│   ├── react.md
+│   └── styles.md
+├── backend/
+│   ├── api.md
+│   └── database.md
+└── general.md
+```
+
+#### プロジェクト全体の構造例
+
 ```
 .kiro/
 ├── settings/
@@ -371,6 +414,14 @@ message: "⚠️  Warning: Destructive command detected. Are you sure?"
 │       ├── security.md
 │       └── performance.md
 .claude/
+├── rules/
+│   ├── frontend/
+│   │   ├── react.md
+│   │   └── styles.md
+│   ├── backend/
+│   │   ├── api.md
+│   │   └── database.md
+│   └── general.md
 └── hookify.pre-commit-quality.local.md
 ```
 

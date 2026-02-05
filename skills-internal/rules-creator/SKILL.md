@@ -105,7 +105,9 @@ Rulesは、Claude AIの動作を制御し、プロジェクト標準を強制す
 
 ```markdown
 ---
-paths: src/api/**/*.ts
+paths:
+  - "src/api/**/*.{ts,tsx}"
+  - "{src,lib}/**/*.ts"
 ---
 
 # API開発ルール
@@ -115,6 +117,11 @@ paths: src/api/**/*.ts
 - 全APIエンドポイントは入力検証必須
 - 標準エラーレスポンス形式を使用
 ```
+
+paths にはブレース展開 `{}` が使えます:
+
+- `*.{ts,tsx}` → .ts と .tsx の両方にマッチ
+- `{src,lib}/**` → src/ と lib/ の両方にマッチ
 
 ### いつSteeringを使うべきか
 
