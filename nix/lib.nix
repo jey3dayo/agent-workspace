@@ -93,14 +93,9 @@ in {
   mkBundle = { skills, name ? "agent-skills-bundle" }:
     let
       skillList = mapAttrsToList (id: skill: { inherit id; inherit (skill) path source; }) skills;
-      # rsync exit code 23 = partial transfer (e.g. broken symlinks in source)
-      # We allow it because some external sources contain dangling symlinks
       copyCommands = concatStringsSep "\n" (map (s:
         ''
-          ${pkgs.rsync}/bin/rsync -aL --ignore-missing-args "${s.path}/" "$out/${s.id}/" || {
-            rc=$?
-            if [ "$rc" -ne 23 ]; then exit "$rc"; fi
-          }
+          ${pkgs.rsync}/bin/rsync -aL "${s.path}/" "$out/${s.id}/"
         ''
       ) skillList);
       bundleInfo = toJSON {
@@ -166,7 +161,23 @@ in {
 
         errors=0
 
-        # Verify each selected skill has SKILL.md in bundle
+        # Verify each selected skill exists in bundle and has SKILL.md
+        selected_ids="${concatStringsSep " " selectedIds}"
+        if [ -n "$selected_ids" ]; then
+          for skill_name in $selected_ids; do
+            if [ ! -d "${bundle}/$skill_name" ]; then
+              echo "  ERROR: $skill_name missing from bundle"
+              errors=$((errors + 1))
+              continue
+            fi
+            if [ ! -f "${bundle}/$skill_name/SKILL.md" ]; then
+              echo "  ERROR: $skill_name missing SKILL.md"
+              errors=$((errors + 1))
+            fi
+          done
+        fi
+
+        # Verify no unexpected directories are missing SKILL.md
         for skill_dir in "${bundle}"/*/; do
           skill_name=$(basename "$skill_dir")
           if [ ! -f "$skill_dir/SKILL.md" ]; then
