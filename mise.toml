@@ -1,7 +1,6 @@
 # ~/.agents エージェント・スキル管理用 mise 設定
 
 [env]
-_.file = ".env"
 _.path = ['./node_modules/.bin']
 MARKDOWN_LINK_CONFIG = ".markdown-link-check.json"
 
@@ -49,7 +48,7 @@ depends = ["docs:lint", "docs:format:check", "docs:links"]
 # === スキル管理 (Nix / Home Manager) ===
 [tasks."skills:install"]
 description = "HM でスキルをインストール"
-run = "sh -c 'export PATH=\"/nix/var/nix/profiles/default/bin:$PATH\"; user=\"$(id -un)\"; if command -v home-manager >/dev/null 2>&1; then home-manager switch --flake ~/.agents --impure; else nix run --impure ~/.agents#homeConfigurations.${user}.activationPackage; fi'"
+run = "sh -c 'if [ -n \"${GITHUB_TOKEN:-}\" ]; then export NIX_CONFIG=\"access-tokens = github.com=$GITHUB_TOKEN\"; fi; home-manager switch --flake ~/.agents --impure'"
 
 [tasks."skills:list"]
 description = "有効スキル一覧を JSON 出力"
@@ -61,7 +60,7 @@ run = "nix run ~/.agents#validate"
 
 [tasks."skills:update"]
 description = "全ソース更新 + 再インストール"
-run = "sh -c 'export PATH=\"/nix/var/nix/profiles/default/bin:$PATH\"; nix flake update --flake ~/.agents || exit $?; user=\"$(id -un)\"; if command -v home-manager >/dev/null 2>&1; then home-manager switch --flake ~/.agents --impure; else nix run --impure ~/.agents#homeConfigurations.${user}.activationPackage; fi'"
+run = "sh -c 'if [ -n \"${GITHUB_TOKEN:-}\" ]; then export NIX_CONFIG=\"access-tokens = github.com=$GITHUB_TOKEN\"; fi; nix flake update --flake ~/.agents || exit $?; home-manager switch --flake ~/.agents --impure'"
 
 [tasks.ci]
 description = "lint + スキル更新 + バリデーション"
