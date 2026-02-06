@@ -82,10 +82,22 @@
           inherit sources;
           localPath = ./skills-internal;
         };
-        selectedSkills = agentLib.selectSkills {
-          inherit catalog;
-          inherit (selection) enable;
-        };
+        enableConfig = if selection ? enable then selection.enable else null;
+        localSkillIds = nixpkgs.lib.attrNames
+          (nixpkgs.lib.filterAttrs (_: skill: skill.source == "local") catalog);
+        enableList =
+          if enableConfig == null then
+            nixpkgs.lib.attrNames catalog
+          else
+            nixpkgs.lib.unique (enableConfig ++ localSkillIds);
+        selectedSkills =
+          if enableConfig == null then
+            catalog
+          else
+            agentLib.selectSkills {
+              inherit catalog;
+              enable = enableList;
+            };
         bundle = agentLib.mkBundle {
           skills = selectedSkills;
           name = "agent-skills-bundle";
@@ -98,7 +110,14 @@
         apps = {
           install = {
             type = "app";
-            program = "${agentLib.mkSyncScript { inherit bundle; targets = import ./nix/targets.nix; }}/bin/skills-install";
+            program =
+              let
+                targetsAttr = import ./nix/targets.nix;
+                targetsList = nixpkgs.lib.mapAttrsToList
+                  (tool: t: { inherit tool; inherit (t) dest; })
+                  (nixpkgs.lib.filterAttrs (_: t: t.enable) targetsAttr);
+              in
+              "${agentLib.mkSyncScript { inherit bundle; targets = targetsList; }}/bin/skills-install";
           };
           list = {
             type = "app";
