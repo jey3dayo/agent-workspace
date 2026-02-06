@@ -24,12 +24,25 @@ let
 
   # Detect if source root is itself a skill, or contains sub-skills
   scanSourceAutoDetect = sourceName: sourcePath:
-    if pathExists (sourcePath + "/SKILL.md") then
-      { ${sourceName} = { id = sourceName; path = sourcePath; source = sourceName; }; }
-    else if pathExists sourcePath then
-      scanSource sourceName sourcePath
-    else
-      {};
+    let
+      claudeSkillsPath = sourcePath + "/.claude/skills";
+      direct =
+        if pathExists sourcePath then
+          scanSource sourceName sourcePath
+        else
+          {};
+      claudeSkills =
+        if direct == {} && pathExists claudeSkillsPath then
+          scanSource sourceName claudeSkillsPath
+        else
+          {};
+    in
+      if pathExists (sourcePath + "/SKILL.md") then
+        { ${sourceName} = { id = sourceName; path = sourcePath; source = sourceName; }; }
+      else if direct != {} then
+        direct
+      else
+        claudeSkills;
 
 in {
   # Discover all available skills from sources + local path
@@ -40,7 +53,7 @@ in {
       externalSkills = builtins.foldl' (acc: srcName:
         let
           src = sources.${srcName};
-          scanned = scanSourceAutoDetect srcName (builtins.path { path = src.path; name = "source-${srcName}"; });
+          scanned = scanSourceAutoDetect srcName src.path;
           duplicates = builtins.filter (id: hasAttr id acc) (attrNames scanned);
         in
           # External sources: later source wins on duplicate (no error)

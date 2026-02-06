@@ -47,7 +47,6 @@ depends = ["docs:lint", "docs:format:check", "docs:links"]
 
 # === スキル管理 (Nix / Home Manager) ===
 [tasks."skills:install"]
-alias = "ci"
 description = "HM でスキルをインストール"
 run = "home-manager switch --flake ~/.agents --impure"
 
@@ -62,6 +61,10 @@ run = "nix run ~/.agents#validate"
 [tasks."skills:update"]
 description = "全ソース更新 + 再インストール"
 run = "nix flake update --flake ~/.agents && home-manager switch --flake ~/.agents --impure"
+
+[tasks.ci]
+description = "lint + スキル更新 + バリデーション"
+depends = ["lint", "skills:update", "skills:validate"]
 
 [tasks."skills:fix:bold-headings"]
 description = "skills-internal の太字見出しを###へ変換"
