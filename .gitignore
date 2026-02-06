@@ -12,6 +12,7 @@ Thumbs.db
 # 一時ファイル
 *.tmp
 *.log
+.env
 
 # claude
 .claude/plans
