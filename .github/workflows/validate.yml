@@ -43,7 +43,7 @@ jobs:
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
       - name: Nix flake check
-        run: nix flake check --no-build
+        run: nix flake check
 
       - name: Validate skills
         run: nix run .#validate
