@@ -1,6 +1,5 @@
 # User Home Manager configuration for agent-skills
-# NOTE: Requires --impure flag due to builtins.getEnv usage
-{ inputs, ... }:
+{ inputs, username, homeDirectory, ... }:
 {
   programs.agent-skills = {
     enable = true;
@@ -21,10 +20,9 @@
     };
   };
 
-  # Home Manager basics
-  # builtins.getEnv requires --impure flag
-  home.username = builtins.getEnv "USER";
-  home.homeDirectory = builtins.getEnv "HOME";
+  # Home Manager basics (username/homeDirectory provided via extraSpecialArgs)
+  home.username = username;
+  home.homeDirectory = homeDirectory;
   home.stateVersion = "24.11";
   programs.home-manager.enable = true;
 }
