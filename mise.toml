@@ -75,7 +75,11 @@ run = "./scripts/fix-skill-self-links.sh"
 description = "スキルリンク状態を表示"
 run = "./scripts/sync-skills.sh status"
 
+[tasks."skills:sync-internal"]
+description = "skills-internal のカスタマイズを skills に適用"
+run = "./scripts/sync-internal-to-external.sh"
+
 [tasks."skills:refresh"]
 alias = "ci"
 description = "スキル更新 → 同期"
-run = "mise run skills:check-links && mise run update && mise run skills:fix:ui-ux-pro-max && mise run skills:fix:self-links && mise run skills:sync"
+run = "mise run skills:check-links && mise run update && mise run skills:sync-internal && mise run skills:fix:ui-ux-pro-max && mise run skills:fix:self-links && mise run skills:sync"
