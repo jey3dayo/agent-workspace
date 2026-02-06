@@ -28,27 +28,20 @@
 | OpenCode | `~/.opencode/settings.json` | —                  | —                   |
 | OpenClaw | —                           | —                  | —                   |
 
-`home.nix` の `targets` で宣言的にスキル同期先を定義:
+`nix/targets.nix` で宣言的にスキル同期先を定義（Single Source of Truth）:
 
 ```nix
-targets = {
+{
   claude   = { enable = true; dest = ".claude/skills"; };
-  codex    = { enable = true; dest = ".codex/skills"; };
-  cursor   = { enable = true; dest = ".cursor/skills"; };
-  opencode = { enable = true; dest = ".opencode/skills"; };
-  openclaw = { enable = true; dest = ".openclaw/skills"; };
-  shared   = { enable = true; dest = ".skills"; };
-};
+  newtool  = { enable = true; dest = ".newtool/skills"; };
+}
 ```
 
-## ターゲット追加時の注意
+`home.nix` と `flake.nix` の両方がこのファイルを import する。
 
-新しいツールを追加する場合、以下の両方を編集する必要がある:
+## ターゲット追加時
 
-1. `home.nix` の `targets` に追記
-2. `nix/targets.nix` にも追記（non-HM fallback 用）
-
-片方だけの編集では不整合が発生する。
+`nix/targets.nix` のみ編集すればよい。`enable = false` でツール単位の無効化も可能。
 
 ## スキル実行時のパス解決
 
