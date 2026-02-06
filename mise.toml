@@ -3,6 +3,7 @@
 [env]
 _.path = ['./node_modules/.bin']
 MARKDOWN_LINK_CONFIG = ".markdown-link-check.json"
+_.file = ".env"
 
 [tools]
 node = '24'                          # Node 24 系に固定
@@ -48,7 +49,7 @@ depends = ["docs:lint", "docs:format:check", "docs:links"]
 # === スキル管理 (Nix / Home Manager) ===
 [tasks."skills:install"]
 description = "HM でスキルをインストール"
-run = "sh -c 'if [ -n \"${GITHUB_TOKEN:-}\" ]; then export NIX_CONFIG=\"access-tokens = github.com=$GITHUB_TOKEN\"; fi; home-manager switch --flake ~/.agents --impure'"
+run = "sh -c 'if [ -n \"${GITHUB_TOKEN:-}\" ]; then export NIX_CONFIG=\"$(printf \"%s\\naccess-tokens = github.com=%s\" \"${NIX_CONFIG:-}\" \"$GITHUB_TOKEN\")\"; fi; home-manager switch --flake ~/.agents --impure'"
 
 [tasks."skills:list"]
 description = "有効スキル一覧を JSON 出力"
@@ -60,11 +61,15 @@ run = "nix run ~/.agents#validate"
 
 [tasks."skills:update"]
 description = "全ソース更新 + 再インストール"
-run = "sh -c 'if [ -n \"${GITHUB_TOKEN:-}\" ]; then export NIX_CONFIG=\"access-tokens = github.com=$GITHUB_TOKEN\"; fi; nix flake update --flake ~/.agents || exit $?; home-manager switch --flake ~/.agents --impure'"
+run = "sh -c 'if [ -n \"${GITHUB_TOKEN:-}\" ]; then export NIX_CONFIG=\"$(printf \"%s\\naccess-tokens = github.com=%s\" \"${NIX_CONFIG:-}\" \"$GITHUB_TOKEN\")\"; fi; nix flake update --flake ~/.agents || exit $?; home-manager switch --flake ~/.agents --impure'"
 
 [tasks.ci]
-description = "lint + バリデーション"
-depends = ["lint", "skills:validate"]
+description = "lint + バリデーション + スキルインストール"
+depends = ["lint", "skills:validate", "skills:install"]
+
+[tasks."ci:full"]
+description = "skills:update + ci"
+depends = ["skills:update", "ci"]
 
 [tasks.update]
 description = "全ソース更新 + 再インストール"
