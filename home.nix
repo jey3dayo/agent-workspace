@@ -1,5 +1,5 @@
 # User Home Manager configuration for agent-skills
-{ inputs, username, homeDirectory, ... }:
+{ inputs, username, homeDirectory, targets ? import ./nix/targets.nix, ... }:
 let
   selection = import ./nix/selection.nix;
 in
@@ -13,7 +13,7 @@ in
 
     skills.enable = if selection ? enable then selection.enable else null;
 
-    targets = import ./nix/targets.nix;
+    targets = targets;
   };
 
   # Home Manager basics (username/homeDirectory provided via extraSpecialArgs)

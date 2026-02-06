@@ -37,6 +37,7 @@
       ...
     }@inputs:
     let
+      targets = import ./nix/targets.nix;
       supportedSystems = [
         "x86_64-linux"
         "aarch64-linux"
@@ -61,7 +62,7 @@
             self.homeManagerModules.default
             ./home.nix
           ];
-          extraSpecialArgs = { inherit inputs username homeDirectory; };
+          extraSpecialArgs = { inherit inputs username homeDirectory targets; };
         };
     }
     // flake-utils.lib.eachSystem supportedSystems (
@@ -108,10 +109,9 @@
             type = "app";
             program =
               let
-                targetsAttr = import ./nix/targets.nix;
                 targetsList = nixpkgs.lib.mapAttrsToList
                   (tool: t: { inherit tool; inherit (t) dest; })
-                  (nixpkgs.lib.filterAttrs (_: t: t.enable) targetsAttr);
+                  (nixpkgs.lib.filterAttrs (_: t: t.enable) targets);
               in
               "${agentLib.mkSyncScript { inherit bundle; targets = targetsList; }}/bin/skills-install";
           };
