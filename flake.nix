@@ -53,18 +53,16 @@
       homeManagerModules.default = import ./nix/module.nix;
 
       # HM configuration: `home-manager switch --flake ~/.agents --impure`
-      # Uses builtins.getEnv which requires --impure flag
-      homeConfigurations = nixpkgs.lib.genAttrs supportedSystems (
-        system:
+      # Keyed by $USER (resolved at eval time via builtins.getEnv, requires --impure)
+      homeConfigurations.${builtins.getEnv "USER"} =
         home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = nixpkgs.legacyPackages.${builtins.currentSystem};
           modules = [
             self.homeManagerModules.default
             ./home.nix
           ];
           extraSpecialArgs = { inherit inputs; };
-        }
-      );
+        };
     }
     // flake-utils.lib.eachSystem supportedSystems (
       system:

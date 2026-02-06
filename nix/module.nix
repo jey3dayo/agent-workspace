@@ -56,9 +56,9 @@ in {
             description = "Destination path relative to $HOME.";
           };
           structure = lib.mkOption {
-            type = lib.types.enum [ "symlink-tree" "copy-tree" "link" ];
-            default = "symlink-tree";
-            description = "Deployment structure: symlink-tree (rsync), copy-tree (rsync -L), or link (HM symlink).";
+            type = lib.types.enum [ "link" "copy-tree" ];
+            default = "link";
+            description = "Deployment structure: link (HM symlink, read-only) or copy-tree (rsync copy, writable).";
           };
         };
       });
@@ -68,26 +68,24 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    # rsync-based sync for symlink-tree and copy-tree targets
+    # copy-tree targets: rsync-based sync (writable copy)
     home.activation.agent-skills = lib.hm.dag.entryAfter [ "writeBoundary" ]
       (let
-        rsyncTargets = lib.filterAttrs
-          (_: t: t.enable && (t.structure == "symlink-tree" || t.structure == "copy-tree"))
+        copyTargets = lib.filterAttrs
+          (_: t: t.enable && t.structure == "copy-tree")
           cfg.targets;
         syncCommands = lib.mapAttrsToList (_name: target:
-          let
-            dest = "$HOME/${target.dest}";
-            rsyncFlags = if target.structure == "copy-tree" then "-aL" else "-a";
+          let dest = "$HOME/${target.dest}";
           in ''
             mkdir -p "${dest}"
-            ${pkgs.rsync}/bin/rsync ${rsyncFlags} --delete --exclude='/.system' "${bundle}/" "${dest}/"
+            ${pkgs.rsync}/bin/rsync -aL --delete --exclude='/.system' "${bundle}/" "${dest}/"
             chmod -R u+w "${dest}"
           ''
-        ) rsyncTargets;
+        ) copyTargets;
       in
         builtins.concatStringsSep "\n" syncCommands);
 
-    # HM native symlink for "link" structure targets
+    # link targets: HM-managed symlinks to Nix store (default)
     home.file = lib.mkMerge (lib.mapAttrsToList (_name: target:
       if target.enable && target.structure == "link" then {
         "${target.dest}" = {
