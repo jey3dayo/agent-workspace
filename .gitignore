@@ -16,6 +16,9 @@ Thumbs.db
 *.tmp
 *.log
 
+# claude
+.claude/plans
+
 # Skills managed by Nix bundle (not git)
 skills/*
 !skills/.gitkeep
