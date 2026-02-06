@@ -143,12 +143,12 @@ mise run skills:validate    # バリデーション
 
 ## 運用コマンド一覧
 
-| 操作                | コマンド                                         |
-| ------------------- | ------------------------------------------------ |
-| インストール        | `home-manager switch --flake ~/.agents --impure` |
-| 全ソース更新        | `nix flake update --flake ~/.agents`             |
-| 特定ソース更新      | `nix flake update <input> --flake ~/.agents`     |
-| スキル一覧          | `nix run ~/.agents#list`                         |
-| バリデーション      | `nix run ~/.agents#validate`                     |
+| 操作                  | コマンド                                         |
+| --------------------- | ------------------------------------------------ |
+| インストール          | `home-manager switch --flake ~/.agents --impure` |
+| 全ソース更新          | `nix flake update --flake ~/.agents`             |
+| 特定ソース更新        | `nix flake update <input> --flake ~/.agents`     |
+| スキル一覧            | `nix run ~/.agents#list`                         |
+| バリデーション        | `nix run ~/.agents#validate`                     |
 | lint + バリデーション | `mise run ci`                                    |
-| 更新 + インストール | `mise run update`                                |
+| 更新 + インストール   | `mise run update`                                |
