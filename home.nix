@@ -1,5 +1,8 @@
 # User Home Manager configuration for agent-skills
 { inputs, username, homeDirectory, ... }:
+let
+  selection = import ./nix/selection.nix;
+in
 {
   programs.agent-skills = {
     enable = true;
@@ -8,21 +11,15 @@
 
     sources = import ./nix/sources.nix { inherit inputs; };
 
-    skills.enable = (import ./nix/selection.nix).enable;
+    skills.enable = if selection ? enable then selection.enable else null;
 
-    targets = {
-      claude   = { enable = true; dest = ".claude/skills"; };
-      codex    = { enable = true; dest = ".codex/skills"; };
-      cursor   = { enable = true; dest = ".cursor/skills"; };
-      opencode = { enable = true; dest = ".opencode/skills"; };
-      openclaw = { enable = true; dest = ".openclaw/skills"; };
-      shared   = { enable = true; dest = ".skills"; };
-    };
+    targets = import ./nix/targets.nix;
   };
 
   # Home Manager basics (username/homeDirectory provided via extraSpecialArgs)
   home.username = username;
   home.homeDirectory = homeDirectory;
   home.stateVersion = "24.11";
-  programs.home-manager.enable = true;
+  # Avoid profile conflicts when home-manager is already installed elsewhere.
+  programs.home-manager.enable = false;
 }
