@@ -15,7 +15,7 @@
 
 ### Example Scenarios
 
-**Scenario 1: New Feature Conceptualization**
+### Scenario 1: New Feature Conceptualization
 
 ```
 User: "ユーザー管理機能を追加したい"
@@ -36,7 +36,7 @@ Claude response:
 - Design Alt 3: Plugin architecture (pros: flexible, cons: overhead)
 ```
 
-**Scenario 2: Architectural Brainstorming**
+### Scenario 2: Architectural Brainstorming
 
 ```
 User: "この認証システムをスケーラブルにしたい"
@@ -69,7 +69,7 @@ Constraints: Must maintain backward compatibility" \
 
 ### Example Scenarios
 
-**Scenario 1: Vague User Request**
+### Scenario 1: Vague User Request
 
 ```
 User: "アプリを速くして"
@@ -96,7 +96,7 @@ Clarifying questions:
 - Are there specific metrics you're monitoring?
 ```
 
-**Scenario 2: Underspecified Feature**
+### Scenario 2: Underspecified Feature
 
 ```
 User: "エクスポート機能を追加"
@@ -128,7 +128,7 @@ Task: Explore possible export formats, scopes, and triggers" \
 
 ### Example Scenarios
 
-**Scenario 1: Technology Selection**
+### Scenario 1: Technology Selection
 
 ```
 User: "状態管理ライブラリを選びたい"
@@ -144,7 +144,7 @@ Output: Comparison table with recommendations" \
   2>/dev/null > .claude/docs/design/state-management-comparison.md
 ```
 
-**Scenario 2: Design Pattern Selection**
+### Scenario 2: Design Pattern Selection
 
 ```
 User: "データフェッチングのパターンを決めたい"
@@ -177,7 +177,7 @@ Trade-offs: Type safety, cache control, developer experience" \
 
 ### Example Scenarios
 
-**Scenario 1: Bulk Refactoring**
+### Scenario 1: Bulk Refactoring
 
 ```
 User: "すべてのコンポーネントでpropsの型定義を統一したい"
@@ -193,7 +193,7 @@ Safety: Create backup, preview changes before applying" \
   2>/dev/null > .claude/docs/design/bulk-props-refactor.md
 ```
 
-**Scenario 2: Mass File Organization**
+### Scenario 2: Mass File Organization
 
 ```
 User: "テストファイルを__tests__ディレクトリに移動"
@@ -226,7 +226,7 @@ Update: Import paths in all affected files" \
 
 ### Example Scenarios
 
-**Scenario 1: Progressive Design Refinement**
+### Scenario 1: Progressive Design Refinement
 
 ```
 User: "ダッシュボードを設計したい"
@@ -250,7 +250,7 @@ Detail: Component structure, data flow, update strategy" \
   2>/dev/null > .claude/docs/design/dashboard-v2.md
 ```
 
-**Scenario 2: Constraint-Based Exploration**
+### Scenario 2: Constraint-Based Exploration
 
 ```
 User: "API設計、でも制約がいくつかある"
