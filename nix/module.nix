@@ -85,14 +85,17 @@ in {
       in
         builtins.concatStringsSep "\n" syncCommands);
 
-    # link targets: HM-managed symlinks to Nix store (default)
+    # link targets: per-skill directory symlinks to Nix store (default)
+    # Each skill dir becomes a symlink: ~/.claude/skills/agent-creator → /nix/store/.../agent-creator
+    # This keeps .system and other tool-managed files writable in the parent dir
     home.file = lib.mkMerge (lib.mapAttrsToList (_name: target:
-      if target.enable && target.structure == "link" then {
-        "${target.dest}" = {
-          source = bundle;
-          recursive = true;
-        };
-      } else {}
+      if target.enable && target.structure == "link" then
+        lib.mapAttrs' (skillId: _skill:
+          lib.nameValuePair "${target.dest}/${skillId}" {
+            source = "${bundle}/${skillId}";
+          }
+        ) selectedSkills
+      else {}
     ) cfg.targets);
   };
 }
