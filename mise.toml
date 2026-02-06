@@ -49,7 +49,7 @@ depends = ["docs:lint", "docs:format:check", "docs:links"]
 [tasks."skills:install"]
 alias = "ci"
 description = "HM でスキルをインストール"
-run = "home-manager switch --flake ~/.agents"
+run = "home-manager switch --flake ~/.agents --impure"
 
 [tasks."skills:list"]
 description = "有効スキル一覧を JSON 出力"
@@ -61,7 +61,7 @@ run = "nix run ~/.agents#validate"
 
 [tasks."skills:update"]
 description = "全ソース更新 + 再インストール"
-run = "nix flake update --flake ~/.agents && home-manager switch --flake ~/.agents"
+run = "nix flake update --flake ~/.agents && home-manager switch --flake ~/.agents --impure"
 
 [tasks."skills:fix:bold-headings"]
 description = "skills-internal の太字見出しを###へ変換"

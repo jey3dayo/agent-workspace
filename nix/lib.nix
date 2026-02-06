@@ -2,15 +2,9 @@
 { pkgs, nixlib }:
 
 let
-  inherit (nixlib) filterAttrs mapAttrs mapAttrsToList concatStringsSep
-    hasAttr attrNames length elem unique;
-  inherit (builtins) readDir pathExists toJSON;
-
-  # Check if a directory entry looks like a skill (contains SKILL.md)
-  isSkillDir = path: name:
-    let fullPath = path + "/${name}";
-    in (readDir path).${name} or "" == "directory"
-       && pathExists (fullPath + "/SKILL.md");
+  inherit (nixlib) filterAttrs mapAttrsToList concatStringsSep
+    hasAttr attrNames length elem;
+  inherit (builtins) readDir pathExists toJSON seq;
 
   # Scan a single source path and return { skillId = { id, path, source }; }
   scanSource = sourceName: sourcePath:
@@ -28,11 +22,9 @@ let
         };
       }) skills);
 
-  # Special handling: some sources are a single skill (the root IS the skill)
-  # Detect by checking if SKILL.md exists at root level
-  scanSourceSmart = sourceName: sourcePath:
+  # Detect if source root is itself a skill, or contains sub-skills
+  scanSourceAutoDetect = sourceName: sourcePath:
     if pathExists (sourcePath + "/SKILL.md") then
-      # The source itself is a single skill; use sourceName as ID
       { ${sourceName} = { id = sourceName; path = sourcePath; source = sourceName; }; }
     else if pathExists sourcePath then
       scanSource sourceName sourcePath
@@ -48,13 +40,10 @@ in {
       externalSkills = builtins.foldl' (acc: srcName:
         let
           src = sources.${srcName};
-          scanned = scanSourceSmart srcName (builtins.path { path = src.path; name = "source-${srcName}"; });
-          # Check for duplicates between external sources
+          scanned = scanSourceAutoDetect srcName (builtins.path { path = src.path; name = "source-${srcName}"; });
           duplicates = builtins.filter (id: hasAttr id acc) (attrNames scanned);
-          _ = if duplicates != [] then
-            throw "Duplicate skill IDs across external sources: ${concatStringsSep ", " duplicates}"
-          else null;
         in
+          # External sources: later source wins on duplicate (no error)
           acc // scanned
       ) {} (attrNames sources);
 
@@ -73,29 +62,38 @@ in {
   selectSkills = { catalog, enable }:
     let
       missing = builtins.filter (id: !(hasAttr id catalog)) enable;
-      _ = if missing != [] then
-        throw "Skills not found in catalog: ${concatStringsSep ", " missing}"
-      else null;
     in
-      filterAttrs (id: _: elem id enable) catalog;
+      # Force evaluation of missing check
+      seq
+        (if missing != [] then
+          throw "Skills not found in catalog: ${concatStringsSep ", " missing}"
+        else null)
+        (filterAttrs (id: _: elem id enable) catalog);
 
   # Create a Nix store derivation bundling all selected skills
   mkBundle = { skills, name ? "agent-skills-bundle" }:
     let
       skillList = mapAttrsToList (id: skill: { inherit id; inherit (skill) path source; }) skills;
+      # rsync exit code 23 = partial transfer (e.g. broken symlinks in source)
+      # We allow it because some external sources contain dangling symlinks
       copyCommands = concatStringsSep "\n" (map (s:
-        ''${pkgs.rsync}/bin/rsync -aL --ignore-errors "${s.path}/" "$out/${s.id}/" || true''
+        ''
+          ${pkgs.rsync}/bin/rsync -aL --ignore-missing-args "${s.path}/" "$out/${s.id}/" || {
+            rc=$?
+            if [ "$rc" -ne 23 ]; then exit "$rc"; fi
+          }
+        ''
       ) skillList);
       bundleInfo = toJSON {
         skills = map (s: { inherit (s) id source; }) skillList;
         count = length skillList;
       };
+      bundleInfoFile = pkgs.writeText "bundle-info.json" bundleInfo;
     in
       pkgs.runCommand name {} ''
         mkdir -p "$out"
         ${copyCommands}
-        echo '${bundleInfo}' > "$out/.bundle-info"
-        # Ensure all files are readable
+        cp ${bundleInfoFile} "$out/.bundle-info"
         chmod -R u+r "$out"
       '';
 
@@ -136,8 +134,8 @@ in {
         ${pkgs.jq}/bin/jq . "${jsonFile}"
       '';
 
-  # Create a validation script
-  mkValidateScript = { catalog, selectedSkills }:
+  # Create a validation script that checks bundle integrity
+  mkValidateScript = { catalog, selectedSkills, bundle }:
     let
       catalogIds = attrNames catalog;
       selectedIds = attrNames selectedSkills;
@@ -146,9 +144,26 @@ in {
         echo "Validating skill catalog..."
         echo "  Total skills in catalog: ${toString (length catalogIds)}"
         echo "  Selected skills: ${toString (length selectedIds)}"
+
+        errors=0
+
+        # Verify each selected skill has SKILL.md in bundle
+        for skill_dir in "${bundle}"/*/; do
+          skill_name=$(basename "$skill_dir")
+          if [ ! -f "$skill_dir/SKILL.md" ]; then
+            echo "  ERROR: $skill_name missing SKILL.md"
+            errors=$((errors + 1))
+          fi
+        done
+
         echo ""
-        echo "All ${toString (length selectedIds)} selected skills validated."
-        echo "OK: All checks passed"
+        if [ "$errors" -gt 0 ]; then
+          echo "FAIL: $errors validation errors found"
+          exit 1
+        else
+          echo "All ${toString (length selectedIds)} selected skills validated."
+          echo "OK: All checks passed"
+        fi
       '';
 
   # Create nix flake checks

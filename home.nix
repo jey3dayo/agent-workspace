@@ -1,4 +1,5 @@
 # User Home Manager configuration for agent-skills
+# NOTE: Requires --impure flag due to builtins.getEnv usage
 { inputs, ... }:
 {
   programs.agent-skills = {
@@ -6,14 +7,7 @@
 
     localSkillsPath = ./skills-internal;
 
-    sources = {
-      openai-curated.path = "${inputs.openai-skills}/skills/.curated";
-      openai-system.path = "${inputs.openai-skills}/skills/.system";
-      vercel.path = "${inputs.vercel-agent-skills}/skills";
-      agent-browser.path = "${inputs.vercel-agent-browser}/skills";
-      ui-ux-pro-max.path = "${inputs.ui-ux-pro-max}/.claude/skills";
-      orchestra.path = "${inputs.claude-code-orchestra}/.claude/skills";
-    };
+    sources = import ./nix/sources.nix { inherit inputs; };
 
     skills.enable = (import ./nix/selection.nix).enable;
 
@@ -28,6 +22,7 @@
   };
 
   # Home Manager basics
+  # builtins.getEnv requires --impure flag
   home.username = builtins.getEnv "USER";
   home.homeDirectory = builtins.getEnv "HOME";
   home.stateVersion = "24.11";

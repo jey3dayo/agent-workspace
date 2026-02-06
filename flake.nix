@@ -47,14 +47,14 @@
         "x86_64-darwin"
         "aarch64-darwin"
       ];
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
     in
     {
       # HM module (usable by external flakes)
       homeManagerModules.default = import ./nix/module.nix;
 
-      # HM configurations (for `home-manager switch --flake ~/.agents`)
-      homeConfigurations = forAllSystems (
+      # HM configuration: `home-manager switch --flake ~/.agents --impure`
+      # Uses builtins.getEnv which requires --impure flag
+      homeConfigurations = nixpkgs.lib.genAttrs supportedSystems (
         system:
         home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${system};
@@ -104,7 +104,7 @@
           };
           validate = {
             type = "app";
-            program = "${agentLib.mkValidateScript { inherit catalog selectedSkills; }}/bin/skills-validate";
+            program = "${agentLib.mkValidateScript { inherit catalog selectedSkills bundle; }}/bin/skills-validate";
           };
         };
 
@@ -114,12 +114,12 @@
           buildInputs = [ home-manager.packages.${system}.default ];
           shellHook = ''
             echo "Agent Skills Dev Shell"
-            echo "  home-manager switch --flake .  # Apply skills"
-            echo "  nix run .#list                 # List skills"
+            echo "  home-manager switch --flake . --impure  # Apply skills"
+            echo "  nix run .#list                          # List skills"
           '';
         };
 
-        formatter = pkgs.nixfmt-rfc-style;
+        formatter = pkgs.nixfmt;
       }
     );
 }
