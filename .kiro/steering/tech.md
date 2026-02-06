@@ -4,10 +4,12 @@
 - Nix Flake + Home Manager でスキルの構成・配布・検証を行う
 - Node.js + mise によりドキュメント系ツールチェーンを統一する
 - Markdown を一次情報として運用する
+ - ドキュメント品質は lint / format / link check を mise タスクに集約する
 
 ## 自動化/CI
 - GitHub Actions で lint/format と Nix 検証を実行する
 - ローカルと CI の共通基盤として `mise` タスクを使う
+ - Nix 検証は flake チェック・スキル検証・バンドル生成の 3 系統で回す
 
 ## 運用上の決定事項
 - README は入口、詳細は各 `SKILL.md` を正とする
