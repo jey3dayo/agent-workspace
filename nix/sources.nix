@@ -7,5 +7,4 @@
   agent-browser.path = "${inputs.vercel-agent-browser}/skills/agent-browser";
   # Use repo root so symlink targets under src/ are included in Nix store.
   ui-ux-pro-max.path = "${inputs.ui-ux-pro-max}";
-  orchestra.path = "${inputs.claude-code-orchestra}/.claude/skills";
 }

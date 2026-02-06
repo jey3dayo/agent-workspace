@@ -26,10 +26,6 @@
       url = "github:nextlevelbuilder/ui-ux-pro-max-skill";
       flake = false;
     };
-    claude-code-orchestra = {
-      url = "github:DeL-TaiseiOzaki/claude-code-orchestra";
-      flake = false;
-    };
   };
 
   outputs =

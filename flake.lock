@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "claude-code-orchestra": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1769667950,
-        "narHash": "sha256-cG9iCAlgIgFKGgRVQTlKyGuei66NRZ0YydWaJUpYtZI=",
-        "owner": "DeL-TaiseiOzaki",
-        "repo": "claude-code-orchestra",
-        "rev": "2d77f4989f452fd9ef9457761300de2a8693663e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "DeL-TaiseiOzaki",
-        "repo": "claude-code-orchestra",
-        "type": "github"
-      }
-    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -73,11 +57,11 @@
     "openai-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1770276720,
-        "narHash": "sha256-kRkAx275ORc7q9gRIrHTFUvr6b1+ajRDQ3tGWMaZa08=",
+        "lastModified": 1770400892,
+        "narHash": "sha256-QqT9YP1CsYY7+4XPdN9K2HJBZO8+rnaxjYD4iMfa2mE=",
         "owner": "openai",
         "repo": "skills",
-        "rev": "2f7901ee4202a26757a5237e987a8ec5a1799e29",
+        "rev": "a5119697b819090e00e5d11ee1d86834d7c1043a",
         "type": "github"
       },
       "original": {
@@ -88,7 +72,6 @@
     },
     "root": {
       "inputs": {
-        "claude-code-orchestra": "claude-code-orchestra",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
@@ -132,11 +115,11 @@
     "vercel-agent-browser": {
       "flake": false,
       "locked": {
-        "lastModified": 1770273509,
-        "narHash": "sha256-DoR7/s64+d3lmNGgCYUnClWrizvY7lHIi8Uorsgm16o=",
+        "lastModified": 1770405786,
+        "narHash": "sha256-5pZv5oxI67gm+DSDSsbnLD1oqYgJdY5M18Fh4SuKffw=",
         "owner": "vercel-labs",
         "repo": "agent-browser",
-        "rev": "76c30690f5539dcb515663b0dec99c0a7c24e0ff",
+        "rev": "4d8097a56fe9990eb2e5cecb6d167eb6897eda06",
         "type": "github"
       },
       "original": {
