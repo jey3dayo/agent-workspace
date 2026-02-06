@@ -48,7 +48,7 @@ depends = ["docs:lint", "docs:format:check", "docs:links"]
 # === スキル管理 (Nix / Home Manager) ===
 [tasks."skills:install"]
 description = "HM でスキルをインストール"
-run = "home-manager switch --flake ~/.agents --impure"
+run = "sh -c 'export PATH=\"/nix/var/nix/profiles/default/bin:$PATH\"; user=\"$(id -un)\"; if command -v home-manager >/dev/null 2>&1; then home-manager switch --flake ~/.agents --impure; else nix run --impure ~/.agents#homeConfigurations.${user}.activationPackage; fi'"
 
 [tasks."skills:list"]
 description = "有効スキル一覧を JSON 出力"
@@ -60,7 +60,7 @@ run = "nix run ~/.agents#validate"
 
 [tasks."skills:update"]
 description = "全ソース更新 + 再インストール"
-run = "nix flake update --flake ~/.agents && home-manager switch --flake ~/.agents --impure"
+run = "sh -c 'export PATH=\"/nix/var/nix/profiles/default/bin:$PATH\"; nix flake update --flake ~/.agents || exit $?; user=\"$(id -un)\"; if command -v home-manager >/dev/null 2>&1; then home-manager switch --flake ~/.agents --impure; else nix run --impure ~/.agents#homeConfigurations.${user}.activationPackage; fi'"
 
 [tasks.ci]
 description = "lint + スキル更新 + バリデーション"
