@@ -10,7 +10,6 @@ fd = 'latest'                        # ファイル検索用
 "npm:prettier" = 'latest'            # コードフォーマッター
 "npm:markdownlint-cli2" = "latest"   # Markdown lint
 "npm:markdown-link-check" = "latest" # Markdown リンクチェック
-"npm:skills" = "latest"              # スキル管理
 
 # === ドキュメント管理 ===
 [tasks."docs:lint"]
@@ -46,40 +45,24 @@ depends = ["skills:fix:bold-headings", "docs:fix", "docs:format"]
 description = "全体検証（修正はしない）"
 depends = ["docs:lint", "docs:format:check", "docs:links"]
 
-# === スキル管理 ===
-[tasks."update"]
-description = "npx skills update を実行"
-run = "skills update"
+# === スキル管理 (Nix / Home Manager) ===
+[tasks."skills:install"]
+alias = "ci"
+description = "HM でスキルをインストール"
+run = "home-manager switch --flake ~/.agents"
 
-[tasks."skills:sync"]
-description = "スキルを3箇所に同期"
-run = "./scripts/sync-skills.sh"
+[tasks."skills:list"]
+description = "有効スキル一覧を JSON 出力"
+run = "nix run ~/.agents#list"
 
-[tasks."skills:check-links"]
-description = "skills/ と skills-internal/ の壊れたリンク検査（警告のみ）"
-run = "./scripts/check-skill-links.sh"
+[tasks."skills:validate"]
+description = "スキル構成バリデーション"
+run = "nix run ~/.agents#validate"
 
-[tasks."skills:fix:ui-ux-pro-max"]
-description = "ui-ux-pro-max の /tmp リンクを実体化"
-run = "./scripts/fix-ui-ux-pro-max.sh"
+[tasks."skills:update"]
+description = "全ソース更新 + 再インストール"
+run = "nix flake update --flake ~/.agents && home-manager switch --flake ~/.agents"
 
 [tasks."skills:fix:bold-headings"]
 description = "skills-internal の太字見出しを###へ変換"
 run = "node ./scripts/replace-bold-headings.js"
-
-[tasks."skills:fix:self-links"]
-description = "スキル内の循環自己リンクを削除"
-run = "./scripts/fix-skill-self-links.sh"
-
-[tasks."skills:status"]
-description = "スキルリンク状態を表示"
-run = "./scripts/sync-skills.sh status"
-
-[tasks."skills:sync-internal"]
-description = "skills-internal のカスタマイズを skills に適用"
-run = "./scripts/sync-internal-to-external.sh"
-
-[tasks."skills:refresh"]
-alias = "ci"
-description = "スキル更新 → 同期"
-run = "mise run skills:check-links && mise run update && mise run skills:sync-internal && mise run skills:fix:ui-ux-pro-max && mise run skills:fix:self-links && mise run skills:sync"

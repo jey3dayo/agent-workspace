@@ -1,0 +1,10 @@
+# External skill source mappings (flake inputs -> source paths)
+{ inputs }:
+{
+  openai-curated.path = "${inputs.openai-skills}/skills/.curated";
+  openai-system.path = "${inputs.openai-skills}/skills/.system";
+  vercel.path = "${inputs.vercel-agent-skills}/skills";
+  agent-browser.path = "${inputs.vercel-agent-browser}/skills";
+  ui-ux-pro-max.path = "${inputs.ui-ux-pro-max}/.claude/skills";
+  orchestra.path = "${inputs.claude-code-orchestra}/.claude/skills";
+}

@@ -2,15 +2,11 @@
 
 ## 概要
 
-`~/.agents/` スキル管理システムが対応する開発ツール一覧
+`~/.agents/` スキル管理システム（Nix Flake + Home Manager）が対応する開発ツール一覧
 
 ## 対象ツール一覧
 
 ### 1. Claude Code
-
-**説明**: Anthropic公式のCLIツール
-
-**paths**:
 
 - スキル: `~/.claude/skills/`
 - 設定: `~/.claude/settings.json`
@@ -19,47 +15,49 @@
 
 ### 2. Codex
 
-**説明**: コード補完・生成ツール
-
-**paths**:
-
 - スキル: `~/.codex/skills/`
 - 設定: `~/.codex/settings.json`
 
-### 3. OpenCode
+### 3. Cursor
 
-**説明**: オープンソースコーディング支援ツール
+- スキル: `~/.cursor/skills/`
 
-**paths**:
+### 4. OpenCode
 
 - スキル: `~/.opencode/skills/`
 - 設定: `~/.opencode/settings.json`
 
-## スキル同期との関係
+### 5. OpenClaw
 
-`~/.agents/scripts/sync-skills.sh` は以下のディレクトリにスキルを同期します：
+- スキル: `~/.openclaw/skills/`
 
-```bash
-SOURCE_DIRS=(
-  "$HOME/.agents/skills"           # 外部スキル
-  "$HOME/.agents/skills-internal"  # 自前スキル（後勝ち）
-)
+### 6. 共有 (Shared)
 
-TARGET_DIRS=(
-  "$HOME/.claude/skills"
-  "$HOME/.codex/skills"
-  "$HOME/.opencode/skills"
-)
+- スキル: `~/.skills/`
+
+## スキル同期の仕組み
+
+`home.nix` の `targets` で宣言的に定義:
+
+```nix
+targets = {
+  claude   = { enable = true; dest = ".claude/skills"; };
+  codex    = { enable = true; dest = ".codex/skills"; };
+  cursor   = { enable = true; dest = ".cursor/skills"; };
+  opencode = { enable = true; dest = ".opencode/skills"; };
+  openclaw = { enable = true; dest = ".openclaw/skills"; };
+  shared   = { enable = true; dest = ".skills"; };
+};
 ```
 
 ## 新しいツールの追加方法
 
-1. `~/.agents/scripts/sync-skills.sh` の `TARGET_DIRS` に追加
-2. このドキュメントに情報を追記
-3. 同期スクリプトを実行: `~/.agents/scripts/sync-skills.sh`
+1. `home.nix` の `targets` に追記
+2. `nix/targets.nix` にも追記（non-HM fallback 用）
+3. `home-manager switch --flake ~/.agents`
 
 ## 注意事項
 
-- 各ツールのスキルディレクトリは `~/.agents/` へのシンボリックリンク
+- 各ツールのスキルディレクトリには rsync でスキルがコピーされる
 - 直接編集せず、`~/.agents/skills-internal/` で管理すること
-- 同期は `mise ci` または手動実行で行う
+- 同期は `home-manager switch --flake ~/.agents` または `mise ci` で実行

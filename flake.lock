@@ -1,0 +1,167 @@
+{
+  "nodes": {
+    "claude-code-orchestra": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1769667950,
+        "narHash": "sha256-cG9iCAlgIgFKGgRVQTlKyGuei66NRZ0YydWaJUpYtZI=",
+        "owner": "DeL-TaiseiOzaki",
+        "repo": "claude-code-orchestra",
+        "rev": "2d77f4989f452fd9ef9457761300de2a8693663e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "DeL-TaiseiOzaki",
+        "repo": "claude-code-orchestra",
+        "type": "github"
+      }
+    },
+    "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1770318660,
+        "narHash": "sha256-yFVde8QZK7Dc0Xa8eQDsmxLX4NJNfL1NKfctSyiQgMY=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "471e6a065f9efed51488d7c51a9abbd387df91b8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1770197578,
+        "narHash": "sha256-AYqlWrX09+HvGs8zM6ebZ1pwUqjkfpnv8mewYwAo+iM=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "00c21e4c93d963c50d4c0c89bfa84ed6e0694df2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "openai-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1770276720,
+        "narHash": "sha256-kRkAx275ORc7q9gRIrHTFUvr6b1+ajRDQ3tGWMaZa08=",
+        "owner": "openai",
+        "repo": "skills",
+        "rev": "2f7901ee4202a26757a5237e987a8ec5a1799e29",
+        "type": "github"
+      },
+      "original": {
+        "owner": "openai",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "claude-code-orchestra": "claude-code-orchestra",
+        "flake-utils": "flake-utils",
+        "home-manager": "home-manager",
+        "nixpkgs": "nixpkgs",
+        "openai-skills": "openai-skills",
+        "ui-ux-pro-max": "ui-ux-pro-max",
+        "vercel-agent-browser": "vercel-agent-browser",
+        "vercel-agent-skills": "vercel-agent-skills"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "ui-ux-pro-max": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1769696747,
+        "narHash": "sha256-dIfOk6IdlAw49Q/4IcL+igy3J2krrQSIlEYB1cp/TB0=",
+        "owner": "nextlevelbuilder",
+        "repo": "ui-ux-pro-max-skill",
+        "rev": "2ba6ca2f1ee68f73ce4fde139f1ede1432054c51",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nextlevelbuilder",
+        "repo": "ui-ux-pro-max-skill",
+        "type": "github"
+      }
+    },
+    "vercel-agent-browser": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1770273509,
+        "narHash": "sha256-DoR7/s64+d3lmNGgCYUnClWrizvY7lHIi8Uorsgm16o=",
+        "owner": "vercel-labs",
+        "repo": "agent-browser",
+        "rev": "76c30690f5539dcb515663b0dec99c0a7c24e0ff",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vercel-labs",
+        "repo": "agent-browser",
+        "type": "github"
+      }
+    },
+    "vercel-agent-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1769685356,
+        "narHash": "sha256-rSfySiCwtEP82tG9La4G7l4bu7W40ICT2qHeqpJArXc=",
+        "owner": "vercel-labs",
+        "repo": "agent-skills",
+        "rev": "e23951b8cad2f4b1e7e176c5731127c1263fe86f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vercel-labs",
+        "repo": "agent-skills",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

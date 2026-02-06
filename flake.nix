@@ -1,0 +1,125 @@
+{
+  description = "AI Agent Skills Management";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flake-utils.url = "github:numtide/flake-utils";
+
+    # External skill sources (flake = false: raw git repos)
+    openai-skills = {
+      url = "github:openai/skills";
+      flake = false;
+    };
+    vercel-agent-skills = {
+      url = "github:vercel-labs/agent-skills";
+      flake = false;
+    };
+    vercel-agent-browser = {
+      url = "github:vercel-labs/agent-browser";
+      flake = false;
+    };
+    ui-ux-pro-max = {
+      url = "github:nextlevelbuilder/ui-ux-pro-max-skill";
+      flake = false;
+    };
+    claude-code-orchestra = {
+      url = "github:DeL-TaiseiOzaki/claude-code-orchestra";
+      flake = false;
+    };
+  };
+
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      flake-utils,
+      ...
+    }@inputs:
+    let
+      supportedSystems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+    in
+    {
+      # HM module (usable by external flakes)
+      homeManagerModules.default = import ./nix/module.nix;
+
+      # HM configurations (for `home-manager switch --flake ~/.agents`)
+      homeConfigurations = forAllSystems (
+        system:
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.${system};
+          modules = [
+            self.homeManagerModules.default
+            ./home.nix
+          ];
+          extraSpecialArgs = { inherit inputs; };
+        }
+      );
+    }
+    // flake-utils.lib.eachSystem supportedSystems (
+      system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+        agentLib = import ./nix/lib.nix {
+          inherit pkgs;
+          nixlib = nixpkgs.lib;
+        };
+        sources = import ./nix/sources.nix { inherit inputs; };
+        selection = import ./nix/selection.nix;
+        catalog = agentLib.discoverCatalog {
+          inherit sources;
+          localPath = ./skills-internal;
+        };
+        selectedSkills = agentLib.selectSkills {
+          inherit catalog;
+          inherit (selection) enable;
+        };
+        bundle = agentLib.mkBundle {
+          skills = selectedSkills;
+          name = "agent-skills-bundle";
+        };
+      in
+      {
+        packages.default = bundle;
+        packages.bundle = bundle;
+
+        apps = {
+          install = {
+            type = "app";
+            program = "${agentLib.mkSyncScript { inherit bundle; targets = import ./nix/targets.nix; }}/bin/skills-install";
+          };
+          list = {
+            type = "app";
+            program = "${agentLib.mkListScript { inherit catalog selectedSkills; }}/bin/skills-list";
+          };
+          validate = {
+            type = "app";
+            program = "${agentLib.mkValidateScript { inherit catalog selectedSkills; }}/bin/skills-validate";
+          };
+        };
+
+        checks.default = agentLib.mkChecks { inherit bundle catalog selectedSkills; };
+
+        devShells.default = pkgs.mkShell {
+          buildInputs = [ home-manager.packages.${system}.default ];
+          shellHook = ''
+            echo "Agent Skills Dev Shell"
+            echo "  home-manager switch --flake .  # Apply skills"
+            echo "  nix run .#list                 # List skills"
+          '';
+        };
+
+        formatter = pkgs.nixfmt-rfc-style;
+      }
+    );
+}
