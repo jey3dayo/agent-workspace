@@ -39,7 +39,7 @@
 
 ```bash
 codex exec \
-  --model gpt-5-codex \
+  --model gpt-5.3-codex \
   --config model_reasoning_effort="high" \
   --sandbox read-only \
   --full-auto \
@@ -57,7 +57,7 @@ codex exec \
 
 ```bash
 codex exec \
-  --model gpt-5-codex \
+  --model gpt-5.3-codex \
   --config model_reasoning_effort="high" \
   --sandbox read-only \
   --full-auto \
@@ -79,7 +79,7 @@ codex exec \
 
 ```bash
 codex exec \
-  --model gpt-5-codex \
+  --model gpt-5.3-codex \
   --config model_reasoning_effort="xhigh" \
   --sandbox read-only \
   --full-auto \
@@ -103,7 +103,7 @@ codex exec \
 
 ```bash
 codex exec \
-  --model gpt-5-codex \
+  --model gpt-5.3-codex \
   --config model_reasoning_effort="xhigh" \
   --sandbox read-only \
   --full-auto \
@@ -126,9 +126,9 @@ codex exec \
 
 ## 委譲しないケース
 
-| ケース | 理由 |
-|--------|------|
-| 単純な CRUD 操作 | 定型作業，深い分析不要 |
+| ケース                   | 理由                    |
+| ------------------------ | ----------------------- |
+| 単純な CRUD 操作         | 定型作業，深い分析不要  |
 | 小規模なバグ修正（初回） | まず Claude Code で試行 |
-| ドキュメント更新のみ | 創造性より正確性重視 |
-| フォーマット・リント修正 | 機械的な処理 |
+| ドキュメント更新のみ     | 創造性より正確性重視    |
+| フォーマット・リント修正 | 機械的な処理            |
