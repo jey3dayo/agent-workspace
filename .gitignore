@@ -13,10 +13,10 @@ Thumbs.db
 *.tmp
 *.log
 
-# Skills managed by npx skills (not git)
+# Skills managed by Nix bundle (not git)
 skills/*
 !skills/.gitkeep
 
 # Nix
-result
-result-*
+/result
+/result-*
