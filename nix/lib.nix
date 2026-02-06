@@ -55,9 +55,15 @@ in {
           src = sources.${srcName};
           scanned = scanSourceAutoDetect srcName src.path;
           duplicates = builtins.filter (id: hasAttr id acc) (attrNames scanned);
+          duplicateDetails = builtins.map (id:
+            "${id} (existing: ${acc.${id}.source}, new: ${scanned.${id}.source})"
+          ) duplicates;
         in
-          # External sources: later source wins on duplicate (no error)
-          acc // scanned
+          # External sources: error on duplicate skill IDs to avoid silent overrides
+          if duplicates != [] then
+            throw "Duplicate skill ids found across external sources: ${concatStringsSep ", " duplicateDetails}. Resolve by renaming or removing the duplicates."
+          else
+            acc // scanned
       ) {} (attrNames sources);
 
       # Scan local skills (skills-internal)
