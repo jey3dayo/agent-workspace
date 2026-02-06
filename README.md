@@ -50,7 +50,8 @@ nix run ~/.agents#validate
 
 ```bash
 mise run skills:install     # HM でインストール
-mise run skills:update      # 全ソース更新 + 再インストール
+mise run update             # 全ソース更新 + 再インストール
+mise run ci                 # lint + バリデーション
 mise run skills:list        # 有効スキル一覧
 mise run skills:validate    # バリデーション
 ```
@@ -149,4 +150,5 @@ mise run skills:validate    # バリデーション
 | 特定ソース更新      | `nix flake update <input> --flake ~/.agents`     |
 | スキル一覧          | `nix run ~/.agents#list`                         |
 | バリデーション      | `nix run ~/.agents#validate`                     |
-| 更新 + インストール | `mise run skills:update`                         |
+| lint + バリデーション | `mise run ci`                                    |
+| 更新 + インストール | `mise run update`                                |

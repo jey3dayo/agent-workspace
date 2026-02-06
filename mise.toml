@@ -63,8 +63,12 @@ description = "全ソース更新 + 再インストール"
 run = "sh -c 'if [ -n \"${GITHUB_TOKEN:-}\" ]; then export NIX_CONFIG=\"access-tokens = github.com=$GITHUB_TOKEN\"; fi; nix flake update --flake ~/.agents || exit $?; home-manager switch --flake ~/.agents --impure'"
 
 [tasks.ci]
-description = "lint + スキル更新 + バリデーション"
-depends = ["lint", "skills:update", "skills:validate"]
+description = "lint + バリデーション"
+depends = ["lint", "skills:validate"]
+
+[tasks.update]
+description = "全ソース更新 + 再インストール"
+depends = ["skills:update"]
 
 [tasks."skills:fix:bold-headings"]
 description = "skills-internal の太字見出しを###へ変換"
