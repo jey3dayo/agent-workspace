@@ -136,13 +136,13 @@ Cross-reference with our codebase to identify:
 
 ## When NOT to Use Gemini
 
-| Task | Reason | Use Instead |
-|------|--------|-------------|
-| Design decisions | Requires deep reasoning | Codex |
-| Code implementation | Codex has better code abilities | Codex |
-| Debugging | Requires logical analysis | Codex |
-| Simple file edits | Overkill | Claude Code directly |
-| Running tests | Execution task | Claude Code directly |
+| Task                | Reason                          | Use Instead          |
+| ------------------- | ------------------------------- | -------------------- |
+| Design decisions    | Requires deep reasoning         | Codex                |
+| Code implementation | Codex has better code abilities | Codex                |
+| Debugging           | Requires logical analysis       | Codex                |
+| Simple file edits   | Overkill                        | Claude Code directly |
+| Running tests       | Execution task                  | Claude Code directly |
 
 ## Output Handling
 
@@ -163,6 +163,7 @@ gemini -p "Generate comprehensive documentation for src/auth/" \
 ## Rate Limits
 
 Free tier (personal Google account):
+
 - 60 requests/minute
 - 1,000 requests/day
 

@@ -24,13 +24,14 @@ codex login status
 ## タイムアウト
 
 | reasoning_effort | 推奨タイムアウト |
-|-----------------|-----------------|
-| low             | 60s             |
-| medium          | 180s            |
-| high            | 600s            |
-| xhigh           | 900s            |
+| ---------------- | ---------------- |
+| low              | 60s              |
+| medium           | 180s             |
+| high             | 600s             |
+| xhigh            | 900s             |
 
 config.toml で設定:
+
 ```toml
 [mcp_servers.codex]
 tool_timeout_sec = 600
@@ -65,14 +66,15 @@ codex sessions show {SESSION_ID}
 
 ## sandbox 権限エラー
 
-| エラー | 原因 | 解決策 |
-|--------|------|--------|
-| Permission denied | read-only で書き込み | workspace-write に変更 |
-| Network blocked | sandbox 制限 | danger-full-access（慎重に） |
+| エラー            | 原因                 | 解決策                       |
+| ----------------- | -------------------- | ---------------------------- |
+| Permission denied | read-only で書き込み | workspace-write に変更       |
+| Network blocked   | sandbox 制限         | danger-full-access（慎重に） |
 
 ## メモリ不足
 
 大きなコードベースを分析する場合:
+
 1. 対象ファイルを絞る
 2. 段階的に分析
 3. `--config context_limit=...` で調整
