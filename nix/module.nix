@@ -11,7 +11,12 @@ let
   };
 
   localSkillIds = lib.attrNames (lib.filterAttrs (_: skill: skill.source == "local") catalog);
-  enableList = lib.unique (cfg.skills.enable ++ localSkillIds);
+  allSkillIds = lib.attrNames catalog;
+  enableList =
+    if cfg.skills.enable == null then
+      allSkillIds
+    else
+      lib.unique (cfg.skills.enable ++ localSkillIds);
 
   selectedSkills = agentLib.selectSkills {
     inherit catalog;
@@ -45,9 +50,9 @@ in {
     };
 
     skills.enable = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [];
-      description = "List of skill IDs to enable (local skills are always included).";
+      type = lib.types.nullOr (lib.types.listOf lib.types.str);
+      default = null;
+      description = "List of skill IDs to enable (null = all discovered skills; local skills are always included).";
     };
 
     targets = lib.mkOption {
