@@ -95,7 +95,7 @@ mise run skills:validate    # バリデーション
 | OpenClaw | `~/.openclaw/skills/` |
 | 共有     | `~/.skills/`          |
 
-ターゲットの追加・変更は `home.nix` の `targets` と `nix/targets.nix` を編集する。
+ターゲットの追加・変更は `nix/targets.nix` を編集する（`home.nix` はこの定義を参照するだけ）。
 
 ## スキル一覧
 

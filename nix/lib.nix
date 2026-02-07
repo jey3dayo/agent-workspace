@@ -105,6 +105,7 @@ in {
       bundleInfoFile = pkgs.writeText "bundle-info.json" bundleInfo;
     in
       pkgs.runCommand name {} ''
+        set -euo pipefail
         mkdir -p "$out"
         ${copyCommands}
         cp ${bundleInfoFile} "$out/.bundle-info"
@@ -115,7 +116,7 @@ in {
   mkSyncScript = { bundle, targets }:
     pkgs.writeShellApplication {
       name = "skills-install";
-      runtimeInputs = [ pkgs.rsync ];
+      runtimeInputs = [ pkgs.coreutils pkgs.jq pkgs.rsync ];
       text = ''
         echo "Installing agent skills..."
         ${concatStringsSep "\n" (map (t: ''
@@ -125,7 +126,7 @@ in {
           chmod -R u+w "$dest"
           echo "  -> ${t.tool}: $dest"
         '') targets)}
-        echo "Done. $(cat "${bundle}/.bundle-info" | ${pkgs.jq}/bin/jq -r '.count') skills installed to ${toString (length targets)} targets."
+        echo "Done. $(jq -r '.count' "${bundle}/.bundle-info") skills installed to ${toString (length targets)} targets."
       '';
     };
 

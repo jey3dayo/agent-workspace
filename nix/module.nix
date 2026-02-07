@@ -93,6 +93,18 @@ in {
       in
         builtins.concatStringsSep "\n" syncCommands);
 
+    # Ensure parent directories exist for link targets before link generation.
+    home.activation.agent-skills-link-dirs = lib.hm.dag.entryBefore [ "linkGeneration" ]
+      (let
+        linkTargets = lib.filterAttrs
+          (_: t: t.enable && t.structure == "link")
+          cfg.targets;
+        mkdirCommands = lib.mapAttrsToList (_name: target: ''
+          ${pkgs.coreutils}/bin/mkdir -p "$HOME/${target.dest}"
+        '') linkTargets;
+      in
+        builtins.concatStringsSep "\n" mkdirCommands);
+
     # link targets: per-skill directory symlinks to Nix store (default)
     # Each skill dir becomes a symlink: ~/.claude/skills/agent-creator → /nix/store/.../agent-creator
     # This keeps .system and other tool-managed files writable in the parent dir
