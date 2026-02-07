@@ -28,6 +28,7 @@ in
   home.username = username;
   home.homeDirectory = homeDirectory;
   home.stateVersion = "24.11";
-  # Avoid profile conflicts when home-manager is already installed elsewhere.
+  # home-manager binary is managed by ~/.config/home-manager (primary).
+  # Enabling here would conflict with the primary configuration.
   programs.home-manager.enable = false;
 }
