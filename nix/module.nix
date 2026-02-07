@@ -134,8 +134,11 @@ in {
         mkdirCommands = lib.mapAttrsToList (_name: target: ''
           ${pkgs.coreutils}/bin/mkdir -p "$HOME/${target.dest}"
         '') linkTargets;
+        configDirCommands = lib.mapAttrsToList (_name: target: ''
+          ${pkgs.coreutils}/bin/mkdir -p "$HOME/${target.configDest}"
+        '') (lib.filterAttrs (_: t: t.enable && t.configDest != null) cfg.targets);
       in
-        builtins.concatStringsSep "\n" mkdirCommands);
+        builtins.concatStringsSep "\n" (mkdirCommands ++ configDirCommands));
 
     # link targets: per-skill directory symlinks to Nix store (default)
     # Each skill dir becomes a symlink: ~/.claude/skills/agent-creator → /nix/store/.../agent-creator
