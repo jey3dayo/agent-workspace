@@ -3,7 +3,6 @@
 [env]
 _.path = ['./node_modules/.bin']
 MARKDOWN_LINK_CONFIG = ".markdown-link-check.json"
-_.file = ".env"
 
 [tools]
 node = '24'                          # Node 24 系に固定
@@ -49,7 +48,7 @@ depends = ["docs:lint", "docs:format:check", "docs:links"]
 # === スキル管理 (Nix / Home Manager) ===
 [tasks."skills:install"]
 description = "HM でスキルをインストール"
-run = "sh -c 'if [ -n \"${GITHUB_TOKEN:-}\" ]; then export NIX_CONFIG=\"$(printf \"%s\\naccess-tokens = github.com=%s\" \"${NIX_CONFIG:-}\" \"$GITHUB_TOKEN\")\"; fi; home-manager switch --flake ~/.agents --impure'"
+run = "home-manager switch --flake ~/.agents --impure"
 
 [tasks."skills:list"]
 description = "有効スキル一覧を JSON 出力"
@@ -60,8 +59,8 @@ description = "スキル構成バリデーション"
 run = "nix run ~/.agents#validate"
 
 [tasks."skills:update"]
-description = "全ソース更新 + 再インストール"
-run = "sh -c 'if [ -n \"${GITHUB_TOKEN:-}\" ]; then export NIX_CONFIG=\"$(printf \"%s\\naccess-tokens = github.com=%s\" \"${NIX_CONFIG:-}\" \"$GITHUB_TOKEN\")\"; fi; nix flake update --flake ~/.agents || exit $?; home-manager switch --flake ~/.agents --impure'"
+description = "全ソース更新（flake inputs）"
+run = "nix flake update --flake ~/.agents"
 
 [tasks.ci]
 description = "lint + バリデーション + スキルインストール"
@@ -73,7 +72,7 @@ depends = ["skills:update", "ci"]
 
 [tasks.update]
 description = "全ソース更新 + 再インストール"
-depends = ["skills:update"]
+depends = ["skills:update", "skills:install"]
 
 [tasks."skills:fix:bold-headings"]
 description = "skills-internal の太字見出しを###へ変換"

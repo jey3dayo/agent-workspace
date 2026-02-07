@@ -31,15 +31,12 @@ Nix Flake + Home Manager により、スキルの取得・選択・配布を一�
 プライベート GitHub リポジトリをスキルソースとして使う場合、Nix にアクセストークンを設定する。
 
 ```bash
-# テンプレートをコピー
-cp ~/.agents/secrets/nix/access-tokens.conf.example ~/.agents/secrets/nix/access-tokens.conf
+# gh auth token を使う場合（推奨）
+echo "access-tokens = github.com=$(gh auth token)" > ~/.agents/secrets/nix/access-tokens.conf
 chmod 600 ~/.agents/secrets/nix/access-tokens.conf
-
-# エディタで実トークンに置き換え
-vim ~/.agents/secrets/nix/access-tokens.conf
 ```
 
-トークンは [GitHub Settings > Personal access tokens](https://github.com/settings/tokens) から Classic トークン（`repo` スコープ）を発行する。
+`gh` 未使用の場合は [GitHub Settings > Personal access tokens](https://github.com/settings/tokens) から Classic トークン（`repo` スコープ）を発行し、テンプレートから手動設定する。
 
 `~/.config/nix/nix.conf` に以下の行を追加して、Nix からトークンを読み込む:
 
