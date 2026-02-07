@@ -49,7 +49,7 @@ run = "$MD_FILES -X prettier --check"
 # === スキル管理 ===
 [tasks."skills:install"]
 description = "HM でスキルをインストール"
-run = "home-manager switch --flake ~/.agents --impure"
+run = "nix run home-manager -- switch --flake ~/.agents --impure"
 
 [tasks."skills:list"]
 description = "有効スキル一覧を表示"
