@@ -3,76 +3,14 @@
 [env]
 _.path = ['./node_modules/.bin']
 MARKDOWN_LINK_CONFIG = ".markdown-link-check.json"
+MD_FILES = "fd -e md --type f --no-follow"
 
 [tools]
-node = '24'                          # Node 24 系に固定
-fd = 'latest'                        # ファイル検索用
-"npm:prettier" = 'latest'            # コードフォーマッター
-"npm:markdownlint-cli2" = "latest"   # Markdown lint
-"npm:markdown-link-check" = "latest" # Markdown リンクチェック
-
-# === ドキュメント管理 ===
-[tasks."docs:lint"]
-description = "Markdownファイルのlintチェック"
-run = "fd -e md --type f --no-follow -X markdownlint-cli2"
-
-[tasks."docs:fix"]
-description = "Markdownファイルの自動修正"
-run = "fd -e md --type f --no-follow -X markdownlint-cli2 --fix"
-
-[tasks."docs:links"]
-description = "Markdownリンクチェック"
-run = "fd -e md --type f --no-follow -X markdown-link-check --quiet --config ${MARKDOWN_LINK_CONFIG}"
-
-[tasks."docs:links:verbose"]
-description = "Markdownリンクチェック（詳細モード）"
-run = "fd -e md --type f --no-follow -X markdown-link-check --verbose --config ${MARKDOWN_LINK_CONFIG}"
-
-[tasks."docs:format"]
-description = "Prettierでフォーマット"
-run = "fd -e md --type f --no-follow -X prettier --write --log-level warn"
-
-[tasks."docs:format:check"]
-description = "Prettierフォーマットチェック"
-run = "fd -e md --type f --no-follow -X prettier --check"
-
-# === エイリアス ===
-[tasks.format]
-description = "全ての自動修正を実行"
-depends = ["skills:fix:bold-headings", "docs:fix", "docs:format"]
-
-[tasks.lint]
-description = "全体検証（修正はしない）"
-depends = ["docs:lint", "docs:format:check", "docs:links"]
-
-# === スキル管理 (Nix / Home Manager) ===
-[tasks."skills:install"]
-description = "HM でスキルをインストール"
-run = "home-manager switch --flake ~/.agents --impure"
-
-[tasks."skills:list"]
-description = "有効スキル一覧を JSON 出力"
-run = "nix run ~/.agents#list"
-
-[tasks."skills:validate"]
-description = "スキル構成バリデーション"
-run = "nix run ~/.agents#validate"
-
-[tasks."skills:update"]
-description = "全ソース更新（flake inputs）"
-run = "nix flake update --flake ~/.agents"
-
-[tasks.ci]
-description = "lint + バリデーション + スキルインストール"
-depends = ["lint", "skills:validate", "skills:install"]
-
-[tasks."ci:full"]
-description = "skills:update + ci"
-depends = ["skills:update", "ci"]
-
-[tasks.update]
-description = "全ソース更新 + 再インストール"
-depends = ["skills:update", "skills:install"]
+node = '24'
+fd = 'latest'
+"npm:prettier" = 'latest'
+"npm:markdownlint-cli2" = "latest"
+"npm:markdown-link-check" = "latest"
 
 # === セットアップ ===
 [tasks."setup:token"]
@@ -83,6 +21,69 @@ run = "bash ./scripts/setup-nix-token.sh"
 description = "初回セットアップ（トークン + スキルインストール）"
 depends = ["setup:token", "skills:install"]
 
+# === ドキュメント管理 ===
+[tasks."docs:lint"]
+description = "Markdown lint チェック"
+run = "$MD_FILES -X markdownlint-cli2"
+
+[tasks."docs:fix"]
+description = "Markdown lint 自動修正"
+run = "$MD_FILES -X markdownlint-cli2 --fix"
+
+[tasks."docs:links"]
+description = "Markdown リンクチェック"
+run = "$MD_FILES -X markdown-link-check --quiet --config ${MARKDOWN_LINK_CONFIG}"
+
+[tasks."docs:links:verbose"]
+description = "Markdown リンクチェック（詳細）"
+run = "$MD_FILES -X markdown-link-check --verbose --config ${MARKDOWN_LINK_CONFIG}"
+
+[tasks."docs:format"]
+description = "Prettier フォーマット"
+run = "$MD_FILES -X prettier --write --log-level warn"
+
+[tasks."docs:format:check"]
+description = "Prettier フォーマットチェック"
+run = "$MD_FILES -X prettier --check"
+
+# === スキル管理 ===
+[tasks."skills:install"]
+description = "HM でスキルをインストール"
+run = "home-manager switch --flake ~/.agents --impure"
+
+[tasks."skills:list"]
+description = "有効スキル一覧を表示"
+run = "nix run ~/.agents#list"
+
+[tasks."skills:validate"]
+description = "スキル構成バリデーション"
+run = "nix run ~/.agents#validate"
+
+[tasks."skills:update"]
+description = "全ソース更新（flake inputs）"
+run = "nix flake update --flake ~/.agents"
+
 [tasks."skills:fix:bold-headings"]
-description = "skills-internal の太字見出しを###へ変換"
+description = "skills-internal の太字見出しを ### へ変換"
 run = "node ./scripts/replace-bold-headings.js"
+
+# === 集約タスク ===
+[tasks.format]
+description = "全自動修正"
+depends = ["skills:fix:bold-headings", "docs:fix", "docs:format"]
+
+[tasks.lint]
+description = "全体検証"
+depends = ["docs:lint", "docs:format:check", "docs:links"]
+
+[tasks.update]
+description = "全ソース更新 + 再インストール"
+depends = ["skills:update", "skills:install"]
+
+[tasks.ci]
+description = "lint + バリデーション + インストール"
+depends = ["lint", "skills:validate", "skills:install"]
+
+[tasks."ci:full"]
+description = "全更新 + ci"
+depends = ["skills:update", "ci"]
