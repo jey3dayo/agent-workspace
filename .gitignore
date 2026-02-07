@@ -21,6 +21,7 @@ secrets/nix/*
 !secrets/nix/*.example
 
 # claude
+.claude/settings.local.json
 .claude/plans
 
 # Skills managed by Nix bundle (not git)
@@ -30,3 +31,4 @@ skills/*
 # Nix
 /result
 /result-*
+
