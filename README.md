@@ -31,20 +31,12 @@ Nix Flake + Home Manager により、スキルの取得・選択・配布を一�
 プライベート GitHub リポジトリをスキルソースとして使う場合、Nix にアクセストークンを設定する。
 
 ```bash
-# gh auth token を使う場合（推奨）
-echo "access-tokens = github.com=$(gh auth token)" > ~/.agents/secrets/nix/access-tokens.conf
-chmod 600 ~/.agents/secrets/nix/access-tokens.conf
+mise run setup:token
 ```
 
-`gh` 未使用の場合は [GitHub Settings > Personal access tokens](https://github.com/settings/tokens) から Classic トークン（`repo` スコープ）を発行し、テンプレートから手動設定する。
+`gh auth token` からトークンを取得し、`secrets/nix/access-tokens.conf` への書き込みと `~/.config/nix/nix.conf` への `!include` 追加を自動で行う。
 
-`~/.config/nix/nix.conf` に以下の行を追加して、Nix からトークンを読み込む:
-
-```
-!include /home/<user>/.agents/secrets/nix/access-tokens.conf
-```
-
-`!include`（感嘆符付き）はファイル未作成でもエラーにならない。
+`gh` 未使用の場合は `secrets/nix/access-tokens.conf.example` をコピーして手動設定する。
 
 ## 使い方
 
@@ -200,6 +192,8 @@ configFiles = [
 
 | 操作                  | コマンド                                         |
 | --------------------- | ------------------------------------------------ |
+| 初回セットアップ      | `mise run setup`                                 |
+| トークン設定          | `mise run setup:token`                           |
 | インストール          | `home-manager switch --flake ~/.agents --impure` |
 | 全ソース更新          | `nix flake update --flake ~/.agents`             |
 | 特定ソース更新        | `nix flake update <input> --flake ~/.agents`     |
