@@ -68,10 +68,42 @@ in {
             default = "link";
             description = "Deployment structure: link (HM symlink, read-only) or copy-tree (rsync copy, writable).";
           };
+          configDest = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+            default = null;
+            description = "Destination directory for configFiles (relative to $HOME). null = no configFiles.";
+          };
         };
       });
       default = {};
       description = "Deployment targets for skill distribution.";
+    };
+
+    configFiles = lib.mkOption {
+      type = lib.types.listOf (lib.types.submodule {
+        options = {
+          src = lib.mkOption {
+            type = lib.types.path;
+            description = "Source file path.";
+          };
+          default = lib.mkOption {
+            type = lib.types.str;
+            description = "Default filename for distribution.";
+          };
+          rename = lib.mkOption {
+            type = lib.types.attrsOf lib.types.str;
+            default = {};
+            description = "Per-target filename overrides (e.g., { claude = \"CLAUDE.md\"; }).";
+          };
+          exclude = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [];
+            description = "Target names to exclude from distribution.";
+          };
+        };
+      });
+      default = [];
+      description = "Configuration files to distribute to target configDest directories.";
     };
   };
 
@@ -102,20 +134,43 @@ in {
         mkdirCommands = lib.mapAttrsToList (_name: target: ''
           ${pkgs.coreutils}/bin/mkdir -p "$HOME/${target.dest}"
         '') linkTargets;
+        configDirCommands = lib.mapAttrsToList (_name: target: ''
+          ${pkgs.coreutils}/bin/mkdir -p "$HOME/${target.configDest}"
+        '') (lib.filterAttrs (_: t: t.enable && t.configDest != null) cfg.targets);
       in
-        builtins.concatStringsSep "\n" mkdirCommands);
+        builtins.concatStringsSep "\n" (mkdirCommands ++ configDirCommands));
 
     # link targets: per-skill directory symlinks to Nix store (default)
     # Each skill dir becomes a symlink: ~/.claude/skills/agent-creator → /nix/store/.../agent-creator
     # This keeps .system and other tool-managed files writable in the parent dir
-    home.file = lib.mkMerge (lib.mapAttrsToList (_name: target:
-      if target.enable && target.structure == "link" then
-        lib.mapAttrs' (skillId: _skill:
-          lib.nameValuePair "${target.dest}/${skillId}" {
-            source = "${bundle}/${skillId}";
-          }
-        ) selectedSkills
-      else {}
-    ) cfg.targets);
+    home.file = lib.mkMerge (
+      # Skill distribution
+      (lib.mapAttrsToList (_name: target:
+        if target.enable && target.structure == "link" then
+          lib.mapAttrs' (skillId: _skill:
+            lib.nameValuePair "${target.dest}/${skillId}" {
+              source = "${bundle}/${skillId}";
+            }
+          ) selectedSkills
+        else {}
+      ) cfg.targets)
+      ++
+      # configFiles distribution
+      (lib.concatMap (cf:
+        lib.mapAttrsToList (targetName: target:
+          if target.enable
+             && target.configDest != null
+             && !(lib.elem targetName cf.exclude)
+          then
+            let
+              filename =
+                if lib.hasAttr targetName cf.rename
+                then cf.rename.${targetName}
+                else cf.default;
+            in { "${target.configDest}/${filename}".source = cf.src; }
+          else {}
+        ) cfg.targets
+      ) cfg.configFiles)
+    );
   };
 }

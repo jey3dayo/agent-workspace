@@ -14,6 +14,14 @@ in
     skills.enable = if selection ? enable then selection.enable else null;
 
     targets = targets;
+
+    configFiles = [
+      {
+        src = ./AGENTS.md;
+        default = "AGENTS.md";
+        rename = { claude = "CLAUDE.md"; };
+      }
+    ];
   };
 
   # Home Manager basics (username/homeDirectory provided via extraSpecialArgs)

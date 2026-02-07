@@ -26,6 +26,18 @@ Nix Flake + Home Manager により、スキルの取得・選択・配布を一�
 - [Nix](https://nixos.org/) がインストールされていること（Flakes 有効）
 - [Home Manager](https://github.com/nix-community/home-manager) が利用可能であること
 
+## GitHub アクセストークンの設定（任意）
+
+プライベート GitHub リポジトリをスキルソースとして使う場合、Nix にアクセストークンを設定する。
+
+```bash
+mise run setup:token
+```
+
+`gh auth token` からトークンを取得し、`secrets/nix/access-tokens.conf` への書き込みと `~/.config/nix/nix.conf` への `!include` 追加を自動で行う。
+
+`gh` 未使用の場合は `secrets/nix/access-tokens.conf.example` をコピーして手動設定する。
+
 ## 使い方
 
 ### スキルのインストール
@@ -86,16 +98,51 @@ mise run skills:validate    # バリデーション
 
 ## 同期先（ターゲット）
 
-| ツール   | 配置先                |
-| -------- | --------------------- |
-| Claude   | `~/.claude/skills/`   |
-| Codex    | `~/.codex/skills/`    |
-| Cursor   | `~/.cursor/skills/`   |
-| OpenCode | `~/.opencode/skills/` |
-| OpenClaw | `~/.openclaw/skills/` |
-| 共有     | `~/.skills/`          |
+| ツール   | スキル配置先          | configFiles 配置先 |
+| -------- | --------------------- | ------------------ |
+| Claude   | `~/.claude/skills/`   | `~/.claude/`       |
+| Codex    | `~/.codex/skills/`    | `~/.codex/`        |
+| Cursor   | `~/.cursor/skills/`   | `~/.cursor/`       |
+| OpenCode | `~/.opencode/skills/` | `~/.opencode/`     |
+| OpenClaw | `~/.openclaw/skills/` | `~/.openclaw/`     |
+| 共有     | `~/.skills/`          | —                  |
 
 ターゲットの追加・変更は `nix/targets.nix` を編集する（`home.nix` はこの定義を参照するだけ）。
+
+## 設定ファイルの配布（configFiles）
+
+`AGENTS.md` などの設定ファイルを各ターゲットディレクトリに自動配布する。
+ツールごとにファイル名を変更可能（例: Claude は `CLAUDE.md`）。
+
+### 現在の配布設定
+
+| ソース    | Claude    | Codex     | その他    |
+| --------- | --------- | --------- | --------- |
+| AGENTS.md | CLAUDE.md | AGENTS.md | AGENTS.md |
+
+### 新しいファイルの追加
+
+`home.nix` の `configFiles` に追加:
+
+```nix
+configFiles = [
+  {
+    src = ./AGENTS.md;
+    default = "AGENTS.md";
+    rename = { claude = "CLAUDE.md"; };
+  }
+  # 新しいファイルを追加:
+  # {
+  #   src = ./NEW_CONFIG.md;
+  #   default = "NEW_CONFIG.md";
+  #   rename = { claude = "CLAUDE_CONFIG.md"; };
+  #   exclude = [ "shared" ];  # 特定ターゲットを除外
+  # }
+];
+```
+
+配布先は `nix/targets.nix` の `configDest` で決まる（`null` のターゲットは対象外）。
+配布方法は `home.file` によるシンボリックリンク（read-only）。
 
 ## スキル一覧
 
@@ -145,6 +192,8 @@ mise run skills:validate    # バリデーション
 
 | 操作                  | コマンド                                         |
 | --------------------- | ------------------------------------------------ |
+| 初回セットアップ      | `mise run setup`                                 |
+| トークン設定          | `mise run setup:token`                           |
 | インストール          | `home-manager switch --flake ~/.agents --impure` |
 | 全ソース更新          | `nix flake update --flake ~/.agents`             |
 | 特定ソース更新        | `nix flake update <input> --flake ~/.agents`     |
