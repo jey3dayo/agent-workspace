@@ -86,16 +86,51 @@ mise run skills:validate    # バリデーション
 
 ## 同期先（ターゲット）
 
-| ツール   | 配置先                |
-| -------- | --------------------- |
-| Claude   | `~/.claude/skills/`   |
-| Codex    | `~/.codex/skills/`    |
-| Cursor   | `~/.cursor/skills/`   |
-| OpenCode | `~/.opencode/skills/` |
-| OpenClaw | `~/.openclaw/skills/` |
-| 共有     | `~/.skills/`          |
+| ツール   | スキル配置先          | configFiles 配置先 |
+| -------- | --------------------- | ------------------ |
+| Claude   | `~/.claude/skills/`   | `~/.claude/`       |
+| Codex    | `~/.codex/skills/`    | `~/.codex/`        |
+| Cursor   | `~/.cursor/skills/`   | `~/.cursor/`       |
+| OpenCode | `~/.opencode/skills/` | `~/.opencode/`     |
+| OpenClaw | `~/.openclaw/skills/` | `~/.openclaw/`     |
+| 共有     | `~/.skills/`          | —                  |
 
 ターゲットの追加・変更は `nix/targets.nix` を編集する（`home.nix` はこの定義を参照するだけ）。
+
+## 設定ファイルの配布（configFiles）
+
+`AGENTS.md` などの設定ファイルを各ターゲットディレクトリに自動配布する。
+ツールごとにファイル名を変更可能（例: Claude は `CLAUDE.md`）。
+
+### 現在の配布設定
+
+| ソース    | Claude    | Codex     | その他    |
+| --------- | --------- | --------- | --------- |
+| AGENTS.md | CLAUDE.md | AGENTS.md | AGENTS.md |
+
+### 新しいファイルの追加
+
+`home.nix` の `configFiles` に追加:
+
+```nix
+configFiles = [
+  {
+    src = ./AGENTS.md;
+    default = "AGENTS.md";
+    rename = { claude = "CLAUDE.md"; };
+  }
+  # 新しいファイルを追加:
+  # {
+  #   src = ./NEW_CONFIG.md;
+  #   default = "NEW_CONFIG.md";
+  #   rename = { claude = "CLAUDE_CONFIG.md"; };
+  #   exclude = [ "shared" ];  # 特定ターゲットを除外
+  # }
+];
+```
+
+配布先は `nix/targets.nix` の `configDest` で決まる（`null` のターゲットは対象外）。
+配布方法は `home.file` によるシンボリックリンク（read-only）。
 
 ## スキル一覧
 
