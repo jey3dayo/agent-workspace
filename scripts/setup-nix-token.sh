@@ -20,7 +20,8 @@ echo "OK: $CONF"
 
 # nix.conf に !include 追加（未設定の場合のみ）
 mkdir -p ~/.config/nix
-if ! grep -qF 'access-tokens.conf' "$NIX_CONF" 2>/dev/null; then
+touch "$NIX_CONF"
+if ! grep -qF 'access-tokens.conf' "$NIX_CONF"; then
   echo "$INCLUDE_LINE" >> "$NIX_CONF"
   echo "OK: $NIX_CONF に !include を追加"
 else
