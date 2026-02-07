@@ -26,6 +26,29 @@ Nix Flake + Home Manager により、スキルの取得・選択・配布を一�
 - [Nix](https://nixos.org/) がインストールされていること（Flakes 有効）
 - [Home Manager](https://github.com/nix-community/home-manager) が利用可能であること
 
+## GitHub アクセストークンの設定（任意）
+
+プライベート GitHub リポジトリをスキルソースとして使う場合、Nix にアクセストークンを設定する。
+
+```bash
+# テンプレートをコピー
+cp ~/.agents/secrets/nix/access-tokens.conf.example ~/.agents/secrets/nix/access-tokens.conf
+chmod 600 ~/.agents/secrets/nix/access-tokens.conf
+
+# エディタで実トークンに置き換え
+vim ~/.agents/secrets/nix/access-tokens.conf
+```
+
+トークンは [GitHub Settings > Personal access tokens](https://github.com/settings/tokens) から Classic トークン（`repo` スコープ）を発行する。
+
+`~/.config/nix/nix.conf` に以下の行を追加して、Nix からトークンを読み込む:
+
+```
+!include /home/<user>/.agents/secrets/nix/access-tokens.conf
+```
+
+`!include`（感嘆符付き）はファイル未作成でもエラーにならない。
+
 ## 使い方
 
 ### スキルのインストール
